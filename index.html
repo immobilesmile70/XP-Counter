@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XP Counter</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/immobilesmile70/Windows-12-web/main/assets/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json" />
+</head>
+
+<body>
+    <div id="loading-screen" class="loading-screen hidden hide">
+        <p class="load_status_text" id="loading-text">
+            Loading Up!</p>
+        <span id="spinner2" class="spinner"></span>
+    </div>
+
+    <div id="popup" class="popup hide">
+        <p id="popup-message"></p>
+        <button id="close-popup-button">×</button>
+    </div>
+
+    <div id="login-screen" class="login-screen">
+        <div class="header">
+            <h1>XP Counter</h1>
+        </div>
+        <div class="welcome-text">
+            <h1>Welcome to the Adventurer's Hall</h1>
+            <h3>Are you ready to dive into the world of grinding while having fun?</h3>
+        </div>
+        <div id="login-form" class="login-form">
+            <h1>Enter the Guild</h1>
+            <input type="email" class="username-input" id="email-input-login" placeholder="E-mail" required>
+            <input type="password" class="password-input" id="password-input-login" placeholder="Password" required>
+            <div class="button-flex">
+                <button id="login-button">Login</button>
+                <div class="button-flex-2">
+                    <button id="signup-switch"
+                        style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">New
+                        Here?</button>
+                    <button id="forget-pass-switch"
+                        style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Forgot
+                        Password?</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="signup-form" class="login-form hidden">
+            <h1>Join the Guild</h1>
+            <input type="text" class="username-input" id="username-input-signup" placeholder="Username" required>
+            <input type="email" class="username-input" id="email-input-signup" placeholder="E-mail" required>
+            <input type="password" class="password-input" id="password-input-signup" placeholder="Password" required>
+            <div class="button-flex">
+                <button id="signup-button">Sign Up</button>
+                <button id="login-switch"
+                    style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Already logged
+                    in?</button>
+            </div>
+        </div>
+        <div id="forget-pass-form" class="login-form hidden">
+            <h1>Forgot Password</h1>
+            <input type="email" class="username-input" id="email-input-forget-pass" placeholder="E-mail" required>
+            <div class="button-flex">
+                <button id="forget-pass-button">Reset</button>
+                <button id="f-login-switch"
+                    style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Go Back?</button>
+            </div>
+        </div>
+        <div class="footer">
+            <p>
+                Developed by Shourya Suthar
+            </p>
+        </div>
+    </div>
+    <div id="main-screen" class="main-screen hidden hide">
+
+        <div id="sidebar" class="sidebar">
+            <div class="welcome">Welcome, <span id="username-text-home">Student</span>!</div>
+            <div class="sidebar-button-flex">
+                <button id="counter">XP Counter</button>
+                <button id="leaderboard">Leaderboard</button>
+                <button id="settings">Settings</button>
+            </div>
+            <button id="logout-button">Logout</button>
+        </div>
+
+        <div class="xp-section" id="xp-section">
+            <div class="xp-display">
+                <h1 id="xp-tex"><span id="xp">0</span> XP</h1>
+                <button id="reset-xp"><svg width="50px" height="50px" viewBox="0 0 21 21"
+                        xmlns="http://www.w3.org/2000/svg">
+
+                        <g fill="none" fill-rule="evenodd" stroke="#bebebe" stroke-width="2px" stroke-linecap="round"
+                            stroke-linejoin="round" transform="matrix(0 1 1 0 2.5 2.5)">
+
+                            <path
+                                d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8" />
+
+                            <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)" />
+
+                        </g>
+
+                    </svg></button>
+            </div>
+
+            <div class="xp-controls">
+
+                <div class="xp-flexbox">
+                    <div class="xp-actions positive">
+                        <h2>Earn XP</h2>
+                        <div class="xp-grid">
+                            <button class="xp-button" data-xp="150">Completed 2-Hour Lecture</button>
+                            <button class="xp-button" data-xp="100">Completed 1 DPP</button>
+                            <button class="xp-button" data-xp="120">Solved Practice Questions (10–20)</button>
+                            <button class="xp-button" data-xp="80">Completed Module/Textbook Exercise</button>
+                            <button class="xp-button" data-xp="150">Attended Full Class (4 hrs)</button>
+                            <button class="xp-button" data-xp="70">Revised Old Work</button>
+                            <button class="xp-button" data-xp="30">Planned Day (written)</button>
+                        </div>
+                    </div>
+                    
+                    <div class="xp-actions negative">
+                        <h2>Lost Focus</h2>
+                        <div class="xp-grid">
+                            <button class="xp-button negative" data-xp="-100">Skipped Planned Lecture</button>
+                            <button class="xp-button negative" data-xp="-70">Skipped DPP (24h delay)</button>
+                            <button class="xp-button negative" data-xp="-20">Scrolled Social Media (5+ mins)</button>
+                            <button class="xp-button negative" data-xp="-30">Studied With Distraction</button>
+                            <button class="xp-button negative" data-xp="-40">Slept Late (after 12 AM)</button>
+                        </div>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+
+        <div class="leaderboard-section hidden hide" id="leaderboard-section">
+            <h1>Leaderboard</h1>
+            <div class="leaderboard-list" id="leaderboard-list"></div>
+            <div class="leaderboard-controls">
+                <button id="refresh-leaderboard">Refresh</button>
+            </div>
+        </div>
+
+        <div class="settings-section hidden hide" id="settings-section">
+            <div class="xp-display">
+                <h1>Settings</h1>
+            </div>
+            <div class="xp-controls">
+                <div class="xp-flexbox">
+                    <div class="xp-actions positive">
+                        <div class="settings-list">
+                            <div class="setting-item" style="gap: 100px;">
+                                <label for="custom-select">Theme </label>
+                                <div class="custom-select" style="width:200px;">
+                                    <select>
+                                        <option value="0">System Default</option>
+                                        <option value="1">System Default</option>
+                                        <option value="2">Light</option>
+                                        <option value="3">Dark</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-item" style="gap: 47px;">
+                                <label for="custom-select">Username</label>
+                                <input type="text" id="username-change-input" placeholder="Change Username">
+                                <button id="change-username-button">Change</button>
+                            </div>
+                            <div class="setting-item" style="gap: 75px;">
+                                <label for="custom-select">Account </label>
+                                <button id="delete-user-button">Delete Account</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"></script>
+    <script type="module" src="firebase.js"></script>
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
