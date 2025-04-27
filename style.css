@@ -559,18 +559,48 @@ html {
     background-color: #762626;
 }
 
+/* Leaderboard Section */
 .leaderboard-section {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-direction: column;
-    position: relative;
-    gap: 20px;
-    width: 90%;
-    height: 100%;
-    opacity: 1;
-    pointer-events: auto;
-    transition: opacity 0.25s ease, width 0.35s ease, height 0.35s ease;
+    align-items: center;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 80vh;
+}
+
+.leaderboard-list {
+    width: 100%;
+    max-width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.leaderboard-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #f4f4f4;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.rank {
+    font-weight: bold;
+    color: #333;
+}
+
+.name {
+    flex-grow: 1;
+    text-align: center;
+    color: #555;
+}
+
+.xp {
+    font-weight: bold;
+    color: #007bff;
 }
 
 .settings-section {
