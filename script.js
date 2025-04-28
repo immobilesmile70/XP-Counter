@@ -636,7 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function checkScreenSize() {
-        if (window.innerWidth < 826) {
+        if (window.innerWidth < 871) {
             sidebarElement.classList.add('hidden');
         } else {
             sidebarElement.classList.remove('hidden');
