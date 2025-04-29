@@ -190,11 +190,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             fadeScreen(loginScreen, mainScreen);
         } else {
-            clearTimeout(popupTimeout);
-            isInfoPopup = true;
-            showPopup("No user signed in.");
-            loginScreen.classList.remove("hidden");
-            mainScreen.classList.add("hidden");
+            console.warn("No user signed in.");
+            fadeScreen(mainScreen, loginScreen);
         }
     });
 
@@ -356,9 +353,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showPopup("Error fetching XP from the server:", error.message);
             }
         } else {
-            clearTimeout(popupTimeout);
-            isInfoPopup = true;
-            showPopup("No user signed in.");
+            console.warn("No user signed in.");
         }
     });
 
@@ -746,33 +741,8 @@ document.addEventListener("DOMContentLoaded", () => {
         spinner2.stop();
     }
 
-    setTimeout(() => {
-        startSpinner();
-        setTimeout(stopSpinner, 50);
-    }, 50);
-
-    async function flushXPToFirebase() {
-        if (pendingXP === 0 || !auth.currentUser || !localUsername) {
-            flushTimeout = null;
-            return;
-        }
-
-        const user = auth.currentUser;
-        const userRefPath = `users/${localUsername}/${user.uid}/xp/value`;
-        const userRef = ref(database, userRefPath);
-
-        try {
-            await set(userRef, parseInt(xpElement.textContent));
-            console.log(`Flushed ${pendingXP} XP`);
-        } catch (err) {
-            clearTimeout(popupTimeout);
-            isInfoPopup = false;
-            showPopup("Failed to flush XP:", err);
-        }
-
-        pendingXP = 0;
-        flushTimeout = null;
-    }
+    startSpinner();
+    setTimeout(stopSpinner, 5000);
 
     //Custom Selection Menu
     var x, i, j, l, ll, selElmnt, a, b, c;
