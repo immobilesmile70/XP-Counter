@@ -13,6 +13,10 @@ html {
     overflow: hidden;
 }
 
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
 /* Loading Screen */
 
 #loading-screen {
@@ -187,17 +191,15 @@ html {
     gap: 20px;
     z-index: 1;
     pointer-events: auto;
-    transition: opacity 0.3s ease, transform 0.35s ease, border-radius 0.45s ease;
+    transition: opacity 0.3s ease, transform 0.35s ease;
     transform: translateX(0) scaleX(1);
     opacity: 1;
 }
 
 .login-form.hidden {
     opacity: 0;
-    border-radius: 0;
     transform: translateX(-250px) scaleX(2);
     pointer-events: none;
-    position: absolute;
 }
 
 .login-form h1 {
@@ -322,19 +324,18 @@ html {
     gap: 20px;
     z-index: 3;
     pointer-events: auto;
-    transition: opacity 0.3s ease, transform 0.35s ease, border-radius 0.45s ease;
+    transition: opacity 0.3s ease, transform 0.3s ease;
     transform: translateX(0) scaleX(1);
     opacity: 1;
     position: fixed;
     left: 0;
+    will-change: transform, opacity;
 }
 
 .sidebar.hidden {
     opacity: 0;
-    border-radius: 0;
     transform: translateX(-250px) scaleX(2);
     pointer-events: none;
-    position: absolute;
 }
 
 #sidebar-overlay {
@@ -348,6 +349,7 @@ html {
     opacity: 1;
     transition: opacity 0.3s ease;
     z-index: 2;
+    will-change: opacity;
 }
 
 #sidebar-overlay.hidden {
