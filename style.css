@@ -179,7 +179,7 @@ button {
 
 .login-form {
     background-color: #232323;
-    padding: 20px;
+    padding: 0px 20px 0px 20px;
     border-radius: 0px 50px 50px 0px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     height: 100%;
@@ -194,6 +194,7 @@ button {
     transition: opacity 0.3s ease, transform 0.35s ease;
     transform: translateX(0) scaleX(1);
     opacity: 1;
+    position: fixed;
 }
 
 .login-form.hidden {
@@ -415,6 +416,7 @@ button {
     cursor: pointer;
     transform: scale(1);
     transition: background-color 0.3s ease, transform 0.3s ease;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .t-sidebar-btn:hover {
