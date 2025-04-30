@@ -345,7 +345,7 @@ html {
     height:100%;
     pointer-events: auto;
     background-color:rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(15px);
+    backdrop-filter: blur(10px);
     opacity: 1;
     transition: opacity 0.3s ease, backdrop-filter 0.3s ease;
     z-index: 2;
@@ -355,6 +355,11 @@ html {
     opacity: 0;
     pointer-events: none;
     backdrop-filter: blur(0);
+}
+
+#sidebar-overlay.no-blur {
+    backdrop-filter: blur(0);
+    background-color: rgba(0,0,0,0.8);
 }
 
 .sidebar h1 {
