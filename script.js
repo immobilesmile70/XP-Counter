@@ -38,6 +38,28 @@ document.addEventListener("DOMContentLoaded", () => {
     const forgetPassSwitch = document.getElementById("forget-pass-switch");
     const fLoginSwitch = document.getElementById("f-login-switch");
 
+    const openSidebarBtn = document.getElementById("open-sidebar-btn");
+    const closeSidebarBtn = document.getElementById("close-sidebar-btn");
+    const sidebar = document.getElementById("sidebar");
+    const sidebarOverlay = document.getElementById("sidebar-overlay");
+
+    var sidebarAllowed = false;
+
+    openSidebarBtn.addEventListener("click", () => {
+        sidebar.classList.remove("hidden");
+        sidebarOverlay.classList.remove("hidden");
+    });
+
+    closeSidebarBtn.addEventListener("click", () => {
+        sidebar.classList.add("hidden");
+        sidebarOverlay.classList.add("hidden");
+    });
+
+    sidebarOverlay.addEventListener("click", () => {
+        sidebar.classList.add("hidden");
+        sidebarOverlay.classList.add("hidden");
+    });
+
     const settingsButton = document.getElementById("settings");
     const settingsScreen = document.getElementById("settings-section");
 
@@ -68,28 +90,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showScreen(screenToShow, ...screensToHide) {
         if (transitionLock) return;
-    
+
         transitionLock = true;
-    
+
+        if (sidebarAllowed) {
+            sidebar.classList.add("hidden");
+            sidebarOverlay.classList.add("hidden");
+        }
+
         screenToShow.classList.remove("hide");
         setTimeout(() => screenToShow.classList.remove("hidden"), 10);
-    
+
         screensToHide.forEach(screen => screen.classList.add("hidden"));
-    
+
         setTimeout(() => {
             screensToHide.forEach(screen => screen.classList.add("hide"));
             transitionLock = false;
         }, 350);
     }
-    
+
     function showCounter() {
         showScreen(counterScreen, leaderboardScreen, settingsScreen);
     }
-    
+
     function showLeaderboard() {
         showScreen(leaderboardScreen, counterScreen, settingsScreen);
     }
-    
+
     function showSettings() {
         showScreen(settingsScreen, leaderboardScreen, counterScreen);
     }
@@ -633,8 +660,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function checkScreenSize() {
         if (window.innerWidth < 871) {
             sidebarElement.classList.add('hidden');
+            sidebarOverlay.classList.add("hidden");
+            sidebarAllowed = true;
         } else {
             sidebarElement.classList.remove('hidden');
+            sidebarOverlay.classList.add("hidden");
+            sidebarAllowed = false;
         }
     }
 
