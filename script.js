@@ -60,26 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
         sidebarOverlay.classList.add("hidden");
     });
 
-    let frameCount = 0;
-    let start = performance.now();
-    
-    function testPerf(now) {
-        frameCount++;
-        if (now - start < 5000) {
-            requestAnimationFrame(testPerf);
-        } else {
-            const fps = frameCount / ((now - start) / 1000);
-            console.log(`FPS: ${fps.toFixed(2)}`);
-            if (fps < 40) {
-                sidebarOverlay.classList.add('no-blur');
-            } else {
-                sidebarOverlay.classList.remove('no-blur');
-            }
-        }
-    }
-    
-    requestAnimationFrame(testPerf);    
-
     const settingsButton = document.getElementById("settings");
     const settingsScreen = document.getElementById("settings-section");
 
