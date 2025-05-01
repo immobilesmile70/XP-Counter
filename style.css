@@ -17,6 +17,19 @@ button {
     -webkit-tap-highlight-color: transparent;
 }
 
+.app-logo {
+    width: 85px;
+    height: 95px;
+    background: url(https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/icons/UpGrindLogo.webp?raw=true) no-repeat;
+    background-size: 100px;
+    background-position-y: 50%;
+    background-position-x: 48%;
+    background-color: rgba(70, 70, 70, 0.6);
+    border: none;
+    padding: 10px 15px;
+    border-radius: 22px;
+}
+
 /* Loading Screen */
 
 .blur-loader {
