@@ -20,7 +20,7 @@ button {
 .app-logo {
     width: 85px;
     height: 95px;
-    background: url(https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/icons/UpGrindLogo.webp?raw=true) no-repeat;
+    background: url("https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/UpGrindLogo.webp") no-repeat;
     background-size: 100px;
     background-position-y: 50%;
     background-position-x: 48%;
