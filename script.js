@@ -10,7 +10,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
     const loadingScreen = document.getElementById("loading-screen");
-    const loadingText = document.getElementById("loading-text");
 
     const loginButton = document.getElementById("login-button");
     const signUpButton = document.getElementById("signup-button");
@@ -207,7 +206,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup(`Signed in as: ${localUsername}`);
-                loadingText.innerHTML = `Welcome Back, ${localUsername}!`;
                 fadeScreen(loginScreen, mainScreen);
             } else {
                 clearTimeout(popupTimeout);
@@ -438,15 +436,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
                         if (foundUsername) {
                             localUsername = foundUsername;
-                            const userRef = ref(database, `users/${localUsername}/${user.uid}`);
-                            const userSnapshot = await get(userRef);
-
-                            if (userSnapshot.exists()) {
-                                const data = userSnapshot.val();
-                                loadingText.innerHTML = `Welcome Back, ${localUsername}!`;
-                            } else {
-                                loadingText.innerHTML = "Welcome Back!";
-                            }
                         } else {
                             clearTimeout(popupTimeout);
                             isInfoPopup = false;
@@ -476,7 +465,6 @@ document.addEventListener("DOMContentLoaded", () => {
     logOutButton.addEventListener("click", () => {
         signOut(auth)
             .then(async () => {
-                loadingText.innerHTML = "See you soon!";
                 await fadeScreen(mainScreen, loginScreen);
                 emailInputLogin.value = "";
                 passwordInputLogin.value = "";
@@ -513,7 +501,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 await deleteUser(user);
 
                 console.log("User deleted.");
-                loadingText.innerHTML = "Visit Again!";
                 await fadeScreen(mainScreen, loginScreen);
 
                 emailInputLogin.value = "";
@@ -565,7 +552,6 @@ document.addEventListener("DOMContentLoaded", () => {
                                 });
 
                                 localUsername = username;
-                                loadingText.innerHTML = `Welcome ${localUsername}!`;
                                 await fadeScreen(loginScreen, mainScreen);
                             })
                             .catch((error) => {
@@ -700,7 +686,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showLoadingScreen() {
-        startSpinner();
         loadingScreen.classList.remove("hide");
         loadingScreen.classList.remove("hidden");
     }
@@ -709,73 +694,9 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingScreen.classList.add("hidden");
         setTimeout(() => {
             loadingScreen.classList.add("hide");
-            setTimeout(stopSpinner, 500);
         }, 350);
     }
 
-    class Spinner {
-        constructor(element, codepoints, delay = 30, idleChar = 0xE100) {
-            this.element = element;
-            this.codepoints = codepoints;
-            this.delay = delay;
-            this.idleChar = idleChar;
-            this.frame = 0;
-            this.intervalId = null;
-        }
-
-        start() {
-            if (this.intervalId) return;
-
-            this.intervalId = setInterval(() => {
-                this.element.textContent = String.fromCharCode(this.codepoints[this.frame]);
-                this.frame = (this.frame + 1) % this.codepoints.length;
-            }, this.delay);
-        }
-
-        stop() {
-            if (!this.intervalId) return;
-
-            clearInterval(this.intervalId);
-            this.intervalId = null;
-            this.element.textContent = String.fromCharCode(this.idleChar);
-            this.frame = 0;
-        }
-    }
-
-    const codepoints = [
-        [0xE100, 0xE109],
-        [0xE10A, 0xE10F],
-        [0xE110, 0xE119],
-        [0xE11A, 0xE11F],
-        [0xE120, 0xE129],
-        [0xE12A, 0xE12F],
-        [0xE130, 0xE139],
-        [0xE13A, 0xE13F],
-        [0xE140, 0xE149],
-        [0xE14A, 0xE14F],
-        [0xE150, 0xE159],
-        [0xE15A, 0xE15F],
-        [0xE160, 0xE169],
-        [0xE16A, 0xE16F],
-        [0xE170, 0xE176]
-    ].flatMap(([start, end]) =>
-        Array.from({ length: end - start + 1 }, (_, i) => start + i)
-    );
-
-    const spinner2 = new Spinner(document.getElementById('spinner2'), codepoints);
-
-    function startSpinner() {
-        spinner2.start();
-    }
-
-    function stopSpinner() {
-        spinner2.stop();
-    }
-
-    startSpinner();
-    setTimeout(stopSpinner, 5000);
-
-    //Custom Selection Menu
     var x, i, j, l, ll, selElmnt, a, b, c;
     x = document.getElementsByClassName("custom-select");
     l = x.length;
