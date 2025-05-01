@@ -1,6 +1,6 @@
 {
-    "name": "XP Counter",
-    "short_name": "XP Counter",
+    "name": "UpGrind",
+    "short_name": "UpGrind",
     "start_url": "./index.html",
     "display": "fullscreen",
     "background_color": "#111111", 
