@@ -8,14 +8,8 @@
     "description": "This is a simple web app to help students get through a set of tasks in a fun way.",
     "icons": [
       {
-        "src": "https://raw.githubusercontent.com/immobilesmile70/Windows-12-web/main/assets/android-chrome-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png",
-        "purpose": "any maskable"
-      },
-      {
-        "src": "https://raw.githubusercontent.com/immobilesmile70/Windows-12-web/main/assets/android-chrome-512x512.png",
-        "sizes": "512x512",
+        "src": "https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/upgrind%20logo.ico",
+        "sizes": "256x256",
         "type": "image/png",
         "purpose": "any maskable"
       }
