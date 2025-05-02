@@ -1,13 +1,13 @@
 :root {
-    --bg: #dfdfdf;
+    --bg: #eaeaea;
     --loader-bg:rgba(169, 169, 169, 0.7);
     --text: black;
     --subtext: #393939;
-    --footer: #c3c3c3;
-    --button-bg: #c8c7c7;
-    --button-hover: #e1e1e1;
+    --footer: #cfcfcf;
+    --button-bg: #e1e1e1;
+    --button-hover: #f1f1f1;
     --button-active: #828282;
-    --sidebar-bg: #bababa;
+    --sidebar-bg: #d6d6d6;
     --header-color: #434343;
     --border: #2d2d2d;
     --svg-stroke-color: black;
@@ -29,15 +29,15 @@
 }
 
 [data-theme="light"] {
-    --bg: rgb(223, 223, 223);
+    --bg: #eaeaea;
     --loader-bg:rgba(169, 169, 169, 0.7);
     --text: black;
     --subtext: #393939;
-    --footer: #c3c3c3;
-    --button-bg: #c8c7c7;
-    --button-hover: #e1e1e1;
+    --footer: #cfcfcf;
+    --button-bg: #e1e1e1;
+    --button-hover: #f1f1f1;
     --button-active: #828282;
-    --sidebar-bg: #bababa;
+    --sidebar-bg: #d6d6d6;
     --header-color: #434343;
     --border: #2d2d2d;
     --svg-stroke-color: black;
