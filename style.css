@@ -1,7 +1,52 @@
+:root {
+    --bg: #dfdfdf;
+    --loader-bg:rgba(169, 169, 169, 0.7);
+    --text: black;
+    --subtext: #393939;
+    --footer: #c3c3c3;
+    --button-bg: #c8c7c7;
+    --button-hover: #e1e1e1;
+    --button-active: #828282;
+    --sidebar-bg: #bababa;
+    --header-color: #434343;
+    --border: #2d2d2d;
+    --svg-stroke-color: black;
+}
+
+[data-theme="dark"] {
+    --bg: #2c2c2c;
+    --loader-bg:rgba(0, 0, 0, 0.7);
+    --text: white;
+    --subtext: #bfbfbf;
+    --footer: #1f1e1e;
+    --button-bg: #353535;
+    --button-hover: #363636;
+    --button-active: #2b2b2b;
+    --sidebar-bg: #232323;
+    --header-color: #bfbfbf;
+    --border: #404040;
+    --svg-stroke-color: white;
+}
+
+[data-theme="light"] {
+    --bg: rgb(223, 223, 223);
+    --loader-bg:rgba(169, 169, 169, 0.7);
+    --text: black;
+    --subtext: #393939;
+    --footer: #c3c3c3;
+    --button-bg: #c8c7c7;
+    --button-hover: #e1e1e1;
+    --button-active: #828282;
+    --sidebar-bg: #bababa;
+    --header-color: #434343;
+    --border: #2d2d2d;
+    --svg-stroke-color: black;
+}
+
 body,
 html {
     font-family: Arial, sans-serif;
-    background-color: #3a3a3a;
+    background-color: var(--bg);
     margin: 0;
     padding: 0;
     display: flex;
@@ -23,7 +68,7 @@ button {
     position: fixed;
     inset: 0;
     backdrop-filter: blur(20px);
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--loader-bg);
     overflow: hidden;
     z-index: 9999;
     transition: all 0.5s ease;
@@ -73,7 +118,7 @@ button {
     top: 20px;
     left: 50%;
     background-color: #ff4d4d;
-    color: white;
+    color: #fff;
     padding: 16px 24px;
     border-radius: 20px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
@@ -103,14 +148,14 @@ button {
     margin-left: 10px;
     text-align: center;
     border: none;
-    color: white;
+    color: #fff;
     font-size: 2rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .login-screen {
-    background-color: #2c2c2c;
+    background-color: var(--bg);
     width: 100%;
     height: 100%;
     display: flex;
@@ -144,7 +189,7 @@ button {
     text-align: center;
     border-radius: 0px 30px 0px 0px;
     background-color: transparent;
-    color: #fff;
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -164,7 +209,7 @@ button {
     text-align: center;
     border-radius: 0px 30px 0px 0px;
     background-color: transparent;
-    color: #fff;
+    color: var(--text);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -176,18 +221,19 @@ button {
     margin-left: 35px;
     margin-bottom: 20px;
     display: block;
+    color: var(--text);
 }
 
 .welcome-text h3 {
     margin-left: 35px;
-    color: #9d9797;
+    color: var(--subtext);
     font-size: 0.9rem;
     margin-top: 0;
     display: block;
 }
 
 .login-form {
-    background-color: #232323;
+    background-color: var(--sidebar-bg);
     padding: 0px 20px 0px 20px;
     border-radius: 0px 50px 50px 0px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -213,14 +259,14 @@ button {
 }
 
 .login-form h1 {
-    color: #fff;
+    color: var(--text);
     font-size: 1.75rem;
     margin-bottom: 20px
 }
 
 .login-form button {
-    background-color: #2d2d2d;
-    color: #bfbfbf;
+    background-color: var(--button-bg);
+    color: var(--subtext);
     border: none;
     padding: 0px 20px;
     border-radius: 12px;
@@ -232,12 +278,12 @@ button {
 }
 
 .login-form button:hover {
-    background-color: #363636;
+    background-color: var(--button-hover);
     transform: scale(1.05);
 }
 
 .login-form button:active {
-    background-color: #2b2b2b;
+    background-color: var(--button-active);
     transform: scale(0.95);
 }
 
@@ -268,7 +314,7 @@ button {
     height: 80px;
     text-align: center;
     border-radius: 0px 30px 0px 0px;
-    background-color: #1f1e1e;
+    background-color: var(--footer);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -285,9 +331,9 @@ button {
     width: 80%;
     padding: 10px;
     border-radius: 12px;
-    border: 1.5px solid #404040;
-    background-color: #232323;
-    color: #fff;
+    border: 1.5px solid var(--border);
+    background-color: var(--sidebar-bg);
+    color: var(--text);
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
@@ -295,14 +341,14 @@ button {
 .username-input:focus,
 .password-input:focus {
     outline: none;
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 5px #ffffff;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 5px var(--text);
 }
 
 /* Main Screen */
 
 .main-screen {
-    background-color: #2c2c2c;
+    background-color: var(--bg);
     width: 100%;
     height: 100%;
     display: flex;
@@ -317,11 +363,11 @@ button {
     font-size: 1.6rem;
     text-align: center;
     font-weight: bolder;
-    color: white;
+    color: var(--text);
 }
 
 .sidebar {
-    background-color: #232323;
+    background-color: var(--sidebar-bg);
     padding: 20px;
     border-radius: 0px 50px 50px 0px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -355,7 +401,7 @@ button {
     width: 100%;
     height: 100%;
     pointer-events: auto;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: var(--loader-bg);
     opacity: 1;
     backdrop-filter: blur(15px);
     transition: opacity 0.3s ease;
@@ -369,14 +415,14 @@ button {
 }
 
 .sidebar h1 {
-    color: #fff;
+    color: var(--text);
     font-size: 1.75rem;
     margin-bottom: 20px
 }
 
 .sidebar button {
-    background-color: #2d2d2d;
-    color: #bfbfbf;
+    background-color: var(--button-bg);
+    color: var(--subtext);
     border: none;
     padding: 0px 20px;
     border-radius: 20px;
@@ -388,12 +434,12 @@ button {
 }
 
 .sidebar button:hover {
-    background-color: #363636;
+    background-color: var(--button-hover);
     transform: scale(1.05);
 }
 
 .sidebar button:active {
-    background-color: #2b2b2b;
+    background-color: var(--button-active);
     transform: scale(0.95);
 }
 
@@ -418,7 +464,7 @@ button {
 .t-sidebar-btn {
     width: 50px;
     height: 50px;
-    color: white;
+    color: var(--text);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -430,13 +476,17 @@ button {
 }
 
 .t-sidebar-btn:hover {
-    background-color: #424242;
+    background-color: var(--button-hover);
     transform: scale(1.1);
 }
 
 .t-sidebar-btn:active {
-    background-color: #121212;
+    background-color: var(--button-active);
     transform: scale(0.9);
+}
+
+.t-sidebar-btn svg {
+    stroke: var(--svg-stroke-color);
 }
 
 #close-sidebar-btn {
@@ -461,7 +511,7 @@ button {
 #xp {
     position: relative;
     font-size: 4rem;
-    background: linear-gradient(to bottom, #cccccc, #b1b1b1);
+    background: linear-gradient(to bottom, var(--subtext), var(--subtext));
     background-clip: text;
     -webkit-text-fill-color: transparent;
     color: transparent;
@@ -515,7 +565,7 @@ button {
     width: 100%;
     height: 70%;
     box-sizing: border-box;
-    background-color: #1f1e1e;
+    background-color: var(--footer);
     border-radius: 0px 30px 0px 0px;
     position: relative;
     padding: 20px 20px 20px 290px;
@@ -527,7 +577,7 @@ button {
     gap: 25px;
     flex: 1 1 calc(50% - 40px);
     padding: 15px;
-    background-color: #323232;
+    background-color: var(--sidebar-bg);
     border-radius: 20px;
     box-shadow: rgba(0, 0, 0, 0.42) 0px 0px 30px 1px;
     box-sizing: border-box;
@@ -549,7 +599,7 @@ button {
 .xp-actions h2 {
     margin: 0px;
     font-size: 2rem;
-    color: white;
+    color: var(--text);
     text-align: center;
     border-bottom: 2px solid #4b4b4b;
 }
@@ -561,7 +611,7 @@ button {
     font-size: 1rem;
     cursor: pointer;
     background-color: #35678a;
-    color: white;
+    color: var(--text);
     transition: background-color 0.3s ease, transform 0.3s ease;
     transform: scale(1);
 }
@@ -705,8 +755,8 @@ button {
 }
 
 .settings-list button {
-    background-color: #454545;
-    color: #bfbfbf;
+    background-color: var(--button-bg);
+    color: var(--subtext);
     border: none;
     padding: 0px 20px;
     border-radius: 12px;
@@ -718,17 +768,17 @@ button {
 }
 
 .settings-list button:hover {
-    background-color: #545454;
+    background-color: var(--button-hover);
     transform: scale(1.05);
 }
 
 .settings-list button:active {
-    background-color: #2b2b2b;
+    background-color: var(--button-active);
     transform: scale(0.95);
 }
 
 .setting-item label {
-    color: white;
+    color: var(--text);
     font-size: 2rem;
     font-weight: bolder;
 }
@@ -741,28 +791,27 @@ button {
 
 .xp-display h1 {
     font-size: 3.5rem;
-    color: #bfbfbf;
+    color: var(--subtext);
 }
 
 .setting-item input {
     padding: 10px;
     border-radius: 12px;
-    border: 1.5px solid #404040;
-    background-color: #232323;
-    color: #fff;
+    border: 1.5px solid var(--border);
+    background-color: var(--sidebar-bg);
+    color: var(--text);
     font-size: 1rem;
     transition: border-color 0.3s ease;
 }
 
 .setting-item input:focus {
     outline: none;
-    border: 1px solid #ffffff;
-    box-shadow: 0 0 5px #ffffff;
+    border: 1px solid var(--border);
+    box-shadow: 0 0 5px var(--text);
 }
 
 .custom-select {
     position: relative;
-    font-family: Arial;
 }
 
 .custom-select select {
@@ -770,7 +819,7 @@ button {
 }
 
 .select-selected {
-    background-color: #454545;
+    background-color: var(--subtext);
     border-radius: 15px;
     transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
 }
@@ -783,20 +832,21 @@ button {
     width: 0;
     height: 0;
     border: 6px solid transparent;
-    border-color: #fff transparent transparent transparent;
+    border-color: var(--text) transparent transparent transparent;
+    transition: border-color 0.2s ease, top 0.2s ease;
 }
 
 .select-selected.select-arrow-active:after {
-    border-color: transparent transparent #fff transparent;
+    border-color: transparent transparent var(--text) transparent;
     top: 7px;
+    transition: border-color 0.2s ease, top 0.2s ease;
 }
 
 .select-items div,
 .select-selected {
-    color: #bfbfbf;
+    background-color:var(--button-bg);
+    color: var(--text);
     padding: 8px 16px;
-    border: 1px solid transparent;
-    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
     cursor: pointer;
     user-select: none;
     border-radius: 12px;
@@ -805,7 +855,7 @@ button {
 
 .select-items {
     position: absolute;
-    background-color: #3f3f3f;
+    background-color: var(--button-bg);
     top: 100%;
     left: 0;
     right: 0;
@@ -823,7 +873,7 @@ button {
 
 .select-items div:hover,
 .same-as-selected {
-    background-color: rgba(0, 0, 0, 0.244);
+    background-color: var(--button-hover);
 }
 
 .xp-section.hidden,
@@ -885,8 +935,6 @@ button {
         border-radius: 20px;
         height: 55%;
         padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        background-color: #232323;
         transition: opacity 0.3s ease, transform 0.4s ease;
         transform: scale(1);
         opacity: 1;
@@ -965,7 +1013,6 @@ button {
         width: 100%;
         height: 60px;
         font-size: 0.9rem;
-        background-color: #1f1e1e;
         border-radius: 20px 20px 0 0;
     }
 
