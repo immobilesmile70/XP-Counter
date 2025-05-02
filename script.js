@@ -781,14 +781,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const items = document.getElementsByClassName("select-items");
         const selected = document.getElementsByClassName("select-selected");
         for (let i = 0; i < selected.length; i++) {
-            if (elmnt !== selected[i]) {
-                selected[i].classList.remove("select-arrow-active");
-            }
+            if (elmnt == selected[i]) continue;
+            selected[i].classList.remove("select-arrow-active");
         }
         for (let i = 0; i < items.length; i++) {
-            if (!items[i].classList.contains("select-hide")) {
-                items[i].classList.add("select-hide");
-            }
+            if (elmnt.nextSibling == items[i]) continue;
+            items[i].classList.add("select-hide");
         }
     }
 
