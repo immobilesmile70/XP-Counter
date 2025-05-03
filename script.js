@@ -129,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let justSignedUp = false;
 
-    let flushDelay = 6000;
+    let flushDelay = 4200;
 
     const userNameTextHome = document.getElementById("username-text-home");
 
@@ -222,6 +222,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user) {
+            if (justSignedUp) {
+                justSignedUp = false;
+                return;
+            }
+
             const xpElement = document.getElementById("xp");
             if (!xpElement) {
                 clearTimeout(popupTimeout);
@@ -266,14 +271,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const userRefPath = `users/${localUsername}/${user.uid}/xp/value`;
+            const userRefPath = `users/${localUsername}/${user.uid}/xp`;
             const userRef = ref(database, userRefPath);
 
             try {
                 const snapshot = await get(userRef);
 
                 if (snapshot.exists()) {
-                    const xp = snapshot.val() || 0;
+                    const xp = parseInt(snapshot.val() || 0);
                     updateXPDisplay(xp);
                     xpElement.textContent = xp;
 
@@ -308,7 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                             flushTimeout = setTimeout(async () => {
                                 try {
-                                    const userRefPath = `users/${localUsername}/${auth.currentUser.uid}/xp/value`;
+                                    const userRefPath = `users/${localUsername}/${auth.currentUser.uid}/xp`;
                                     const userRef = ref(database, userRefPath);
 
                                     await set(userRef, pendingXP);
@@ -368,17 +373,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 } else {
+                    await set(userRef, 0);
+                    updateXPDisplay(0);
+                    xpElement.textContent = 0;
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
-                    showPopup(`No XP data found at path: ${userRefPath}`);
+                    showPopup("XP initialized to zero");
                 }
             } catch (error) {
                 clearTimeout(popupTimeout);
                 isInfoPopup = false;
-                showPopup("Error fetching XP from the server:", error.message);
+                showPopup("Error fetching XP from the server: " + error.message);
             }
         } else {
-            console.warn("No user signed in.");
+            console.warn("No user signed in");
         }
     });
 
@@ -498,9 +506,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const userRef = ref(database, `users/${localUsername}/${user.uid}`);
                 await remove(userRef);
 
+                const usernameRef = ref(database, `users/${localUsername}`);
+                const usernameSnapshot = await get(usernameRef);
+                if (usernameSnapshot.exists() && Object.keys(usernameSnapshot.val()).length === 0) {
+                    await remove(usernameRef);
+                }
+
                 await deleteUser(user);
 
-                console.log("User deleted.");
+                console.log("User deleted successfully");
                 await fadeScreen(mainScreen, loginScreen);
 
                 emailInputLogin.value = "";
@@ -548,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 const userRef = ref(database, `users/${username}/${user.uid}`);
                                 await set(userRef, {
                                     email: { value: email },
-                                    xp: { value: 0 }
+                                    xp: 0
                                 });
 
                                 localUsername = username;
