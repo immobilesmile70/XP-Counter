@@ -6,7 +6,7 @@ import {
     signOut
 } from './firebase.js';
 
-document.addEventListener("DOMContentLoaded", () => {
+window.onload = function()  {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
     const loadingScreen = document.getElementById("loading-screen");
@@ -124,7 +124,11 @@ document.addEventListener("DOMContentLoaded", () => {
     const closePopupButton = document.getElementById("close-popup-button");
     let popupTimeout = null;
     let isInfoPopup = false;
-
+  
+    if (typeof Filter !== 'undefined') {
+      const filter = new Filter();
+    }
+    
     let localUsername = null;
 
     let justSignedUp = false;
@@ -153,8 +157,13 @@ document.addEventListener("DOMContentLoaded", () => {
             showPopup("New username cannot be the same as the current username.");
             return;
         }
+        if (filter.isProfane(newUsername)) {
+            clearTimeout(popupTimeout);
+            isInfoPopup = false;
+            showPopup("Username contains profanity. Please choose another one.");
+            return;
+        }
         try {
-            // Check for duplicate username
             const usersSnap = await get(ref(database, "users"));
             const usersData = usersSnap.val() || {};
             const usernameTaken = Object.values(usersData).some(user => user.username === newUsername);
@@ -164,7 +173,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 showPopup("Username already taken. Please choose another one.");
                 return;
             }
-            // Update username
             await set(ref(database, `users/${auth.currentUser.uid}/username`), newUsername);
             localUsername = newUsername;
             usernameChangeInput.value = localUsername;
@@ -224,7 +232,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const xp = parseInt(userData.xp || 0);
                     updateXPDisplay(xp);
                     xpElement.textContent = xp;
-                    // ...rest of XP button logic, but update path to users/${user.uid}/xp...
                     document.querySelectorAll(".xp-button").forEach(button => {
                         button.addEventListener("click", () => {
                             const change = parseInt(button.dataset.xp);
@@ -260,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
                             }, flushDelay);
                         });
                     });
-                    // ...reset XP logic...
                     const resetButton = document.getElementById("reset-xp");
                     if (!resetButton) {
                         clearTimeout(popupTimeout);
@@ -350,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loginButton.addEventListener("click", () => {
         const email = emailInputLogin.value.trim();
         const password = passwordInputLogin.value.trim();
-    
+
         if (email && password) {
             signInWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
@@ -440,9 +446,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = usernameInputSignup.value.trim();
         const email = emailInputSignUp.value.trim();
         const password = passwordInputSignUp.value.trim();
-    
+
         if (username && email && password) {
-            // Check for duplicate username
             get(ref(database, "users")).then(async (snapshot) => {
                 const usersData = snapshot.val() || {};
                 const usernameTaken = Object.values(usersData).some(user => user.username === username);
@@ -450,7 +455,17 @@ document.addEventListener("DOMContentLoaded", () => {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Username already taken. Please choose another one.");
-                } else {
+                }
+                else if (filter.isProfane(username)) {
+                    clearTimeout(popupTimeout);
+                    isInfoPopup = false;
+                    showPopup("Username contains profanity. Please choose another one.");
+                } else if (filter.isProfane(email)) {
+                    clearTimeout(popupTimeout);
+                    isInfoPopup = false;
+                    showPopup("Email contains profanity. Please choose another one.");
+                }
+                else {
                     justSignedUp = true;
                     createUserWithEmailAndPassword(auth, email, password)
                         .then(async (userCredential) => {
@@ -698,4 +713,4 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     document.addEventListener("click", closeAllSelect);
-});
+}
