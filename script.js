@@ -141,36 +141,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     changeUsernameButton.addEventListener("click", async () => {
         const newUsername = usernameChangeInput.value.trim();
-
         if (!newUsername) {
             clearTimeout(popupTimeout);
             isInfoPopup = true;
             showPopup("Username cannot be empty.");
             return;
         }
-
         if (newUsername === localUsername) {
             clearTimeout(popupTimeout);
             isInfoPopup = true;
             showPopup("New username cannot be the same as the current username.");
             return;
         }
-
         try {
-            const newUserRef = ref(database, `users/${newUsername}`);
-            const snapshot = await get(newUserRef);
-
-            if (snapshot.exists()) {
+            // Check for duplicate username
+            const usersSnap = await get(ref(database, "users"));
+            const usersData = usersSnap.val() || {};
+            const usernameTaken = Object.values(usersData).some(user => user.username === newUsername);
+            if (usernameTaken) {
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup("Username already taken. Please choose another one.");
                 return;
             }
-
-            const currentUserRef = ref(database, `users/${localUsername}/${auth.currentUser.uid}`);
-            const newUserData = (await get(currentUserRef)).val();
-            await set(ref(database, `users/${newUsername}/${auth.currentUser.uid}`), newUserData);
-            await remove(currentUserRef);
+            // Update username
+            await set(ref(database, `users/${auth.currentUser.uid}/username`), newUsername);
             localUsername = newUsername;
             usernameChangeInput.value = localUsername;
             userNameTextHome.textContent = localUsername || "Student";
@@ -186,23 +181,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user && !justSignedUp) {
-            const usersRef = ref(database, `users`);
-            const snapshot = await get(usersRef);
-
-            if (snapshot.exists()) {
-                const usersData = snapshot.val();
-                for (const username in usersData) {
-                    if (usersData[username][user.uid]) {
-                        localUsername = username;
-                        if (localUsername) {
-                            usernameChangeInput.value = localUsername;
-                        }
-                        break;
-                    }
-                }
-            }
-
-            if (localUsername) {
+            const userSnap = await get(ref(database, `users/${user.uid}`));
+            if (userSnap.exists()) {
+                localUsername = userSnap.val().username;
+                usernameChangeInput.value = localUsername;
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup(`Signed in as: ${localUsername}`);
@@ -212,8 +194,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 isInfoPopup = true;
                 showPopup("No user data found.");
                 localUsername = "Student404";
+                fadeScreen(loginScreen, mainScreen);
             }
-            fadeScreen(loginScreen, mainScreen);
         } else {
             console.warn("No user signed in.");
             fadeScreen(mainScreen, loginScreen);
@@ -226,7 +208,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 justSignedUp = false;
                 return;
             }
-
             const xpElement = document.getElementById("xp");
             if (!xpElement) {
                 clearTimeout(popupTimeout);
@@ -234,89 +215,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 showPopup("XP element not found in the DOM.");
                 return;
             }
-
-            const usersRef = ref(database, `users`);
+            const userRef = ref(database, `users/${user.uid}`);
             try {
-                const snapshot = await get(usersRef);
-
-                if (snapshot.exists()) {
-                    const usersData = snapshot.val();
-                    let foundUsername = null;
-
-                    for (const username in usersData) {
-                        if (usersData[username][user.uid]) {
-                            foundUsername = username;
-                            break;
-                        }
-                    }
-
-                    if (foundUsername) {
-                        localUsername = foundUsername;
-                    } else {
-                        clearTimeout(popupTimeout);
-                        isInfoPopup = false;
-                        showPopup("No username found for the current UID.");
-                        localUsername = "UnknownUser";
-                    }
-                } else {
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup("No users found in the database.");
-                    return;
-                }
-            } catch (error) {
-                clearTimeout(popupTimeout);
-                isInfoPopup = false;
-                showPopup("Error fetching username:", error.message);
-                return;
-            }
-
-            const userRefPath = `users/${localUsername}/${user.uid}/xp`;
-            const userRef = ref(database, userRefPath);
-
-            try {
-                const snapshot = await get(userRef);
-
-                if (snapshot.exists()) {
-                    const xp = parseInt(snapshot.val() || 0);
+                const userSnap = await get(userRef);
+                if (userSnap.exists()) {
+                    const userData = userSnap.val();
+                    localUsername = userData.username;
+                    const xp = parseInt(userData.xp || 0);
                     updateXPDisplay(xp);
                     xpElement.textContent = xp;
-
+                    // ...rest of XP button logic, but update path to users/${user.uid}/xp...
                     document.querySelectorAll(".xp-button").forEach(button => {
                         button.addEventListener("click", () => {
                             const change = parseInt(button.dataset.xp);
                             const currentXP = parseInt(xpElement.textContent || "0");
                             const newXP = currentXP + change;
-
                             if (newXP < -1000) {
                                 clearTimeout(popupTimeout);
                                 isInfoPopup = true;
                                 showPopup("XP cannot be less than -1000.");
                                 return;
                             }
-
                             toggleShimmer("xp", true);
                             toggleShimmer("xp-tex", true);
-
                             setTimeout(() => {
                                 toggleShimmer("xp", false);
                                 toggleShimmer("xp-tex", false);
                             }, 300);
-
                             updateXPDisplay(newXP);
                             xpElement.textContent = newXP;
-
                             pendingXP = newXP;
-                            if (flushTimeout) {
-                                clearTimeout(flushTimeout);
-                            }
-
+                            if (flushTimeout) clearTimeout(flushTimeout);
                             flushTimeout = setTimeout(async () => {
                                 try {
-                                    const userRefPath = `users/${localUsername}/${auth.currentUser.uid}/xp`;
-                                    const userRef = ref(database, userRefPath);
-
-                                    await set(userRef, pendingXP);
+                                    await set(ref(database, `users/${auth.currentUser.uid}/xp`), pendingXP);
                                     console.log(`Flushed ${pendingXP} XP to the server.`);
                                     pendingXP = 0;
                                 } catch (error) {
@@ -328,7 +260,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             }, flushDelay);
                         });
                     });
-
+                    // ...reset XP logic...
                     const resetButton = document.getElementById("reset-xp");
                     if (!resetButton) {
                         clearTimeout(popupTimeout);
@@ -336,30 +268,26 @@ document.addEventListener("DOMContentLoaded", () => {
                         showPopup("Reset XP button not found in the DOM.");
                         return;
                     }
-
                     resetButton.addEventListener("click", async () => {
                         const currentXP = parseInt(xpElement.textContent || "0");
-
                         if (currentXP === 0 && pendingXP === 0) {
                             clearTimeout(popupTimeout);
                             isInfoPopup = true;
                             showPopup("XP is already zero.");
                             return;
                         }
-
                         toggleShimmer("xp", true);
                         toggleShimmer("xp-tex", true);
                         setTimeout(() => {
                             toggleShimmer("xp", false);
                             toggleShimmer("xp-tex", false);
                         }, 300);
-
                         try {
                             pendingXP = 0;
                             clearTimeout(flushTimeout);
                             flushTimeout = null;
                             if (currentXP !== 0) {
-                                await set(ref(database, userRefPath), 0);
+                                await set(ref(database, `users/${auth.currentUser.uid}/xp`), 0);
                             }
                             updateXPDisplay(0);
                             xpElement.textContent = 0;
@@ -373,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     });
                 } else {
-                    await set(userRef, 0);
+                    await set(ref(database, `users/${user.uid}/xp`), 0);
                     updateXPDisplay(0);
                     xpElement.textContent = 0;
                     clearTimeout(popupTimeout);
@@ -422,39 +350,19 @@ document.addEventListener("DOMContentLoaded", () => {
     loginButton.addEventListener("click", () => {
         const email = emailInputLogin.value.trim();
         const password = passwordInputLogin.value.trim();
-
+    
         if (email && password) {
             signInWithEmailAndPassword(auth, email, password)
                 .then(async (userCredential) => {
                     const user = userCredential.user;
-
-                    const usernameRef = ref(database, `users`);
-                    const snapshot = await get(usernameRef);
-
-                    if (snapshot.exists()) {
-                        const usersData = snapshot.val();
-                        let foundUsername = null;
-
-                        for (const username in usersData) {
-                            if (usersData[username][user.uid]) {
-                                foundUsername = username;
-                                break;
-                            }
-                        }
-
-                        if (foundUsername) {
-                            localUsername = foundUsername;
-                        } else {
-                            clearTimeout(popupTimeout);
-                            isInfoPopup = false;
-                            showPopup("User data not found.");
-                        }
+                    const userSnap = await get(ref(database, `users/${user.uid}`));
+                    if (userSnap.exists()) {
+                        localUsername = userSnap.val().username;
                     } else {
                         clearTimeout(popupTimeout);
                         isInfoPopup = false;
-                        showPopup("No users found in the database.");
+                        showPopup("User data not found.");
                     }
-
                     await fadeScreen(loginScreen, mainScreen);
                 })
                 .catch((error) => {
@@ -497,26 +405,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     deleteUserButton.addEventListener("click", async () => {
         const user = auth.currentUser;
-
-        if (user && localUsername) {
+        if (user) {
             try {
                 const credential = EmailAuthProvider.credential(user.email, prompt("Please re-enter your password:"));
                 await reauthenticateWithCredential(user, credential);
-
-                const userRef = ref(database, `users/${localUsername}/${user.uid}`);
-                await remove(userRef);
-
-                const usernameRef = ref(database, `users/${localUsername}`);
-                const usernameSnapshot = await get(usernameRef);
-                if (usernameSnapshot.exists() && Object.keys(usernameSnapshot.val()).length === 0) {
-                    await remove(usernameRef);
-                }
-
+                await remove(ref(database, `users/${user.uid}`));
                 await deleteUser(user);
-
                 console.log("User deleted successfully");
                 await fadeScreen(mainScreen, loginScreen);
-
                 emailInputLogin.value = "";
                 passwordInputLogin.value = "";
                 emailInputSignUp.value = "";
@@ -536,7 +432,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 showPopup(`Error deleting user: ${mappedMessage}`);
             }
         } else {
-            console.log("No user is currently signed in or localUsername is not set.");
+            console.log("No user is currently signed in.");
         }
     });
 
@@ -544,47 +440,44 @@ document.addEventListener("DOMContentLoaded", () => {
         const username = usernameInputSignup.value.trim();
         const email = emailInputSignUp.value.trim();
         const password = passwordInputSignUp.value.trim();
-
+    
         if (username && email && password) {
-            const userRef = ref(database, `users/${username}`);
-            get(userRef)
-                .then(async (snapshot) => {
-                    if (snapshot.exists()) {
-                        clearTimeout(popupTimeout);
-                        isInfoPopup = false;
-                        showPopup("Username already taken. Please choose another one.");
-                    } else {
-                        justSignedUp = true;
-                        createUserWithEmailAndPassword(auth, email, password)
-                            .then(async (userCredential) => {
-                                const user = userCredential.user;
-
-                                const userRef = ref(database, `users/${username}/${user.uid}`);
-                                await set(userRef, {
-                                    email: { value: email },
-                                    xp: 0
-                                });
-
-                                localUsername = username;
-                                await fadeScreen(loginScreen, mainScreen);
-                            })
-                            .catch((error) => {
-                                const mappedMessage = mapErrorMessage(error);
-                                clearTimeout(popupTimeout);
-                                showPopup(`SignUp Failed: ${mappedMessage}`);
+            // Check for duplicate username
+            get(ref(database, "users")).then(async (snapshot) => {
+                const usersData = snapshot.val() || {};
+                const usernameTaken = Object.values(usersData).some(user => user.username === username);
+                if (usernameTaken) {
+                    clearTimeout(popupTimeout);
+                    isInfoPopup = false;
+                    showPopup("Username already taken. Please choose another one.");
+                } else {
+                    justSignedUp = true;
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then(async (userCredential) => {
+                            const user = userCredential.user;
+                            await set(ref(database, `users/${user.uid}`), {
+                                username: username,
+                                "E-Mail": email,
+                                xp: 0
                             });
-                    }
-                })
-                .catch((error) => {
-                    showPopup("Error checking username availability: " + error.message);
-                });
+                            localUsername = username;
+                            await fadeScreen(loginScreen, mainScreen);
+                        })
+                        .catch((error) => {
+                            const mappedMessage = mapErrorMessage(error);
+                            clearTimeout(popupTimeout);
+                            showPopup(`SignUp Failed: ${mappedMessage}`);
+                        });
+                }
+            }).catch((error) => {
+                showPopup("Error checking username availability: " + error.message);
+            });
         } else {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
             showPopup("Please enter your email and password.");
         }
     });
-
 
     forgetPassButton.addEventListener("click", () => {
         const email = emailInputForgetPass.value.trim();
