@@ -6,7 +6,7 @@ import {
     signOut
 } from './firebase.js';
 
-window.onload = function()  {
+document.addEventListener('DOMContentLoaded', () =>  {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
     const loadingScreen = document.getElementById("loading-screen");
@@ -709,4 +709,4 @@ window.onload = function()  {
     }
 
     document.addEventListener("click", closeAllSelect);
-}
+});
