@@ -125,10 +125,6 @@ window.onload = function()  {
     let popupTimeout = null;
     let isInfoPopup = false;
   
-    if (typeof Filter !== 'undefined') {
-      const filter = new Filter();
-    }
-    
     let localUsername = null;
 
     let justSignedUp = false;
@@ -157,12 +153,12 @@ window.onload = function()  {
             showPopup("New username cannot be the same as the current username.");
             return;
         }
-        if (filter.isProfane(newUsername)) {
+        /*if (filter.isProfane(newUsername)) {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
             showPopup("Username contains profanity. Please choose another one.");
             return;
-        }
+        }*/
         try {
             const usersSnap = await get(ref(database, "users"));
             const usersData = usersSnap.val() || {};
@@ -456,7 +452,7 @@ window.onload = function()  {
                     isInfoPopup = false;
                     showPopup("Username already taken. Please choose another one.");
                 }
-                else if (filter.isProfane(username)) {
+                /*else if (filter.isProfane(username)) {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Username contains profanity. Please choose another one.");
@@ -464,7 +460,7 @@ window.onload = function()  {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Email contains profanity. Please choose another one.");
-                }
+                }*/
                 else {
                     justSignedUp = true;
                     createUserWithEmailAndPassword(auth, email, password)
