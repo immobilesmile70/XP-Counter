@@ -6,7 +6,7 @@ import {
     signOut
 } from './firebase.js';
 
-import LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
+import { filter } from './profanity-filter.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     const loginScreen = document.getElementById("login-screen");
@@ -140,26 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             usernameChangeInput.value = localUsername || "Student";
         }, 700);
     });
-
-    LeoProfanity.loadDictionary();
-
-    const filter = {
-        normalizeLeetspeak(text) {
-            return text
-                .replace(/4|@/gi, 'a')
-                .replace(/3/gi, 'e')
-                .replace(/1|!/gi, 'i')
-                .replace(/0/gi, 'o')
-                .replace(/5|\$/gi, 's')
-                .replace(/7|\+/gi, 't')
-                .replace(/8/gi, 'b');
-        },
-
-        isProfane(text) {
-            const normalized = this.normalizeLeetspeak(text);
-            return LeoProfanity.check(normalized);
-        }
-    };
 
     changeUsernameButton.addEventListener("click", async () => {
         const newUsername = usernameChangeInput.value.trim();
