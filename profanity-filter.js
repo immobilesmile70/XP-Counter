@@ -197,6 +197,7 @@ export const filter = {
         const words = text.toLowerCase().split(/\s+|[.,!?;:()]+/g);
 
         const checkWord = (word) => {
+            let allSlices = [];
             const allBanned = [...customProfanity, ...hindiProfanity, ...arabicProfanity];
             const maxLen = Math.max(...allBanned.map(w => w.length));
 
@@ -204,6 +205,8 @@ export const filter = {
                 for (let i = 0; i <= word.length - maxLen; i++) {
                     allSlices.push(word.slice(i, i + maxLen));
                 }
+            } else {
+                allSlices.push(word);
             }
 
             return allSlices.some(chunk =>
