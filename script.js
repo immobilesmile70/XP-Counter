@@ -6,7 +6,9 @@ import {
     signOut
 } from './firebase.js';
 
-document.addEventListener('DOMContentLoaded', () =>  {
+import LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
+
+document.addEventListener('DOMContentLoaded', () => {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
     const loadingScreen = document.getElementById("loading-screen");
@@ -124,7 +126,7 @@ document.addEventListener('DOMContentLoaded', () =>  {
     const closePopupButton = document.getElementById("close-popup-button");
     let popupTimeout = null;
     let isInfoPopup = false;
-  
+
     let localUsername = null;
 
     let justSignedUp = false;
@@ -138,6 +140,26 @@ document.addEventListener('DOMContentLoaded', () =>  {
             usernameChangeInput.value = localUsername || "Student";
         }, 700);
     });
+
+    LeoProfanity.loadDictionary();
+
+    const filter = {
+        normalizeLeetspeak(text) {
+            return text
+                .replace(/4|@/gi, 'a')
+                .replace(/3/gi, 'e')
+                .replace(/1|!/gi, 'i')
+                .replace(/0/gi, 'o')
+                .replace(/5|\$/gi, 's')
+                .replace(/7|\+/gi, 't')
+                .replace(/8/gi, 'b');
+        },
+
+        isProfane(text) {
+            const normalized = this.normalizeLeetspeak(text);
+            return LeoProfanity.check(normalized);
+        }
+    };
 
     changeUsernameButton.addEventListener("click", async () => {
         const newUsername = usernameChangeInput.value.trim();
@@ -153,12 +175,12 @@ document.addEventListener('DOMContentLoaded', () =>  {
             showPopup("New username cannot be the same as the current username.");
             return;
         }
-        /*if (filter.isProfane(newUsername)) {
+        if (filter.isProfane(newUsername)) {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
             showPopup("Username contains profanity. Please choose another one.");
             return;
-        }*/
+        }
         try {
             const usersSnap = await get(ref(database, "users"));
             const usersData = usersSnap.val() || {};
@@ -451,16 +473,20 @@ document.addEventListener('DOMContentLoaded', () =>  {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Username already taken. Please choose another one.");
+                    return;
                 }
-                /*else if (filter.isProfane(username)) {
+                if (filter.isProfane(username)) {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Username contains profanity. Please choose another one.");
-                } else if (filter.isProfane(email)) {
+                    return;
+                }
+                if (filter.isProfane(email)) {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Email contains profanity. Please choose another one.");
-                }*/
+                    return;
+                }
                 else {
                     justSignedUp = true;
                     createUserWithEmailAndPassword(auth, email, password)
