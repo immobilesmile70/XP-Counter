@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
-            showPopup("Please enter both email and password.");
+            showPopup("Please enter your email and password.");
         }
     });
 
@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
-            showPopup("Please enter your email and password.");
+            showPopup("Please enter your username, email and password.");
         }
     });
 

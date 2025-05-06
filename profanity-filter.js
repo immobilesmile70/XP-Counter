@@ -39,6 +39,11 @@ function editDistance(s1, s2) {
     return costs[s2.length];
 }
 
+const safePhrases = [
+    "classy bitch", "bass ass", "bad ass", "pass the exam", "madarchess", "gandu phool", "assam state", "assignment submission", "class test", "assess the data", "assistant manager", "passion project", "classic move", "bass guitar", "mass communication", "grass field", "bitchu village", "kashi vishwanath", "kumari", "shashi",
+    "mess hall", "hackathon", "shatabdi express", "assume role", "ashutosh", "mission report", "fakir", "rashid", "pushkar", "shivam", "raashan card", "rashtrapati bhavan", "assam state", "bishan", "ashram"
+];
+
 const hindiProfanity = ['aand', 'aandu', 'balatkar', 'balatkari', 'behen chod', 'beti chod', 'bhadva', 'bhadve', 'bhandve', 'bhangi', 'bhootni ke', 'bhosad', 'bhosadi ke', 'boobe', 'chakke', 'chinaal', 'chinki', 'chod', 'chodu', 'chodu bhagat', 'chooche', 'choochi', 'choope', 'choot', 'choot ke baal', 'chootia', 'chootiya',
     'chuche', 'chuchi', 'chudaap', 'chudai khanaa', 'chudam chudai', 'chude', 'chut', 'chut ka chuha', 'chut ka churan', 'chut ka mail', 'chut ke baal', 'chut ke dhakkan', 'chut maarli', 'chutad', 'chutadd', 'chutan', 'chutia', 'chutiya', 'gaand', 'gaandfat', 'gaandmasti', 'gaandufad', 'gandfattu', 'gandu', 'gashti', 'gasti',
     'ghassa', 'ghasti', 'gucchi', 'gucchu', 'harami', 'haramzade', 'hawas', 'hawas ke pujari', 'hijda', 'hijra', 'jhant', 'jhant chaatu', 'jhant ka keeda', 'jhant ke baal', 'jhant ke pissu', 'jhantu', 'kamine', 'kaminey', 'kanjar', 'kutta', 'kutta kamina', 'kutte ki aulad', 'kutte ki jat', 'kuttiya', 'loda', 'lodu', 'lund',
@@ -49,7 +54,7 @@ const hindiProfanity = ['aand', 'aandu', 'balatkar', 'balatkari', 'behen chod', 
     'माँ की चूत', 'माल', 'मादरचोद', 'मादरचोद', 'माधवचोद', 'मूँह में ले', 'मुठ', 'मुठल', 'नाजायज़', 'नाजायज़ औलाद', 'नाजायज़ पैदाइश', 'पाकी', 'पटाखा', 'पटाखा', 'रांड', 'रांडाप', 'रंडी', 'रंडी रोना', 'साला', 'साला कुत्ता', 'साली कुत्ती', 'साली रंडी', 'सुअर', 'सुअर के लंड', 'सुअर की औलाद', 'तत्ते', 'तट्टी', 'तेरी माँ का भोसड़ा', 'तेरी माँ का बोबा चूसू', 'तेरी माँ की बहनचोद',
     'तेरी माँ की चूत', 'थरक', 'थरकी', 'तू चूदा'];
 const arabicProfanity = ['سكس', 'طيز', 'شرج', 'لعق', 'لحس', 'مص', 'تمص', 'بيضان', 'ثدي', 'بز', 'بزاز', 'حلمة', 'مفلقسة', 'بظر', 'كس', 'فرج', 'شهوة', 'شاذ', 'مبادل', 'عاهرة', 'جماع', 'قضيب', 'زب', 'لوطي', 'لواط', 'سحاق', 'سحاقية', 'اغتصاب', 'خنثي', 'احتلام', 'نيك', 'متناك', 'متناكة', 'شرموطة', 'عرص', 'خول', 'قحبة', 'لبوة'];
-const customProfanity = ['bozo', 'simp', 'cringe', 'loser', 'beta', 'virgin', 'incel', 'femcel', 'weeb', 'karen', 'soyboy', 'chad', 'stacy', 'ok boomer', 'woke', 'beta', 'alpha', 'cuck', 'normie', 'toxic', 'dweeb', '2g1c', '2 girls 1 cup', 'acrotomophilia', 'alabama hot pocket', 'alaskan pipeline', 'anal', 'anilingus', 'anus', 'apeshit',
+const customProfanity = ['admin', 'null', 'Shourya', 'god', 'developer', 'dev', 'bozo', 'simp', 'cringe', 'loser', 'beta', 'virgin', 'incel', 'femcel', 'weeb', 'karen', 'soyboy', 'chad', 'stacy', 'ok boomer', 'woke', 'beta', 'alpha', 'cuck', 'normie', 'toxic', 'dweeb', '2g1c', '2 girls 1 cup', 'acrotomophilia', 'alabama hot pocket', 'alaskan pipeline', 'anal', 'anilingus', 'anus', 'apeshit',
     'arsehole', 'ass', 'asshole', 'assmunch', 'auto erotic', 'autoerotic', 'babeland', 'baby batter', 'baby juice', 'ball gag', 'ball gravy', 'ball kicking', 'ball licking', 'ball sack', 'ball sucking', 'bangbros', 'bangbus', 'bareback', 'barely legal', 'barenaked', 'bastard', 'bastardo', 'bastinado', 'bbw', 'bdsm', 'beaner',
     'beaners', 'beaver cleaver', 'beaver lips', 'beastiality', 'bestiality', 'big black', 'big breasts', 'big knockers', 'big tits', 'bimbos', 'birdlock', 'bitch', 'bitches', 'black cock', 'blonde action', 'blonde on blonde action', 'blowjob', 'blow job', 'blow your load', 'blue waffle', 'blumpkin', 'bollocks', 'bondage',
     'boner', 'boob', 'boobs', 'booty call', 'brown showers', 'brunette action', 'bukkake', 'bulldyke', 'bullet vibe', 'bullshit', 'bung hole', 'bunghole', 'busty', 'butt', 'buttcheeks', 'butthole', 'camel toe', 'camgirl', 'camslut', 'camwhore', 'carpet muncher', 'carpetmuncher', 'chocolate rosebuds', 'cialis', 'circlejerk',
@@ -66,12 +71,40 @@ const customProfanity = ['bozo', 'simp', 'cringe', 'loser', 'beta', 'virgin', 'i
     'tea bagging', 'threesome', 'throating', 'thumbzilla', 'tied up', 'tight white', 'tit', 'tits', 'titties', 'titty', 'tongue in a', 'topless', 'tosser', 'towelhead', 'tranny', 'tribadism', 'tub girl', 'tubgirl', 'tushy', 'twat', 'twink', 'twinkie', 'two girls one cup', 'undressing', 'upskirt', 'urethra play', 'urophilia', 'vagina',
     'venus mound', 'viagra', 'vibrator', 'violet wand', 'vorarephilia', 'voyeur', 'voyeurweb', 'voyuer', 'vulva', 'wank', 'wetback', 'wet dream', 'white power', 'whore', 'worldsex', 'wrapping men', 'wrinkled starfish', 'xx', 'xxx', 'yaoi', 'yellow showers', 'yiffy', 'zoophilia', '🖕', '🍑', '💦', '😏', '😉', '😍', '😘', '🥰', '😗',
     '😙', '😚', '😛', '😜', '🤤', '😩', '🥵', '🤪', '🤬', '😽', '😻', '🫰', '🫶', '💏', '💑', '💍', '💎', '♥️', '🩷', '🧡', '💛', '💚', '💙', '🩵', '💜', '🤎', '🖤', '🩶', '🤍', '💔', '❤️‍🔥', '❤️‍🩹', '❣️', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '💌', '🆖', '®️', '™️', '©️'];
-const fuzzyThreshold = 0.65;
+
+function adaptiveThreshold(word) {
+    return Math.max(0.55, 1 - (1 / (word.length + 1)));
+}
+
 const smartRegex = [
     /f+[\W_]*u+[\W_]*c+[\W_]*k+/gi,
     /s+[\W_]*h+[\W_]*i+[\W_]*t+/gi,
     /b+[\W_]*i+[\W_]*t+[\W_]*c+[\W_]*h+/gi,
-    /a+[\W_]*s+[\W_]*s+/gi
+    /a+[\W_]*s+[\W_]*s+/gi,
+    /d+[\W_]*a+[\W_]*m+[\W_]*n+/gi,
+    /h+[\W_]*e+[\W_]*l+[\W_]*l+/gi,
+    /c+[\W_]*u+[\W_]*n+[\W_]*t+/gi,
+    /p+[\W_]*u+[\W_]*s+[\W_]*s+[\W_]*y+/gi,
+    /d+[\W_]*i+[\W_]*c+[\W_]*k+/gi,
+    /c+[\W_]*o+[\W_]*c+[\W_]*k+/gi,
+    /b+[\W_]*a+[\W_]*s+[\W_]*t+[\W_]*a+[\W_]*r+[\W_]*d+/gi,
+    /m+[\W_]*o+[\W_]*t+[\W_]*h+[\W_]*e+[\W_]*r+[\W_]*f+[\W_]*u+[\W_]*c+[\W_]*k+[\W_]*e+[\W_]*r+/gi,
+    /n+[\W_]*i+[\W_]*g+[\W_]*g+[\W_]*e+[\W_]*r+/gi,
+    /n+[\W_]*i+[\W_]*g+[\W_]*g+[\W_]*a+/gi,
+    /b+[\W_]*h+[\W_]*e+[\W_]*n+[\W_]*c+[\W_]*h+[\W_]*o+d+/gi,
+    /m+[\W_]*a+[\W_]*d+[\W_]*a+[\W_]*r+[\W_]*c+[\W_]*h+[\W_]*o+d+/gi,
+    /c+[\W_]*h+[\W_]*u+[\W_]*t+[\W_]*i+[\W_]*y+a+/gi,
+    /b+[\W_]*h+[\W_]*o+s+[\W_]*a+d+k+[\W_]*e+/gi,
+    /r+[\W_]*a+[\W_]*n+[\W_]*d+[\W_]*i+/gi,
+    /l+[\W_]*o+[\W_]*d+[\W_]*e+/gi,
+    /g+[\W_]*a+[\W_]*n+d+[\W_]*u+/gi,
+    /भ[\W_]*ो[\W_]*स[\W_]*ड[\W_]*ी/gi,
+    /च[\W_]*ु[\W_]*त[\W_]*ि[\W_]*य[\W_]*ा/gi,
+    /म[\W_]*ा[\W_]*द[\W_]*र[\W_]*च[\W_]*ो[\W_]*द/gi,
+    /भ[\W_]*े[\W_]*न[\W_]*च[\W_]*ो[\W_]*द/gi,
+    /ग[\W_]*ा[\W_]*ं[\W_]*ड[\W_]*ू/gi,
+    /ल[\W_]*ो[\W_]*ड[\W_]*े/gi,
+    /र[\W_]*ं[\W_]*ड[\W_]*ी/gi
 ];
 
 export const filter = {
@@ -79,6 +112,7 @@ export const filter = {
         return text
             .normalize("NFKD").replace(/[\u0300-\u036f]/g, "")
             .toLowerCase()
+            .replace(/[\u200B-\u200D\uFEFF\u2060]/g, '')
             .replace(/[@4^∆ªλα]/g, 'a')
             .replace(/[8ßƃ]/g, 'b')
             .replace(/[<\(\[{¢©¢]/g, 'c')
@@ -106,37 +140,96 @@ export const filter = {
             .replace(/[¥γy]/g, 'y')
             .replace(/[2ž]/g, 'z')
             .replace(/\s+/g, '')
-            .replace(/(.)\1{2,}/g, '$1');
+            .replace(/(.)\1{1,}/g, '$1');
     },
 
-    hasRegexProfanity(text) {
-        return smartRegex.some(pattern => pattern.test(text));
+    isEffectivelyEmpty(text) {
+        return text
+            .replace(/[\u200B-\u200D\uFEFF\u2060\u2800\s]/g, '')
+            .replace(/(.)\1+/g, '$1')
+            .trim()
+            .length === 0;
     },
 
-    hasFuzzyMatch(text) {
-        const words = text.toLowerCase().split(/\s+|[.,!?;:()]+/g);
-        return words.some(word =>
-            customProfanity.some(banned =>
-                stringSimilarity(word, banned) > fuzzyThreshold
-            ) ||
-            hindiProfanity.some(banned =>
-                stringSimilarity(word, banned) > fuzzyThreshold
-            ) ||
-            arabicProfanity.some(banned =>
-                stringSimilarity(word, banned) > fuzzyThreshold
-            )
+    get normalizedSafePhrases() {
+        return safePhrases.map(p => this.normalizeLeetspeak(p));
+    },
+
+    containsSafePhrase(text) {
+        const normalized = this.normalizeLeetspeak(text);
+        return this.normalizedSafePhrases.some(phrase =>
+            normalized.includes(phrase.replace(/\s+/g, ''))
         );
     },
 
+    stich(text) { return text.replace(/[^a-z\u0900-\u097F\u0600-\u06FF]/gi, ''); },
+
+    hasRegexProfanity(text) {
+        if (!text || typeof text !== 'string') return;
+
+        return smartRegex.some(pattern => pattern.test(text));
+    },
+
+    hasPhoneNumber(text) {
+        const phoneRegex = /(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{2,4}\)?[\s.-]?)?\d{3,4}[\s.-]?\d{4}/g;
+        return phoneRegex.test(text);
+    },
+
+    hasSocialHandle(text) {
+        const socialRegex = /(?:@|https?:\/\/)?(?:instagram\.com|twitter\.com|t\.me|facebook\.com|snapchat\.com|linkedin\.com|@)[\w.]+/gi;
+        return socialRegex.test(text);
+    },
+
+    containsSensitiveInfo(text) {
+        if (!text || typeof text !== 'string') return false;
+
+        return (
+            this.hasPhoneNumber(text) ||
+            this.hasSocialHandle(text)
+        );
+    },
+
+    hasFuzzyMatch(text) {
+        if (!text || typeof text !== 'string') return;
+        
+        const words = text.toLowerCase().split(/\s+|[.,!?;:()]+/g);
+
+        const checkWord = (word) => {
+            const allBanned = [...customProfanity, ...hindiProfanity, ...arabicProfanity];
+            const maxLen = Math.max(...allBanned.map(w => w.length));
+
+            if (word.length > maxLen) {
+                for (let i = 0; i <= word.length - maxLen; i++) {
+                    allSlices.push(word.slice(i, i + maxLen));
+                }
+            }
+
+            return allSlices.some(chunk =>
+                allBanned.some(banned =>
+                    stringSimilarity(chunk, banned) > adaptiveThreshold(banned)
+                )
+            );
+        };
+
+        return words.some(checkWord);
+    },
+
     isProfane(text) {
+        if (!text || typeof text !== 'string') return false;
+
         const normalized = this.normalizeLeetspeak(text);
         const collapsed = normalized.replace(/[^a-z]/g, '');
+
+        if (this.isEffectivelyEmpty(text)) return false;
+
+        if (this.containsSafePhrase(text)) return false;
 
         return (
             LeoProfanity.check(normalized) ||
             LeoProfanity.check(collapsed) ||
             this.hasRegexProfanity(normalized) ||
-            this.hasFuzzyMatch(normalized)
+            this.hasFuzzyMatch(normalized) ||
+            this.containsSensitiveInfo(text)
         );
     },
 
