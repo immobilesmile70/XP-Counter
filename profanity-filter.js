@@ -1,6 +1,6 @@
-import LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
+import LeoProfanity from './-/leo-profanity';
 
-const dictionary = LeoProfanity.default.getDictionary('en');
+const dictionary = LeoProfanity.getDictionary('en');
 
 console.log(LeoProfanity);
 console.log(dictionary);
