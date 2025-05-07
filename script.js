@@ -162,6 +162,26 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         try {
+            const userRef = ref(database, `users/${auth.currentUser.uid}`);
+            const userSnap = await get(userRef);
+            const userData = userSnap.val() || {};
+            if (!userData) {
+                clearTimeout(popupTimeout);
+                isInfoPopup = false;
+                showPopup("User data not found.");
+                return;
+            }
+            const now = Date.now();
+            const lastChange = userData.lastUsernameChange || 0;
+            const TEN_DAYS_MS = 10 * 24 * 60 * 60 * 1000;
+            if (now - lastChange < TEN_DAYS_MS) {
+                const daysLeft = Math.ceil((TEN_DAYS_MS - (now - lastChange)) / (24 * 60 * 60 * 1000));
+                clearTimeout(popupTimeout);
+                isInfoPopup = true;
+                showPopup(`You can change your username again in ${daysLeft} day(s).`);
+                return;
+            }
+    
             const usersSnap = await get(ref(database, "users"));
             const usersData = usersSnap.val() || {};
             const usernameTaken = Object.values(usersData).some(user => user.username === newUsername);
@@ -172,6 +192,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             await set(ref(database, `users/${auth.currentUser.uid}/username`), newUsername);
+            await set(ref(database, `users/${auth.currentUser.uid}/lastUsernameChange`), now);
+    
             localUsername = newUsername;
             usernameChangeInput.value = localUsername;
             userNameTextHome.textContent = localUsername || "Student";
