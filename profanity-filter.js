@@ -1,6 +1,6 @@
-import LeoProfanity from './-/leo-profanity';
+import * as LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
 
-const dictionary = LeoProfanity.getDictionary('en');
+LeoProfanity.getDictionary();
 
 console.log(LeoProfanity);
 console.log(dictionary);
@@ -190,7 +190,7 @@ function normalizeLeetspeak(text) {
         .replace(/(.)\1{1,}/g, '$1');
 }
 
-const normalizedBannedWords = dictionary.map(w => normalizeLeetspeak(w));
+const normalizedBannedWords = LeoProfanity.getDictionary().map(w => normalizeLeetspeak(w));
 
 const rawHomophones = {
     'beech': 'bitch',
