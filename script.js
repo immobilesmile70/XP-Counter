@@ -10,6 +10,8 @@ import { filter } from './profanity-filter.js';
 
 import { initXPHandlers } from './xp.js';
 
+import { getLeaderboardData } from './leaderboard.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
@@ -178,7 +180,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPopup(`You can change your username again in ${daysLeft} day(s).`);
                 return;
             }
-    
+
             const usersSnap = await get(ref(database, "users"));
             const usersData = usersSnap.val() || {};
             const usernameTaken = Object.values(usersData).some(user => user.username === newUsername);
@@ -190,7 +192,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             await set(ref(database, `users/${auth.currentUser.uid}/username`), newUsername);
             await set(ref(database, `users/${auth.currentUser.uid}/lastUsernameChange`), now);
-    
+
             localUsername = newUsername;
             usernameChangeInput.value = localUsername;
             userNameTextHome.textContent = localUsername || "Student";
@@ -202,6 +204,55 @@ document.addEventListener('DOMContentLoaded', () => {
             isInfoPopup = false;
             showPopup("Error updating username: " + error.message);
         }
+    });
+
+    async function populateLeaderboard() {
+        const leaderboardList = document.getElementById('leaderboard-list');
+        leaderboardList.innerHTML = '';
+
+        const leaderboard = await getLeaderboardData(10);
+
+        leaderboard.forEach((user, index) => {
+            const item = document.createElement('div');
+            item.className = 'leaderboard-item';
+
+            const rank = document.createElement('span');
+            rank.className = 'rank';
+            rank.textContent = index + 1;
+
+            const name = document.createElement('span');
+            name.className = 'name';
+            name.textContent = user.username;
+
+            const xp = document.createElement('span');
+            xp.className = 'xp';
+            xp.textContent = `${user.xp} XP`;
+
+            item.appendChild(rank);
+            item.appendChild(name);
+            item.appendChild(xp);
+
+            leaderboardList.appendChild(item);
+        });
+    }
+
+    var refreshTimeout = false;
+    const refreshLeaderboardButton = document.getElementById('refresh-leaderboard');
+
+    refreshLeaderboardButton.addEventListener('click', () => {
+        if(refreshTimeout) {
+            clearTimeout(popupTimeout);
+            isInfoPopup = false;
+            showPopup("Please wait before refreshing again.");
+            return;
+        }
+
+        refreshTimeout = true;
+
+        setTimeout(() => {
+            refreshTimeout = false;
+            populateLeaderboard();
+        }, 3500);
     });
 
     function updateXPDisplay(xp) {
@@ -247,6 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 localUsername = userSnap.val().username;
                 usernameChangeInput.value = localUsername;
                 await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+                await populateLeaderboard();
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup(`Signed in as: ${localUsername}`);
@@ -300,6 +352,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (userSnap.exists()) {
                         localUsername = userSnap.val().username;
                         await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+                        await populateLeaderboard();
                     } else {
                         clearTimeout(popupTimeout);
                         isInfoPopup = false;
@@ -418,6 +471,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             localUsername = username;
                             await fadeScreen(loginScreen, mainScreen);
                             await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+                            await populateLeaderboard();
                         })
                         .catch((error) => {
                             const mappedMessage = mapErrorMessage(error);
