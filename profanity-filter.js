@@ -3,7 +3,6 @@ import * as LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
 LeoProfanity.getDictionary();
 
 console.log(LeoProfanity);
-console.log(dictionary);
 
 function stringSimilarity(a, b) {
     a = a.toLowerCase();
