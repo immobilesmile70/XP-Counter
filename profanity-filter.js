@@ -1,6 +1,6 @@
 import LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
 
-const dictionary = LeoProfanity.loadDictionary();
+const dictionary = LeoProfanity.default.loadDictionary();
 
 function stringSimilarity(a, b) {
     a = a.toLowerCase();
