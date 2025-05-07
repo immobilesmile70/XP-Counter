@@ -1,6 +1,6 @@
 import LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
 
-LeoProfanity.loadDictionary();
+const dictionary = LeoProfanity.loadDictionary();
 
 function stringSimilarity(a, b) {
     a = a.toLowerCase();
@@ -80,7 +80,7 @@ function editDistance(s1, s2) {
     return costs[s2.length];
 }
 
-const safePhrases = ([
+LeoProfanity.remove([
     "classy bitch", "bass ass", "bad ass", "pass the exam", "madarchess", "gandu phool", "assam state", "assignment submission", "class test", "assess the data", "assistant manager", "passion project", "classic move", "bass guitar", "mass communication", "grass field", "bitchu village", "kashi vishwanath", "kumari", "shashi",
     "mess hall", "hackathon", "shatabdi express", "assume role", "ashutosh", "mission report", "fakir", "rashid", "pushkar", "shivam", "raashan card", "rashtrapati bhavan", "assam state", "bishan", "ashram"
 ]);
@@ -187,12 +187,7 @@ function normalizeLeetspeak(text) {
         .replace(/(.)\1{1,}/g, '$1');
 }
 
-const normalizedBannedWords = LeoProfanity.getProfanityList().map(w => normalizeLeetspeak(w));
-
-const normalizedSafePhrases = safePhrases.map(p => normalizeLeetspeak(p.replace(/\s+/g, '')));
-const safePhraseRegexes = normalizedSafePhrases.map(safe =>
-    new RegExp(`\\b${safe}\\b`, 'i')
-);
+const normalizedBannedWords = dictionary.map(w => normalizeLeetspeak(w));
 
 const rawHomophones = {
     'beech': 'bitch',
@@ -243,11 +238,6 @@ export const filter = {
             .replace(/(.)\1+/g, '$1')
             .trim()
             .length === 0;
-    },
-
-    containsSafePhrase(text) {
-        const normalized = normalizeLeetspeak(text);
-        return safePhraseRegexes.some(regex => regex.test(normalized));
     },
 
     stich(text) { return text.replace(/[^a-z\u0900-\u097F\u0600-\u06FF]/gi, ''); },
