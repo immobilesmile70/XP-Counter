@@ -2,8 +2,6 @@ import * as LeoProfanity from 'https://cdn.skypack.dev/leo-profanity';
 
 LeoProfanity.getDictionary();
 
-console.log(LeoProfanity);
-
 function stringSimilarity(a, b) {
     a = a.toLowerCase();
     b = b.toLowerCase();
@@ -319,7 +317,8 @@ export const filter = {
 
         if (this.isEffectivelyEmpty(text)) return false;
 
-        if (this.containsSafePhrase(text)) return false;
+        console.log('normalized text: ' + normalized);
+        console.log('collapsed text: ' + collapsed);
 
         return (
             LeoProfanity.check(text) ||
