@@ -54,7 +54,7 @@ const hindiProfanity = ['aand', 'aandu', 'balatkar', 'balatkari', 'behen chod', 
     'माँ की चूत', 'माल', 'मादरचोद', 'मादरचोद', 'माधवचोद', 'मूँह में ले', 'मुठ', 'मुठल', 'नाजायज़', 'नाजायज़ औलाद', 'नाजायज़ पैदाइश', 'पाकी', 'पटाखा', 'पटाखा', 'रांड', 'रांडाप', 'रंडी', 'रंडी रोना', 'साला', 'साला कुत्ता', 'साली कुत्ती', 'साली रंडी', 'सुअर', 'सुअर के लंड', 'सुअर की औलाद', 'तत्ते', 'तट्टी', 'तेरी माँ का भोसड़ा', 'तेरी माँ का बोबा चूसू', 'तेरी माँ की बहनचोद',
     'तेरी माँ की चूत', 'थरक', 'थरकी', 'तू चूदा'];
 const arabicProfanity = ['سكس', 'طيز', 'شرج', 'لعق', 'لحس', 'مص', 'تمص', 'بيضان', 'ثدي', 'بز', 'بزاز', 'حلمة', 'مفلقسة', 'بظر', 'كس', 'فرج', 'شهوة', 'شاذ', 'مبادل', 'عاهرة', 'جماع', 'قضيب', 'زب', 'لوطي', 'لواط', 'سحاق', 'سحاقية', 'اغتصاب', 'خنثي', 'احتلام', 'نيك', 'متناك', 'متناكة', 'شرموطة', 'عرص', 'خول', 'قحبة', 'لبوة'];
-const customProfanity = ["null", "admin", "con", "aux", "prn", "com1", "lpt1", "com2", "nul", "sys", "sys1", "config", "boot", "temp", "root", "support", "user", "guest", "localhost", "test", 
+const customProfanity = ["balls", "null", "admin", "con", "aux", "prn", "com1", "lpt1", "com2", "nul", "sys", "sys1", "config", "boot", "temp", "root", "support", "user", "guest", "localhost", "test", 
     "database", "backup", "system", "web", "localhost", "mail", "ftp", "db", "bin", 'Shourya', 'god', 'developer', 'dev', 'bozo', 'simp', 'cringe', 'loser', 'beta', 'virgin', 'incel', 'femcel', 'weeb', 'karen', 'soyboy', 'chad', 'stacy', 'ok boomer', 'woke', 'beta', 'alpha', 'cuck', 'normie', 'toxic', 'dweeb', '2g1c', '2 girls 1 cup', 'acrotomophilia', 'alabama hot pocket', 'alaskan pipeline', 'anal', 'anilingus', 'anus', 'apeshit',
     'arsehole', 'ass', 'asshole', 'assmunch', 'auto erotic', 'autoerotic', 'babeland', 'baby batter', 'baby juice', 'ball gag', 'ball gravy', 'ball kicking', 'ball licking', 'ball sack', 'ball sucking', 'bangbros', 'bangbus', 'bareback', 'barely legal', 'barenaked', 'bastard', 'bastardo', 'bastinado', 'bbw', 'bdsm', 'beaner',
     'beaners', 'beaver cleaver', 'beaver lips', 'beastiality', 'bestiality', 'big black', 'big breasts', 'big knockers', 'big tits', 'bimbos', 'birdlock', 'bitch', 'bitches', 'black cock', 'blonde action', 'blonde on blonde action', 'blowjob', 'blow job', 'blow your load', 'blue waffle', 'blumpkin', 'bollocks', 'bondage',
@@ -167,8 +167,6 @@ export const filter = {
     stich(text) { return text.replace(/[^a-z\u0900-\u097F\u0600-\u06FF]/gi, ''); },
 
     hasRegexProfanity(text) {
-        if (!text || typeof text !== 'string') return;
-
         return smartRegex.some(pattern => pattern.test(text));
     },
 
@@ -183,17 +181,13 @@ export const filter = {
     },
 
     containsSensitiveInfo(text) {
-        if (!text || typeof text !== 'string') return false;
-
         return (
             this.hasPhoneNumber(text) ||
             this.hasSocialHandle(text)
         );
     },
 
-    hasFuzzyMatch(text) {
-        if (!text || typeof text !== 'string') return;
-        
+    hasFuzzyMatch(text) {     
         const words = text.toLowerCase().split(/\s+|[.,!?;:()]+/g);
 
         const checkWord = (word) => {
@@ -220,8 +214,6 @@ export const filter = {
     },
 
     isProfane(text) {
-        if (!text || typeof text !== 'string') return false;
-
         const normalized = this.normalizeLeetspeak(text);
         const collapsed = normalized.replace(/[^a-z]/g, '');
 
