@@ -81,7 +81,7 @@ function editDistance(s1, s2) {
 }
 
 LeoProfanity.remove([
-    "classy bitch", "bass ass", "bad ass", "pass the exam", "madarchess", "gandu phool", "assam state", "assignment submission", "class test", "assess the data", "assistant manager", "passion project", "classic move", "bass guitar", "mass communication", "grass field", "bitchu village", "kashi vishwanath", "kumari", "shashi",
+    "sussy", "sus", "classy bitch", "bass ass", "bad ass", "pass the exam", "madarchess", "gandu phool", "assam state", "assignment submission", "class test", "assess the data", "assistant manager", "passion project", "classic move", "bass guitar", "mass communication", "grass field", "bitchu village", "kashi vishwanath", "kumari", "shashi",
     "mess hall", "hackathon", "shatabdi express", "assume role", "ashutosh", "mission report", "fakir", "rashid", "pushkar", "shivam", "raashan card", "rashtrapati bhavan", "assam state", "bishan", "ashram"
 ]);
 
@@ -255,7 +255,7 @@ export const filter = {
     },
 
     hasSocialHandle(text) {
-        const socialRegex = /(?:@|https?:\/\/)?(?:instagram\.com|twitter\.com|t\.me|facebook\.com|snapchat\.com|linkedin\.com|@)[\w.]+/gi;
+        const socialRegex = /(?:https?:\/\/)?(?:instagram\.com|twitter\.com|t\.me|facebook\.com|snapchat\.com|linkedin\.com)[\w.]+/gi;
         return socialRegex.test(text);
     },
 
