@@ -30,11 +30,16 @@
             <h3>Ready to <b>upgrade</b> yourself while enjoying the <b>grind</b>?</h3>
         </div>
         <div id="login-form" class="login-form">
-            <h1>Enter the Guild</h1>
-            <input type="email" class="username-input" id="email-input-login" placeholder="E-mail" required>
-            <input type="password" class="password-input" id="password-input-login" placeholder="Password" required>
+            <h1>Enter the Grind</h1>
+            <input type="email" class="username-input form-field" id="email-input-login" placeholder="E-mail" required>
+            <div class="password-flex">
+                <input type="password" class="password-input form-field" id="password-input-login" placeholder="Password" required>
+                <button id="toggle-password-login">
+                    <i class="fa-regular fa-eye"></i>
+                </button>
+            </div>
             <div class="button-flex">
-                <button id="login-button">Login</button>
+                <button class="form-field" id="login-button">Login</button>
                 <div class="button-flex-2">
                     <button id="signup-switch"
                         style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">New
@@ -46,45 +51,52 @@
             </div>
         </div>
 
-        <div id="signup-form" class="login-form hidden">
-            <h1>Join the Guild</h1>
-            <input type="text" class="username-input" id="username-input-signup" maxlength="18" placeholder="Username"
+        <div id="signup-form" class="login-form hidden hide">
+            <h1>Join the Grind</h1>
+            <input type="text" class="username-input form-field" id="username-input-signup" maxlength="18" placeholder="Username"
                 required>
-            <input type="email" class="username-input" id="email-input-signup" placeholder="E-mail" required>
-            <input type="password" class="password-input" id="password-input-signup" placeholder="Password" required>
+            <input type="email" class="username-input form-field" id="email-input-signup" placeholder="E-mail" required>
+            <div class="password-flex">
+                <input type="password" class="password-input form-field" id="password-input-signup" placeholder="Password" required>
+                <button id="toggle-password-signup">
+                    <i class="fa-regular fa-eye"></i>
+                </button>
+            </div>
+            <div id="strength-text" class="strength-text"></div>
             <div class="button-flex">
-                <button id="signup-button">Sign Up</button>
+                <button class="form-field" id="signup-button">Sign Up</button>
                 <button id="login-switch"
                     style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Already logged
                     in?</button>
             </div>
         </div>
-        <div id="forget-pass-form" class="login-form hidden">
-            <h1>Forgot Password</h1>
-            <input type="email" class="username-input" id="email-input-forget-pass" placeholder="E-mail" required>
-            <div class="button-flex">
-                <button id="forget-pass-button">Reset</button>
-                <button id="f-login-switch"
-                    style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Go Back?</button>
-            </div>
+    </div>
+    <div id="forget-pass-form" class="login-form hidden hide">
+        <h1>Forgot Password</h1>
+        <input type="email" class="username-input form-field" id="email-input-forget-pass" placeholder="E-mail" required>
+        <div class="button-flex">
+            <button class="form-field" id="forget-pass-button">Reset</button>
+            <button id="f-login-switch"
+                style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Go Back?</button>
         </div>
-        <div class="footer">
-            <p>
-                Developed by Shourya <b>|</b> © 2025 UpGrind. All rights reserved.
-                <a href="https://github.com/immobilesmile70" target="_blank"
-                    style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
-                    <i class="fab fa-github fa-lg"></i>
-                </a>
-                <a href="https://reddit.com/user/Exciting-Sherbert147" target="_blank"
-                    style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
-                    <i class="fab fa-reddit fa-lg"></i>
-                </a>
-                <a href="mailto:help.upgrind@gmail.com"
-                    style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
-                    <i class="fas fa-envelope fa-lg"></i>
-                </a>
-            </p>
-        </div>
+    </div>
+    <div class="footer">
+        <p>
+            Developed by Shourya <b>|</b> © 2025 UpGrind. All rights reserved.
+            <a href="https://github.com/immobilesmile70" target="_blank"
+                style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                <i class="fab fa-github fa-lg"></i>
+            </a>
+            <a href="https://reddit.com/user/Exciting-Sherbert147" target="_blank"
+                style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                <i class="fab fa-reddit fa-lg"></i>
+            </a>
+            <a href="mailto:help.upgrind@gmail.com"
+                style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
+                <i class="fas fa-envelope fa-lg"></i>
+            </a>
+        </p>
+    </div>
     </div>
     <div id="main-screen" class="main-screen hidden hide">
 
@@ -179,19 +191,19 @@
             <div class="xp-display">
                 <h1>Leaderboard</h1>
                 <button id="refresh-leaderboard"><svg width="50px" height="50px" viewBox="0 0 21 21"
-                    xmlns="http://www.w3.org/2000/svg">
+                        xmlns="http://www.w3.org/2000/svg">
 
-                    <g fill="none" fill-rule="evenodd" stroke-width="2px" stroke-linecap="round"
-                        stroke-linejoin="round" transform="matrix(0 1 1 0 2.5 2.5)">
+                        <g fill="none" fill-rule="evenodd" stroke-width="2px" stroke-linecap="round"
+                            stroke-linejoin="round" transform="matrix(0 1 1 0 2.5 2.5)">
 
-                        <path
-                            d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8" />
+                            <path
+                                d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8" />
 
-                        <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)" />
+                            <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)" />
 
-                    </g>
+                        </g>
 
-                </svg></button>
+                    </svg></button>
             </div>
             <div class="xp-controls">
                 <div class="xp-flexbox">
@@ -236,6 +248,7 @@
             </div>
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js"></script>

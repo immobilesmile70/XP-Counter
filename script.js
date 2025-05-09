@@ -25,12 +25,110 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const emailInputLogin = document.getElementById("email-input-login");
     const passwordInputLogin = document.getElementById("password-input-login");
+    const togglePasswordLogin = document.getElementById("toggle-password-login");
+
+    togglePasswordLogin.addEventListener("click", () => {
+        onTogglePassword(passwordInputLogin, togglePasswordLogin);
+    });
+
+    passwordInputLogin.addEventListener("blur", () => {
+        onBlurInput(passwordInputLogin, togglePasswordLogin);
+    });
 
     const usernameInputSignup = document.getElementById("username-input-signup");
     const emailInputSignUp = document.getElementById("email-input-signup");
     const passwordInputSignUp = document.getElementById("password-input-signup");
+    const togglePasswordSignUp = document.getElementById("toggle-password-signup");
+    const strengthText = document.getElementById("strength-text");
+
+    togglePasswordSignUp.addEventListener("click", () => { 
+        onTogglePassword(passwordInputSignUp, togglePasswordSignUp);
+    });
+
+    passwordInputSignUp.addEventListener("blur", () => {
+        onBlurInput(passwordInputSignUp, togglePasswordSignUp, strengthText);
+    });
+
+    passwordInputSignUp.addEventListener("input", () => {
+        const result = zxcvbn(passwordInputSignUp.value);
+        const score = result.score;
+        const strengthLabels = ["very weak", "weak", "fair", "good", "strong"];
+
+        strengthText.classList.add("show");
+
+        strengthText.textContent = "Your password is " + strengthLabels[score];
+        strengthText.style.color = ["#e74c3c", "#e67e22", "#f1c40f", "#2ecc71", "#27ae60"][score];
+    });
+
+    function onTogglePassword(inputField, toggleButton) {
+        const isHidden = inputField.type === "password";
+        inputField.type = isHidden ? "text" : "password";
+
+        toggleButton.innerHTML = isHidden
+            ? '<i class="fa-regular fa-eye-slash"></i>'
+            : '<i class="fa-regular fa-eye"></i>';
+    }
+
+    function onBlurInput(inputField, toggleButton, strengthTex) {
+        inputField.addEventListener("blur", (e) => {
+            if (e.relatedTarget === toggleButton) {
+                inputField.focus();
+                return;
+            }
+            setTimeout(() => {
+                inputField.type = "password";
+                toggleButton.innerHTML = '<i class="fa-regular fa-eye"></i>';
+                if (strengthTex) {
+                    strengthTex.classList.remove("show");
+                }
+            }, 700);
+        });
+        toggleButton.tabIndex = 0;
+    }
 
     const emailInputForgetPass = document.getElementById("email-input-forget-pass");
+
+    usernameInputSignup.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            usernameInputSignup.blur();
+            emailInputSignUp.focus();
+        }
+    }); 
+
+    emailInputSignUp.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            emailInputSignUp.blur();
+            passwordInputSignUp.focus();
+        }
+    }); 
+
+    passwordInputSignUp.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            passwordInputSignUp.blur();
+            signUpButton.click();
+        }
+    });
+
+    emailInputLogin.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            emailInputLogin.blur();
+            passwordInputLogin.focus();
+        }
+    }); 
+
+    passwordInputLogin.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            passwordInputLogin.blur();
+            loginButton.click();
+        }
+    });
+
+    emailInputForgetPass.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            emailInputForgetPass.blur();
+            forgetPassButton.click();
+        }
+    }); 
 
     const usernameChangeInput = document.getElementById("username-change-input");
     const changeUsernameButton = document.getElementById("change-username-button");
@@ -240,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshLeaderboardButton = document.getElementById('refresh-leaderboard');
 
     refreshLeaderboardButton.addEventListener('click', () => {
-        if(refreshTimeout) {
+        if (refreshTimeout) {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
             showPopup("Please wait before refreshing again.");
@@ -437,6 +535,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInputSignUp.value.trim();
 
         if (username && email && password) {
+
+            if (password.length < 6 || password.length > 20) {
+                clearTimeout(popupTimeout);
+                isInfoPopup = false;
+                showPopup("Password length must be between 6 and 20 characters.");
+                return;
+            }
+            if (username.length < 3 || username.length > 18) {
+                clearTimeout(popupTimeout);
+                isInfoPopup = false;
+                showPopup("Username length must be between 3 and 18 characters.");
+                return;
+            }
+
             get(ref(database, "users")).then(async (snapshot) => {
                 const usersData = snapshot.val() || {};
                 const usernameTaken = Object.values(usersData).some(user => user.username === username);
@@ -450,12 +562,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     clearTimeout(popupTimeout);
                     isInfoPopup = false;
                     showPopup("Username contains profanity. Please choose another one.");
-                    return;
-                }
-                if (filter.isProfane(email)) {
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup("Email contains profanity. Please choose another one.");
                     return;
                 }
                 else {

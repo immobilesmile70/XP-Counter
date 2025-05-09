@@ -271,6 +271,7 @@ button {
     transform: translateX(0) scaleX(1);
     opacity: 1;
     position: fixed;
+    left: 0;
 }
 
 .login-form.hidden {
@@ -325,6 +326,56 @@ button {
     gap: 12px;
     width: 100%;
     height: 70%;
+}
+
+.password-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+}
+
+.password-flex button {
+    position:absolute;
+    width: 50px;
+    height: 40px;
+    background-color: transparent;
+    right: 10%;
+    background-color: transparent;
+    color: var(--subtext);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: opacity 0.3s ease, transform 0.4s ease;
+}
+
+.password-flex button:hover {
+    background-color: transparent;
+    transform: scale(1.1);
+}
+
+.password-flex button:active {
+    background-color: transparent;
+    transform: scale(0.9);
+}
+
+.strength-text {
+    color: #b42323;
+    text-align: left;
+    width: 87%;
+    margin-top: -10px;
+    margin-bottom: -10px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    height:0px;
+    opacity:0;
+    transition: opacity 0.3s ease, height 0.3s ease;
+}
+
+.strength-text.show {
+    opacity: 1;
+    height: auto;
 }
 
 .footer {
@@ -987,6 +1038,7 @@ button {
         transition: opacity 0.3s ease, transform 0.4s ease;
         transform: scale(1);
         opacity: 1;
+        left:unset;
     }
 
     .login-form.hidden {
@@ -1025,8 +1077,11 @@ button {
 
     .username-input,
     .password-input {
-        width: 100%;
         font-size: 0.9rem;
+    }
+
+    .password-flex button {
+       right: 10%;
     }
 
     .login-screen {

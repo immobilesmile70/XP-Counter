@@ -255,7 +255,7 @@ export const filter = {
     },
 
     hasSocialHandle(text) {
-        const socialRegex = /(?:https?:\/\/)?(?:instagram\.com|twitter\.com|t\.me|facebook\.com|snapchat\.com|linkedin\.com)[\w.]+/gi;
+        const socialRegex = /(?:@|https?:\/\/)?(?:instagram\.com|twitter\.com|t\.me|facebook\.com|snapchat\.com|linkedin\.com|@)[\w.]+/gi;
         return socialRegex.test(text);
     },
 
@@ -316,9 +316,6 @@ export const filter = {
         const collapsed = normalized.replace(/[^a-z]/g, '');
 
         if (this.isEffectivelyEmpty(text)) return false;
-
-        console.log('normalized text: ' + normalized);
-        console.log('collapsed text: ' + collapsed);
 
         return (
             LeoProfanity.check(text) ||
