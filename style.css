@@ -11,7 +11,7 @@
     --header-color: #434343;
     --border: #2d2d2d;
     --svg-stroke-color: black;
-    --scrollbar-bg: #eaeaea;
+    --scrollbar-bg: #d8d8d8;
     --scrollbar-thumb: #b0b0b0;
     --blur-loader-bbg: linear-gradient(120deg, #00000000 0%, rgb(255 255 255 / 35%) 50%, #00000000 100%);
     --list-bg: #e2e2e2;
@@ -57,7 +57,7 @@
     --header-color: #434343;
     --border: #2d2d2d;
     --svg-stroke-color: black;
-    --scrollbar-bg: #eaeaea;
+    --scrollbar-bg: #d8d8d8;
     --scrollbar-thumb: #b0b0b0;
     --blur-loader-bbg: linear-gradient(120deg, #00000000 0%, rgb(255 255 255 / 35%) 50%, #00000000 100%);
     --list-bg: #e2e2e2;
@@ -337,12 +337,11 @@ button {
 }
 
 .password-flex button {
-    position:absolute;
+    position: absolute;
     width: 50px;
     height: 40px;
     background-color: transparent;
     right: 10%;
-    background-color: transparent;
     color: var(--subtext);
     border: none;
     padding: 0;
@@ -368,8 +367,8 @@ button {
     margin-bottom: -10px;
     font-size: 0.8rem;
     font-weight: bold;
-    height:0px;
-    opacity:0;
+    height: 0px;
+    opacity: 0;
     transition: opacity 0.3s ease, height 0.3s ease;
 }
 
@@ -609,7 +608,6 @@ button {
     align-items: center;
     flex-direction: column;
     position: relative;
-    gap: 20px;
     width: 100%;
     height: 100%;
     opacity: 1;
@@ -719,7 +717,7 @@ button {
     gap: 20px;
     width: 100%;
     height: 15%;
-    top: 50px;
+    top: 40px;
     padding-left: 290px;
 }
 
@@ -819,6 +817,7 @@ button {
 #refresh-leaderboard:hover {
     background-color: var(--refresh-btn-hover-bg);
 }
+
 #refresh-leaderboard:active {
     background-color: var(--refresh-btn-active-bg);
 }
@@ -842,16 +841,16 @@ button {
 }
 
 .settings-list {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: space-around;
-    height: 100%;
     width: 100%;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    max-height: 1080px;
+    padding: 5px;
+    display: flex;
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+    border-radius: 25px 38px 38px 25px;
 }
 
 .settings-list button {
@@ -864,7 +863,7 @@ button {
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.4s ease;
     height: 40px;
-    width: 100%;
+    width: 150px;
 }
 
 .settings-list button:hover {
@@ -901,14 +900,15 @@ button {
     background-color: var(--sidebar-bg);
     color: var(--text);
     font-size: 1rem;
-    height: 15%;
-    transition: border-color 0.3s ease;
+    height: 17px;
+    width: 175px;
+    transition: all 0.3s ease;
 }
 
 .setting-item input:focus {
     outline: none;
-    border: 1px solid var(--border);
-    box-shadow: 0 0 5px var(--text);
+    border: 2px solid var(--border);
+    box-shadow: 0 0 4px var(--text);
 }
 
 .custom-select {
@@ -1000,12 +1000,12 @@ button {
 
     .xp-section {
         width: 100%;
-        gap: 100px;
+        gap: 0px;
     }
 
     .settings-section {
         width: 100%;
-        gap: 100px;
+        gap: 0px;
     }
 
     .xp-controls {
@@ -1038,7 +1038,7 @@ button {
         transition: opacity 0.3s ease, transform 0.4s ease;
         transform: scale(1);
         opacity: 1;
-        left:unset;
+        left: unset;
     }
 
     .login-form.hidden {
@@ -1081,7 +1081,7 @@ button {
     }
 
     .password-flex button {
-       right: 10%;
+        right: 10%;
     }
 
     .login-screen {
@@ -1148,7 +1148,7 @@ button {
     }
 
     .xp-display {
-        top: 40px;
+        top: 40px !important;
     }
 
     .xp-display h1 {
@@ -1160,8 +1160,10 @@ button {
         height: 50px;
     }
 
-    #leaderboard-section, #xp-section, #settings-section {
-        gap: 85px !important;
+    #leaderboard-section,
+    #xp-section,
+    #settings-section {
+        gap: 0px !important;
     }
 }
 

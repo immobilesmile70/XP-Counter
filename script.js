@@ -450,7 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (userSnap.exists()) {
                         localUsername = userSnap.val().username;
                         await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
-                        await populateLeaderboard();
                     } else {
                         clearTimeout(popupTimeout);
                         isInfoPopup = false;
@@ -577,7 +576,6 @@ document.addEventListener('DOMContentLoaded', () => {
                             localUsername = username;
                             await fadeScreen(loginScreen, mainScreen);
                             await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
-                            await populateLeaderboard();
                         })
                         .catch((error) => {
                             const mappedMessage = mapErrorMessage(error);
