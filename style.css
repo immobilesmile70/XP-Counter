@@ -406,14 +406,14 @@ button {
     background-color: var(--sidebar-bg);
     color: var(--text);
     font-size: 1rem;
-    transition: border-color 0.3s ease;
+    transition: all 0.3s ease;
 }
 
 .username-input:focus,
 .password-input:focus {
     outline: none;
-    border: 1px solid var(--border);
-    box-shadow: 0 0 5px var(--text);
+    border: 2px solid var(--border);
+    box-shadow: 0 0 4px var(--text);
 }
 
 /* Main Screen */
@@ -495,13 +495,12 @@ button {
     background-color: var(--button-bg);
     color: var(--subtext);
     border: none;
-    padding: 0px 20px;
+    padding: 20px 20px;
     border-radius: 20px;
     font-size: 1rem;
     cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.4s ease, border-radius 0.4s ease;
-    height: 60px;
-    width: 100%;
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.4s ease, border-radius 0.4s ease;
+    width: calc(100% - 20px);
 }
 
 .sidebar button:hover {
@@ -528,8 +527,21 @@ button {
     justify-content: flex-start;
     align-items: center;
     gap: 20px;
-    width: 90%;
-    height: 100%;
+    width: 100%;
+    height: calc(100% - 180px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
+}
+
+.sidebar-button-flex::-webkit-scrollbar {
+    width: 8px;
+    background: var(--scrollbar-bg);
+}
+
+.sidebar-button-flex::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 8px;
 }
 
 .t-sidebar-btn {
@@ -1174,7 +1186,7 @@ button {
     }
 
     .settings-list {
-        max-height: 320px;
+        max-height: 1000px;
         overflow-y: auto;
         width: 100%;
         padding-right: 8px;
