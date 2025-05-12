@@ -106,9 +106,6 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                     await set(ref(database, `users/${user.uid}/xp`), 0);
                     updateXPDisplay(0);
                     xpElement.textContent = 0;
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup("XP initialized to zero");
                 }
             } catch (error) {
                 clearTimeout(popupTimeout);

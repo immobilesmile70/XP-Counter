@@ -4,7 +4,7 @@
     --text: black;
     --subtext: #393939;
     --footer: #cfcfcf;
-    --button-bg: #e1e1e1;
+    --button-bg: #e0e0e0;
     --button-hover: #f1f1f1;
     --button-active: #828282;
     --sidebar-bg: #d6d6d6;
@@ -50,7 +50,7 @@
     --text: black;
     --subtext: #393939;
     --footer: #cfcfcf;
-    --button-bg: #e1e1e1;
+    --button-bg: #e0e0e0;
     --button-hover: #f1f1f1;
     --button-active: #828282;
     --sidebar-bg: #d6d6d6;
@@ -294,7 +294,7 @@ button {
     border-radius: 12px;
     font-size: 1rem;
     cursor: pointer;
-    transition: opacity 0.3s ease, transform 0.4s ease, border-radius 0.4s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease, transform 0.4s ease, border-radius 0.4s ease;
     height: 100%;
     width: 100%;
 }
@@ -414,6 +414,52 @@ button {
     outline: none;
     border: 2px solid var(--border);
     box-shadow: 0 0 4px var(--text);
+}
+
+.alt-flex-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 12px;
+    width: 90%;
+}
+
+.alt-flex-btn button {
+    padding: 10px 16px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.alt-flex-btn button i {
+    font-size: 1.5rem;
+    background: conic-gradient(from 17deg, #EA4335, #4285F4, #34A853, #FBBC05, #EA4335);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-right: 10px;
+    margin-bottom: 3px;
+}
+
+.line-flex {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.line-flex p {
+    color: var(--subtext);
+    font-size: 1rem;
+    margin: 0px 20px;
+}
+
+.line {
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--border);
 }
 
 /* Main Screen */
@@ -1051,6 +1097,7 @@ button {
         transform: scale(1);
         opacity: 1;
         left: unset;
+        padding-bottom: 30px;
     }
 
     .login-form.hidden {

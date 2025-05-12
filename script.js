@@ -3,7 +3,7 @@ import {
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
-    signOut
+    signOut, signInWithGoogle, GoogleAuthProvider, signInWithPopup
 } from './firebase.js';
 
 import { filter } from './profanity-filter.js';
@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadingScreen = document.getElementById("loading-screen");
 
     const loginButton = document.getElementById("login-button");
+    const signInWithGoogleButton = document.getElementById("google-signin-button");
     const signUpButton = document.getElementById("signup-button");
     const forgetPassButton = document.getElementById("forget-pass-button");
     const logOutButton = document.getElementById("logout-button");
@@ -41,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const togglePasswordSignUp = document.getElementById("toggle-password-signup");
     const strengthText = document.getElementById("strength-text");
 
-    togglePasswordSignUp.addEventListener("click", () => { 
+    togglePasswordSignUp.addEventListener("click", () => {
         onTogglePassword(passwordInputSignUp, togglePasswordSignUp);
     });
 
@@ -93,14 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
             usernameInputSignup.blur();
             emailInputSignUp.focus();
         }
-    }); 
+    });
 
     emailInputSignUp.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
             emailInputSignUp.blur();
             passwordInputSignUp.focus();
         }
-    }); 
+    });
 
     passwordInputSignUp.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -114,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emailInputLogin.blur();
             passwordInputLogin.focus();
         }
-    }); 
+    });
 
     passwordInputLogin.addEventListener('keydown', function (event) {
         if (event.key === 'Enter') {
@@ -128,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
             emailInputForgetPass.blur();
             forgetPassButton.click();
         }
-    }); 
+    });
 
     const usernameChangeInput = document.getElementById("username-change-input");
     const changeUsernameButton = document.getElementById("change-username-button");
@@ -389,6 +390,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    signInWithGoogleButton.addEventListener("click", () => {
+        signInWithGoogle({
+            filter,
+            showPopup,
+            setJustSignedUp: () => justSignedUp = true
+        });
+    });
+
     onAuthStateChanged(auth, async (user) => {
         if (user && !justSignedUp) {
             const userSnap = await get(ref(database, `users/${user.uid}`));
@@ -400,13 +409,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup(`Signed in as: ${localUsername}`);
-                fadeScreen(loginScreen, mainScreen);
+                await fadeScreen(loginScreen, mainScreen);
             } else {
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
                 showPopup("No user data found.");
                 localUsername = "Student404";
-                fadeScreen(loginScreen, mainScreen);
+                await fadeScreen(loginScreen, mainScreen);
             }
         } else {
             console.warn("No user signed in.");
@@ -499,7 +508,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = auth.currentUser;
         if (user) {
             try {
-                const credential = EmailAuthProvider.credential(user.email, prompt("Please re-enter your password:"));
+                let credential;
+                if (user.providerData[0].providerId === "password") {
+                    credential = EmailAuthProvider.credential(user.email, prompt("Please re-enter your password:"));
+                } else if (user.providerData[0].providerId === "google.com") {
+                    const googleProvider = new GoogleAuthProvider();
+                    credential = GoogleAuthProvider.credentialFromResult(await signInWithPopup(auth, googleProvider));
+                } else {
+                    throw new Error("Unsupported provider. Cannot reauthenticate.");
+                }
                 await reauthenticateWithCredential(user, credential);
                 await remove(ref(database, `users/${user.uid}`));
                 await deleteUser(user);
