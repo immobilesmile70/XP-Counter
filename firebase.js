@@ -5,7 +5,7 @@ import {
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
     signOut,
-    GoogleAuthProvider, 
+    GoogleAuthProvider,
     signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
@@ -88,7 +88,12 @@ export const signInWithGoogle = async ({
         } else {
             const userData = snapshot.val();
             if (userData.username !== rawUsername) {
-                await set(ref(database, `users/${uid}/username`), rawUsername);
+                try {
+                    await set(ref(database, `users/${uid}/username`), rawUsername);
+                    console.log(`Username updated for user ${uid}: ${rawUsername}`);
+                } catch (error) {
+                    console.error(`Failed to update username for user ${uid}:`, error.message);
+                }
             }
         }
 
@@ -104,7 +109,7 @@ export {
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
-    signOut, 
-    GoogleAuthProvider, 
+    signOut,
+    GoogleAuthProvider,
     signInWithPopup
 };

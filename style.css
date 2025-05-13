@@ -435,7 +435,7 @@ button {
 
 .alt-flex-btn button i {
     font-size: 1.5rem;
-    background: conic-gradient(from 17deg, #EA4335, #4285F4, #34A853, #FBBC05, #EA4335);
+    background: radial-gradient(circle at center, #4285f4 0%, transparent 30%), conic-gradient(from 309deg, #ea4335 89deg 87deg, #4285f4 138deg 143deg, #34a853 258deg 281deg, #fbbc05 326deg 311deg, #ea4335 353deg 359deg);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
