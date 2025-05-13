@@ -196,6 +196,17 @@ button {
     font-size: 1.8rem;
 }
 
+.dialog p {
+    text-align: center;
+    margin-top: 5px;
+}
+
+#dialog-sub-message {
+    font-size: 0.9rem;
+    color: var(--subtext);
+    margin-top: -15px;
+}
+
 .dialog.show {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1);
@@ -224,7 +235,7 @@ button {
     text-align: center;
     border: none;
     color: var(--text);
-    font-size: 2rem;
+    font-size: 1.5rem;
     cursor: pointer;
     transform: scale(1);
     transition: background-color 0.3s ease, transform 0.3s ease;
@@ -1329,10 +1340,6 @@ button {
 
     .dialog {
         font-size: 1.25rem;
-    }
-
-    .dialog button {
-        font-size: 1.5rem;
     }
 }
 

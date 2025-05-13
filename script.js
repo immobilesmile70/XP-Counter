@@ -13,7 +13,6 @@ import { initXPHandlers } from './xp.js';
 import { getLeaderboardData } from './leaderboard.js';
 
 
-
 const popup = document.getElementById('popup');
 const closePopupButton = document.getElementById("close-popup-button");
 const popupMessage = document.getElementById('popup-message');
@@ -43,11 +42,13 @@ function showPopup(message, duration = 3000) {
 
 const dialog = document.getElementById("dialog");
 const messageEl = document.getElementById("dialog-message");
+const subMessageEl = document.getElementById("dialog-sub-message");
 const buttonsContainer = document.getElementById("dialog-buttons");
-const customContainer = document.getElementById("custom-element-dialog")
+const customContainer = document.getElementById("custom-element-dialog");
 
-function showDialog(message, buttons = [], customContent = null) {
+function showDialog(message, subMessage, buttons = [], customContent = null) {
     messageEl.textContent = message;
+    subMessageEl.textContent = subMessage;
     buttonsContainer.innerHTML = "";
 
     if (customContent) {
@@ -513,7 +514,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logOutButton.addEventListener("click", () => {
-        showDialog("Do you really want to logout?", [
+        showDialog("Do you really want to logout?", "Logging out will remove your local data and settings. You can log back in anytime to restore them.", [
             {
                 text: "Yes", onClick: () => {
                     signOut(auth)
@@ -550,7 +551,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) return;
 
         showDialog(
-            "Do you really want to delete your account?",
+            "Do you really want to delete your account?", "Deleting your account will erase all your data and settings permanently. You won’t be able to recover them, even if you log in again.",
             [
                 {
                     text: "Yes",
@@ -564,7 +565,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             setTimeout(() => {
                                 showDialog(
-                                    "Please re-enter your password to delete your account.",
+                                    "Please re-enter your password to delete your account.", "To delete your account, please re-enter your password to confirm your identity. This ensures your account is deleted securely and intentionally.",
                                     [
                                         {
                                             text: "Delete",
@@ -608,7 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         else if (user.providerData[0].providerId === "google.com") {
                             setTimeout(() => {
                                 showDialog(
-                                    "Please re-authenticate with Google to delete your account.",
+                                    "Please re-authenticate with Google to delete your account.", "To delete your account, please re-authenticate using your Google account. This step is required to verify your identity and complete the deletion process securely.",
                                     [
                                         {
                                             text: "Delete",
