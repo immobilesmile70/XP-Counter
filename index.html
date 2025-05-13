@@ -21,6 +21,12 @@
         <button id="close-popup-button">×</button>
     </div>
 
+    <div id="dialog" class="dialog hide">
+        <p id="dialog-message"></p>
+        <div id="custom-element-dialog" style="width: 80%;"></div>
+        <div id="dialog-buttons"></div>
+    </div>
+
     <div id="login-screen" class="login-screen">
         <div class="header">
             <h1>UpGrind</h1>
@@ -146,7 +152,6 @@
                 <button id="counter">XP Counter</button>
                 <button id="leaderboard">Leaderboard</button>
             </div>
-            <button id="logout-button">Logout</button>
         </div>
 
         <div class="xp-section" id="xp-section">
@@ -252,6 +257,7 @@
                             <div class="setting-item" style="gap: 75px;">
                                 <label>Account</label>
                                 <button id="delete-user-button">Delete Account</button>
+                                <button id="logout-button">Logout</button>
                             </div>
                         </div>
                     </div>

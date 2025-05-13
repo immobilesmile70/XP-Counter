@@ -10,6 +10,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app-check.js";
+import { showPopupWithType } from './script.js';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAR3CuLQ0s1rBd8wPD36HDh52HJK-bT8bc",
@@ -52,7 +53,6 @@ function mapErrorMessage(error) {
 
 export const signInWithGoogle = async ({
     filter,
-    showPopup,
     setJustSignedUp
 }) => {
     try {
@@ -87,20 +87,21 @@ export const signInWithGoogle = async ({
 
         } else {
             const userData = snapshot.val();
-            if (userData.username !== rawUsername) {
-                try {
-                    await set(ref(database, `users/${uid}/username`), rawUsername);
-                    console.log(`Username updated for user ${uid}: ${rawUsername}`);
-                } catch (error) {
-                    console.error(`Failed to update username for user ${uid}:`, error.message);
-                }
+            if (!userData.username) {
+                rawUsername = `user${Math.floor(Math.random() * 10000)}`;
+                await set(ref(database, `users/${uid}/username`), rawUsername);
+                console.log(`Fallback: Username set for user ${uid}: ${rawUsername}`);
+            } else {
+                rawUsername = userData.username;
             }
         }
+
+        console.log(`Signed in as: ${rawUsername}`);
 
     } catch (error) {
         console.error("Google Sign-in error:", error.message);
         const mappedMessage = mapErrorMessage(error);
-        showPopup("Google Sign-in failed: " + mappedMessage);
+        showPopupWithType("Google Sign-in failed: " + mappedMessage, false);
     }
 };
 

@@ -12,6 +12,66 @@ import { initXPHandlers } from './xp.js';
 
 import { getLeaderboardData } from './leaderboard.js';
 
+
+
+const popup = document.getElementById('popup');
+const closePopupButton = document.getElementById("close-popup-button");
+const popupMessage = document.getElementById('popup-message');
+let popupTimeout = null;
+let isInfoPopup = false;
+
+function showPopup(message, duration = 3000) {
+    popupMessage.textContent = message;
+
+    if (isInfoPopup) {
+        popup.style.backgroundColor = "rgb(0, 118, 186)";
+        closePopupButton.style.backgroundColor = "rgb(0, 80, 126)";
+    }
+    else {
+        popup.style.backgroundColor = "rgb(232, 72, 72)";
+        closePopupButton.style.backgroundColor = "rgb(174, 43, 43)";
+    }
+
+    popup.classList.remove('hide');
+    setTimeout(() => { popup.classList.add('show'); }, 100);
+
+    popupTimeout = setTimeout(() => {
+        popup.classList.remove('show');
+        setTimeout(() => { popup.classList.add('hide'); }, 100);
+    }, duration);
+}
+
+const dialog = document.getElementById("dialog");
+const messageEl = document.getElementById("dialog-message");
+const buttonsContainer = document.getElementById("dialog-buttons");
+const customContainer = document.getElementById("custom-element-dialog")
+
+function showDialog(message, buttons = [], customContent = null) {
+    messageEl.textContent = message;
+    buttonsContainer.innerHTML = "";
+
+    if (customContent) {
+        customContainer.appendChild(customContent);
+    }
+
+    buttons.forEach(({ text, onClick }) => {
+        const btn = document.createElement("button");
+        btn.textContent = text;
+        if (text.toLowerCase() === "delete") {
+            btn.style.color = "#e84747";
+        }
+        btn.onclick = () => {
+            onClick();
+            dialog.classList.remove('show');
+            setTimeout(() => { dialog.classList.add('hide'); }, 100);
+        };
+        buttonsContainer.appendChild(btn);
+    });
+
+    dialog.classList.remove('hide');
+    setTimeout(() => { dialog.classList.add('show'); }, 100);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
@@ -222,11 +282,6 @@ document.addEventListener('DOMContentLoaded', () => {
         showScreen(settingsScreen, leaderboardScreen, counterScreen);
     }
 
-    const popup = document.getElementById('popup');
-    const closePopupButton = document.getElementById("close-popup-button");
-    let popupTimeout = null;
-    let isInfoPopup = false;
-
     let localUsername = null;
 
     let justSignedUp = false;
@@ -359,27 +414,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (xpElement) xpElement.textContent = xp;
     }
 
-    function showPopup(message, duration = 3000) {
-        const popupMessage = document.getElementById('popup-message');
-        popupMessage.textContent = message;
-
-        if (isInfoPopup) {
-            popup.style.backgroundColor = "rgb(0, 118, 186)";
-            closePopupButton.style.backgroundColor = "rgb(0, 80, 126)";
-        }
-        else {
-            popup.style.backgroundColor = "rgb(232, 72, 72)";
-            closePopupButton.style.backgroundColor = "rgb(174, 43, 43)";
-        }
-
-        popup.classList.remove('hide');
-        setTimeout(() => { popup.classList.add('show'); }, 100);
-
-        popupTimeout = setTimeout(() => {
-            popup.classList.remove('show');
-            setTimeout(() => { popup.classList.add('hide'); }, 100);
-        }, duration);
-    }
 
     function toggleShimmer(elementId, shouldShimmer) {
         const el = document.getElementById(elementId);
@@ -393,7 +427,6 @@ document.addEventListener('DOMContentLoaded', () => {
     signInWithGoogleButton.addEventListener("click", () => {
         signInWithGoogle({
             filter,
-            showPopup,
             setJustSignedUp: () => justSignedUp = true
         });
     });
@@ -480,69 +513,150 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logOutButton.addEventListener("click", () => {
-        signOut(auth)
-            .then(async () => {
-                await fadeScreen(mainScreen, loginScreen);
-                emailInputLogin.value = "";
-                passwordInputLogin.value = "";
-                emailInputSignUp.value = "";
-                passwordInputSignUp.value = "";
-                emailInputForgetPass.value = "";
-                usernameInputSignup.value = "";
-                updateXPDisplay(0);
-                loginForm.classList.remove("hidden");
-                signUpForm.classList.add("hidden");
-                forgetPassForm.classList.add("hidden");
-                localUsername = null;
-                showCounter();
-            })
-            .catch((error) => {
-                const mappedMessage = mapErrorMessage(error);
-                clearTimeout(popupTimeout);
-                isInfoPopup = false;
-                showPopup(`Error Signing Out: ${mappedMessage}`);
-            });
+        showDialog("Do you really want to logout?", [
+            {
+                text: "Yes", onClick: () => {
+                    signOut(auth)
+                        .then(async () => {
+                            await fadeScreen(mainScreen, loginScreen);
+                            emailInputLogin.value = "";
+                            passwordInputLogin.value = "";
+                            emailInputSignUp.value = "";
+                            passwordInputSignUp.value = "";
+                            emailInputForgetPass.value = "";
+                            usernameInputSignup.value = "";
+                            usernameChangeInput.value = "";
+                            updateXPDisplay(0);
+                            loginForm.classList.remove("hidden");
+                            signUpForm.classList.add("hidden");
+                            forgetPassForm.classList.add("hidden");
+                            localUsername = null;
+                            showCounter();
+                        })
+                        .catch((error) => {
+                            const mappedMessage = mapErrorMessage(error);
+                            clearTimeout(popupTimeout);
+                            isInfoPopup = false;
+                            showPopup(`Error Signing Out: ${mappedMessage}`);
+                        });
+                }
+            },
+            { text: "No", onClick: () => { console.log('Cancelled Logout') } }
+        ]);
     });
 
-    deleteUserButton.addEventListener("click", async () => {
+    deleteUserButton.addEventListener("click", () => {
         const user = auth.currentUser;
-        if (user) {
-            try {
-                let credential;
-                if (user.providerData[0].providerId === "password") {
-                    credential = EmailAuthProvider.credential(user.email, prompt("Please re-enter your password:"));
-                } else if (user.providerData[0].providerId === "google.com") {
-                    const googleProvider = new GoogleAuthProvider();
-                    credential = GoogleAuthProvider.credentialFromResult(await signInWithPopup(auth, googleProvider));
-                } else {
-                    throw new Error("Unsupported provider. Cannot reauthenticate.");
-                }
-                await reauthenticateWithCredential(user, credential);
-                await remove(ref(database, `users/${user.uid}`));
-                await deleteUser(user);
-                console.log("User deleted successfully");
-                await fadeScreen(mainScreen, loginScreen);
-                emailInputLogin.value = "";
-                passwordInputLogin.value = "";
-                emailInputSignUp.value = "";
-                passwordInputSignUp.value = "";
-                emailInputForgetPass.value = "";
-                usernameInputSignup.value = "";
-                updateXPDisplay(0);
-                showCounter();
-                signUpForm.classList.remove("hidden");
-                loginForm.classList.add("hidden");
-                forgetPassForm.classList.add("hidden");
-                localUsername = null;
-            } catch (error) {
-                const mappedMessage = mapErrorMessage(error);
-                clearTimeout(popupTimeout);
-                isInfoPopup = false;
-                showPopup(`Error deleting user: ${mappedMessage}`);
-            }
-        } else {
-            console.log("No user is currently signed in.");
-        }
+        if (!user) return;
+
+        showDialog(
+            "Do you really want to delete your account?",
+            [
+                {
+                    text: "Yes",
+                    onClick: () => {
+                        if (user.providerData[0].providerId === "password") {
+                            const passwordInput = document.createElement("input");
+                            passwordInput.type = "password";
+                            passwordInput.placeholder = "Re-enter your password";
+                            passwordInput.style.display = "block";
+                            passwordInput.autofocus = true;
+
+                            setTimeout(() => {
+                                showDialog(
+                                    "Please re-enter your password to delete your account.",
+                                    [
+                                        {
+                                            text: "Delete",
+                                            onClick: async () => {
+                                                try {
+                                                    const credential = EmailAuthProvider.credential(user.email, passwordInput.value);
+                                                    await reauthenticateWithCredential(user, credential);
+                                                    await remove(ref(database, `users/${user.uid}`));
+                                                    await deleteUser(user);
+                                                    console.log("User deleted successfully");
+                                                    await fadeScreen(mainScreen, loginScreen);
+                                                    emailInputLogin.value = "";
+                                                    passwordInputLogin.value = "";
+                                                    emailInputSignUp.value = "";
+                                                    passwordInputSignUp.value = "";
+                                                    emailInputForgetPass.value = "";
+                                                    usernameInputSignup.value = "";
+                                                    customContainer.innerHTML = "";
+                                                    updateXPDisplay(0);
+                                                    showCounter();
+                                                    signUpForm.classList.add("hidden");
+                                                    loginForm.classList.remove("hidden");
+                                                    forgetPassForm.classList.add("hidden");
+                                                    localUsername = null;
+                                                    usernameChangeInput.value = "";
+                                                } catch (error) {
+                                                    const mappedMessage = mapErrorMessage(error);
+                                                    clearTimeout(popupTimeout);
+                                                    isInfoPopup = false;
+                                                    showPopup(`Error deleting user: ${mappedMessage}`);
+                                                    customContainer.innerHTML = "";
+                                                }
+                                            }
+                                        },
+                                        { text: "Cancel", onClick: () => { customContainer.innerHTML = ""; } }
+                                    ],
+                                    passwordInput
+                                );
+                            }, 220);
+                        }
+                        else if (user.providerData[0].providerId === "google.com") {
+                            setTimeout(() => {
+                                showDialog(
+                                    "Please re-authenticate with Google to delete your account.",
+                                    [
+                                        {
+                                            text: "Delete",
+                                            onClick: async () => {
+                                                try {
+                                                    const googleProvider = new GoogleAuthProvider();
+                                                    const result = await signInWithPopup(auth, googleProvider);
+                                                    const credential = GoogleAuthProvider.credentialFromResult(result);
+                                                    await reauthenticateWithCredential(user, credential);
+                                                    await remove(ref(database, `users/${user.uid}`));
+                                                    await deleteUser(user);
+                                                    console.log("User deleted successfully");
+                                                    await fadeScreen(mainScreen, loginScreen);
+                                                    emailInputLogin.value = "";
+                                                    passwordInputLogin.value = "";
+                                                    emailInputSignUp.value = "";
+                                                    passwordInputSignUp.value = "";
+                                                    emailInputForgetPass.value = "";
+                                                    usernameInputSignup.value = "";
+                                                    usernameChangeInput.value = "";
+                                                    updateXPDisplay(0);
+                                                    showCounter();
+                                                    signUpForm.classList.add("hidden");
+                                                    loginForm.classList.remove("hidden");
+                                                    forgetPassForm.classList.add("hidden");
+                                                    localUsername = null;
+                                                } catch (error) {
+                                                    const mappedMessage = mapErrorMessage(error);
+                                                    clearTimeout(popupTimeout);
+                                                    isInfoPopup = false;
+                                                    showPopup(`Error deleting user: ${mappedMessage}`);
+                                                }
+                                            }
+                                        },
+                                        { text: "Cancel", onClick: () => { } }
+                                    ]
+                                );
+                            }, 220);
+                        } else {
+                            clearTimeout(popupTimeout);
+                            isInfoPopup = false;
+                            showPopup("Unsupported provider. Cannot reauthenticate.");
+                        }
+                    }
+                },
+                { text: "No", onClick: () => { } }
+            ]
+        );
     });
 
     signUpButton.addEventListener("click", () => {
@@ -799,3 +913,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener("click", closeAllSelect);
 });
+
+export function showPopupWithType(message, info = false, duration = 3000) {
+    isInfoPopup = info;
+    showPopup(message, duration);
+}
