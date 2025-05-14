@@ -234,7 +234,7 @@ button {
     height: calc(100% - 10px);
     text-align: center;
     border: none;
-    color: var(--text);
+    color: var(--subtext);
     font-size: 1.5rem;
     cursor: pointer;
     transform: scale(1);
@@ -570,7 +570,7 @@ button {
 }
 
 .welcome {
-    font-size: 1.6rem;
+    font-size: 3rem;
     text-align: center;
     font-weight: bolder;
     color: var(--text);
@@ -722,6 +722,63 @@ button {
     width: 90%;
 }
 
+.quote-home {
+    color: var(--subtext);
+    font-size: 1.2rem;
+}
+
+.home-name-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.tasks-header {
+    width: 100%;
+    height: 100px;
+    padding: 0 15px 0 15px;
+    margin-left: -15px;
+    margin-top: -15px;
+    color: var(--text);
+    background-color: var(--button-active);
+    font-size: 1.6rem;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.tasks-header button {
+    background-color: var(--button-bg);
+    color: var(--subtext);
+    border: none;
+    border-radius: 14px;
+    margin-right: 8px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.4s ease;
+    height: 40px;
+    width: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.tasks-header button i {
+    font-weight: bolder;
+}
+
+.tasks-header button:hover {
+    background-color: var(--button-hover);
+    transform: scale(1.05);
+}
+.tasks-header button:active {
+    background-color: var(--button-active);
+    transform: scale(0.95);
+}
+
 #xp-tex,
 #xp {
     position: relative;
@@ -799,6 +856,7 @@ button {
     min-width: 250px;
     max-width: 100%;
     max-height: 100%;
+    overflow: hidden;
 }
 
 .xp-grid {

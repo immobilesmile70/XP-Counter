@@ -234,12 +234,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const counterButton = document.getElementById("counter");
     const counterScreen = document.getElementById("xp-section");
 
+    const tasksButton = document.getElementById("tasks");
+    const tasksScreen = document.getElementById("tasks-section");
+
     const sidebarElement = document.getElementById("sidebar");
 
     let transitionLock = false;
 
     counterButton.addEventListener("click", () => {
         showCounter();
+    });
+
+    tasksButton.addEventListener("click", () => {
+        showTasks();
     });
 
     leaderboardButton.addEventListener("click", () => {
@@ -272,15 +279,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCounter() {
-        showScreen(counterScreen, leaderboardScreen, settingsScreen);
+        showScreen(counterScreen, tasksScreen, leaderboardScreen, settingsScreen);
+    }
+
+    function showTasks() {
+        showScreen(tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
     }
 
     function showLeaderboard() {
-        showScreen(leaderboardScreen, counterScreen, settingsScreen);
+        showScreen(leaderboardScreen, tasksScreen, counterScreen, settingsScreen);
     }
 
     function showSettings() {
-        showScreen(settingsScreen, leaderboardScreen, counterScreen);
+        showScreen(settingsScreen, tasksScreen, leaderboardScreen, counterScreen);
     }
 
     let localUsername = null;
@@ -440,9 +451,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 usernameChangeInput.value = localUsername;
                 await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
                 await populateLeaderboard();
-                clearTimeout(popupTimeout);
-                isInfoPopup = true;
-                showPopup(`Signed in as: ${localUsername}`);
                 await fadeScreen(loginScreen, mainScreen);
             } else {
                 clearTimeout(popupTimeout);
@@ -532,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             signUpForm.classList.add("hidden");
                             forgetPassForm.classList.add("hidden");
                             localUsername = null;
-                            showCounter();
+                            showTasks();
                         })
                         .catch((error) => {
                             const mappedMessage = mapErrorMessage(error);
@@ -585,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     usernameInputSignup.value = "";
                                                     customContainer.innerHTML = "";
                                                     updateXPDisplay(0);
-                                                    showCounter();
+                                                    showTasks();
                                                     signUpForm.classList.add("hidden");
                                                     loginForm.classList.remove("hidden");
                                                     forgetPassForm.classList.add("hidden");
@@ -631,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     usernameInputSignup.value = "";
                                                     usernameChangeInput.value = "";
                                                     updateXPDisplay(0);
-                                                    showCounter();
+                                                    showTasks();
                                                     signUpForm.classList.add("hidden");
                                                     loginForm.classList.remove("hidden");
                                                     forgetPassForm.classList.add("hidden");

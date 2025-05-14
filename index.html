@@ -130,7 +130,6 @@
         <div id="sidebar-overlay"></div>
 
         <div id="sidebar" class="sidebar">
-            <div class="welcome" style="display: none;">Welcome, <span id="username-text-home">Student</span>!</div>
             <div class="top-flex">
                 <div class="t-sidebar-btn" id="close-sidebar-btn"><svg xmlns="http://www.w3.org/2000/svg" width="45"
                         height="45" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"
@@ -150,12 +149,37 @@
                 </div>
             </div>
             <div class="sidebar-button-flex">
-                <button id="counter">XP Counter</button>
+                <button id="tasks">Tasks</button>
+                <button id="counter">Spend XP</button>
                 <button id="leaderboard">Leaderboard</button>
             </div>
         </div>
 
-        <div class="xp-section" id="xp-section">
+        <div class="xp-section" id="tasks-section" style="gap: 100px;">
+            <div class="xp-display" style="top: 50px;">
+                <div class="home-name-flex">
+                    <div class="welcome">Welcome, <span id="username-text-home">Student</span>!</div>
+                    <span class="quote-home">Today's Quote: <span id="quote">Failure is an event, not a person.</span></span>
+                </div>
+            </div>
+            <div class="xp-controls">
+                <div class="xp-flexbox">
+                    <div class="xp-actions positive" style="gap: 10px;">
+                        <div class="tasks-header"><span  style="margin-left: 8px;">Your Tasks (<span id="created-tasks">6</span>/8)</span> <button><i class="fa-solid fa-plus"></i> Create</button></div>
+                        <div class="leaderboard-list" id="task-list">
+                            <div class="leaderboard-item"><span class="rank">--- 1</span><span class="name">DPP Finish</span><span class="xp">30:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 2</span><span class="name">Chem HW</span><span class="xp">01:00:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 3</span><span class="name">Phy Lecture</span><span class="xp">20:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 4</span><span class="name">Math Matrices</span><span class="xp">40:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 5</span><span class="name">Math Determinants</span><span class="xp">50:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 6</span><span class="name">NCERT</span><span class="xp">10:00</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="xp-section hidden hide" id="xp-section">
             <div class="xp-display">
                 <h1 id="xp-tex"><span id="xp">0</span> XP</h1>
                 <button id="reset-xp"><svg width="50px" height="50px" viewBox="0 0 21 21"
