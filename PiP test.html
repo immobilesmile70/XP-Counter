@@ -97,10 +97,12 @@
   <div class="watch-flex">
     <div id="stopwatch">00:00</div>
     <div class="watch-btn-flex">
-      <button class="visible" id="start" style="padding-left: 2px; padding-right: 0px;"><i class="fas fa-play"></i><p>Start</p></button>
-      <button class="hidden" id="resume" style="padding-left: 2px; padding-right: 0px;"><i class="fas fa-play"></i><p>Resume</p></button>
-      <button class="hidden" id="pause"><i class="fas fa-pause"></i><p>Pause</p></button>
-      <button class="hidden" id="reset"><i class="fas fa-rotate-left"></i><p>Reset</p></button>
+      <button class="visible" id="start" style="padding-left: 2px; padding-right: 0px;"><i
+          class="fas fa-play"></i><span>Start</span></button>
+      <button class="hidden" id="resume" style="padding-left: 2px; padding-right: 0px;"><i
+          class="fas fa-play"></i><span>Resume</span></button>
+      <button class="hidden" id="pause"><i class="fas fa-pause"></i><span>Pause</span></button>
+      <button class="hidden" id="reset"><i class="fas fa-rotate-left"></i><span>Reset</span></button>
     </div>
     <button class="visible" id="openPiP"><svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
         xmlns="http://www.w3.org/2000/svg">
@@ -429,6 +431,42 @@
       appContainer.id = "appContainer";
       appContainer.appendChild(pipTimerEl);
       appContainer.appendChild(buttonContainer);
+
+      const tooltip = pipWindow.document.createElement("div");
+      tooltip.id = "pip-tooltip";
+      tooltip.style.position = "absolute";
+      tooltip.style.background = "#222";
+      tooltip.style.color = "#fff";
+      tooltip.style.padding = "6px 16px";
+      tooltip.style.borderRadius = "8px";
+      tooltip.style.fontSize = "1rem";
+      tooltip.style.pointerEvents = "none";
+      tooltip.style.opacity = "0";
+      tooltip.style.transition = "opacity 0.2s";
+      tooltip.style.zIndex = "1000";
+      pipWindow.document.body.appendChild(tooltip);
+
+      function showTooltip(e, text) {
+        tooltip.textContent = text;
+        const rect = e.target.getBoundingClientRect();
+        tooltip.style.left = rect.left + rect.width / 2 - tooltip.offsetWidth / 2 + "px";
+        tooltip.style.top = rect.top - 36 + "px";
+        tooltip.style.opacity = "1";
+      }
+      function hideTooltip() {
+        tooltip.style.opacity = "0";
+      }
+
+      let tooltipTimeout;
+
+      pipButtons.startBtn.addEventListener("mouseenter", e => { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { showTooltip(e, "Start") }, 450); });
+      pipButtons.startBtn.addEventListener("mouseleave", () => { clearTimeout(tooltipTimeout); hideTooltip(); });
+      pipButtons.pauseBtn.addEventListener("mouseenter", e => { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { showTooltip(e, "Pause") }, 450); });
+      pipButtons.pauseBtn.addEventListener("mouseleave", () => { clearTimeout(tooltipTimeout); hideTooltip(); });
+      pipButtons.resumeBtn.addEventListener("mouseenter", e => { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { showTooltip(e, "Resume") }, 450); });
+      pipButtons.resumeBtn.addEventListener("mouseleave", () => { clearTimeout(tooltipTimeout); hideTooltip(); });
+      pipButtons.resetBtn.addEventListener("mouseenter", e => { clearTimeout(tooltipTimeout); tooltipTimeout = setTimeout(() => { showTooltip(e, "Reset") }, 450); });
+      pipButtons.resetBtn.addEventListener("mouseleave", () => { clearTimeout(tooltipTimeout); hideTooltip(); });
 
       pipWindow.document.body.append(appContainer);
       const faLink = document.createElement("link");
