@@ -720,7 +720,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         .catch((error) => {
                             const mappedMessage = mapErrorMessage(error);
                             clearTimeout(popupTimeout);
-                            showPopup(`SignUp Failed: ${mappedMessage}`);
+                            showPopup(`SignUp Failed: ${mappedMessage}`, 7500);
+                            console.log(error.message);
+                            console.log(mappedMessage);
                         });
                 }
             }).catch((error) => {
@@ -777,6 +779,13 @@ document.addEventListener('DOMContentLoaded', () => {
             "auth/too-many-requests": "Too many attempts. Try again later.",
             "auth/operation-not-allowed": "This operation is not allowed. Please contact support."
         };
+
+        const passwordReqMsg = "Password must contain an upper case character";
+        const passwordReqMsg2 = "auth/password-does-not-meet-requirements";
+        const msg = error.message || "";
+        if (msg.includes(passwordReqMsg) || msg.includes(passwordReqMsg2)) {
+            return "Password must contain an uppercase character (e.g. A,B,C...) and a non alphanumeric character (e.g. @,#,$,&,*...).";
+        }
 
         const code = error.code || error.message;
         return errorMap[code] || "An unexpected error occurred. Please try again.";

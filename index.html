@@ -159,20 +159,29 @@
             <div class="xp-display" style="top: 50px;">
                 <div class="home-name-flex">
                     <div class="welcome">Welcome, <span id="username-text-home">Student</span>!</div>
-                    <span class="quote-home" id="quote">Failure is an event, not a person.<span class="quote-author">-Unknown</span></span>
+                    <span class="quote-home" id="quote">Failure is an event, not a person.<span
+                            class="quote-author">-Unknown</span></span>
                 </div>
             </div>
             <div class="xp-controls">
                 <div class="xp-flexbox">
                     <div class="xp-actions positive" style="gap: 10px;">
-                        <div class="tasks-header"><span  style="margin-left: 8px;">Your Tasks (<span id="created-tasks">6</span>/8)</span> <button><i class="fa-solid fa-plus"></i> Create</button></div>
+                        <div class="tasks-header"><span style="margin-left: 8px;">Your Tasks (<span
+                                    id="created-tasks">6</span>/8)</span> <button><i class="fa-solid fa-plus"></i>
+                                Create</button></div>
                         <div class="leaderboard-list" id="task-list">
-                            <div class="leaderboard-item"><span class="rank">--- 1</span><span class="name">DPP Finish</span><span class="xp">30:00</span></div>
-                            <div class="leaderboard-item"><span class="rank">--- 2</span><span class="name">Chem HW</span><span class="xp">01:00:00</span></div>
-                            <div class="leaderboard-item"><span class="rank">--- 3</span><span class="name">Phy Lecture</span><span class="xp">20:00</span></div>
-                            <div class="leaderboard-item"><span class="rank">--- 4</span><span class="name">Math Matrices</span><span class="xp">40:00</span></div>
-                            <div class="leaderboard-item"><span class="rank">--- 5</span><span class="name">Math Determinants</span><span class="xp">50:00</span></div>
-                            <div class="leaderboard-item"><span class="rank">--- 6</span><span class="name">NCERT</span><span class="xp">10:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 1</span><span class="name">DPP
+                                    Finish</span><span class="xp">30:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 2</span><span class="name">Chem
+                                    HW</span><span class="xp">01:00:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 3</span><span class="name">Phy
+                                    Lecture</span><span class="xp">20:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 4</span><span class="name">Math
+                                    Matrices</span><span class="xp">40:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 5</span><span class="name">Math
+                                    Determinants</span><span class="xp">50:00</span></div>
+                            <div class="leaderboard-item"><span class="rank">--- 6</span><span
+                                    class="name">NCERT</span><span class="xp">10:00</span></div>
                         </div>
                     </div>
                 </div>
@@ -290,7 +299,12 @@
             </div>
         </div>
     </div>
-    <!-- <script defer src="/_vercel/insights/script.js"></script> -->
+    
+    <script type="module">
+        import { inject } from 'https://cdn.jsdelivr.net/npm/@vercel/analytics@1.5.0/+esm';
+
+        inject();
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/zxcvbn@4.4.2/dist/zxcvbn.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
     <script type="module" src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
