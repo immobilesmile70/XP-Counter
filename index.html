@@ -62,7 +62,7 @@
     <script>
         const noInternetScreen = document.getElementById('no-internet-screen');
         function updateNetworkUI() {
-            if (navigator.onLine) {
+            if (!navigator.onLine) {
                 noInternetScreen.classList.remove('hide');
             } else {
                 noInternetScreen.classList.add('hide');
