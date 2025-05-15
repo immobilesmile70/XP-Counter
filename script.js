@@ -237,6 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const tasksButton = document.getElementById("tasks");
     const tasksScreen = document.getElementById("tasks-section");
 
+    const mainButton = document.getElementById("main");
+    const mainSection = document.getElementById("main-section");
+
     const sidebarElement = document.getElementById("sidebar");
 
     let transitionLock = false;
@@ -247,6 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tasksButton.addEventListener("click", () => {
         showTasks();
+    });
+
+    mainButton.addEventListener("click", () => {
+        showMain();
     });
 
     leaderboardButton.addEventListener("click", () => {
@@ -279,19 +286,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCounter() {
-        showScreen(counterScreen, tasksScreen, leaderboardScreen, settingsScreen);
+        showScreen(counterScreen, mainSection, tasksScreen, leaderboardScreen, settingsScreen);
     }
 
     function showTasks() {
-        showScreen(tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
+        showScreen(tasksScreen, mainSection, counterScreen, leaderboardScreen, settingsScreen);
+    }
+
+    function showMain() {
+        showScreen(mainSection, tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
     }
 
     function showLeaderboard() {
-        showScreen(leaderboardScreen, tasksScreen, counterScreen, settingsScreen);
+        showScreen(leaderboardScreen, mainSection, tasksScreen, counterScreen, settingsScreen);
     }
 
     function showSettings() {
-        showScreen(settingsScreen, tasksScreen, leaderboardScreen, counterScreen);
+        showScreen(settingsScreen, mainSection, tasksScreen, leaderboardScreen, counterScreen);
     }
 
     let localUsername = null;
