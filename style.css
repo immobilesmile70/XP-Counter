@@ -22,6 +22,7 @@
     --xp-btn: #7bc5f8;
     --xp-btn-hover: #97c4e3;
     --xp-btn-active: #458cbc;
+    --list-tool-bg: #cccccc;
 }
 
 [data-theme="dark"] {
@@ -35,7 +36,7 @@
     --button-active: #2b2b2b;
     --sidebar-bg: #232323;
     --header-color: #bfbfbf;
-    --border: #404040;
+    --border: #2d2d2d;
     --svg-stroke-color: white;
     --scrollbar-bg: #232323;
     --scrollbar-thumb: #444;
@@ -48,6 +49,7 @@
     --xp-btn: #35678a;
     --xp-btn-hover: #4882a4;
     --xp-btn-active: #1a5473;
+    --list-tool-bg: #4f4f4f;
 }
 
 [data-theme="light"] {
@@ -74,6 +76,7 @@
     --xp-btn: #7bc5f8;
     --xp-btn-hover: #97c4e3;
     --xp-btn-active: #458cbc;
+    --list-tool-bg: #cccccc;
 }
 
 body,
@@ -1094,14 +1097,17 @@ button {
 
 .rank {
     font-weight: bold;
-    font-weight: bold;
     font-size: 1.25rem;
     color: var(--subtext);
+    background-color: var(--list-tool-bg);
+    border-radius: 50pc;
+    padding: 2px 8px;
 }
 
 .name {
     flex-grow: 1;
-    text-align: center;
+    text-align: left;
+    margin-left: 15px;
     color: var(--subtext);
     font-weight: bold;
     font-size: 1.25rem;
