@@ -672,7 +672,10 @@ button {
     font-size: 3rem;
     text-align: center;
     font-weight: bolder;
-    color: var(--text);
+    background: linear-gradient(90deg, #8ca7e8 35%, #a660d8 70%, #da6060 100%, #8ca7e8 35%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .sidebar {
@@ -1058,7 +1061,7 @@ button {
     gap: 20px;
     overflow-y: auto;
     height: 250px;
-    max-height: 1080px;
+    height: 100%;
     padding: 5px;
     display: flex;
     scrollbar-width: thin;
