@@ -675,7 +675,7 @@ button {
     font-size: 3rem;
     text-align: center;
     font-weight: bolder;
-    background: linear-gradient(90deg, #8ca7e8 35%, #a660d8 70%, #da6060 100%, #8ca7e8 35%);
+    background: linear-gradient(90deg, #628bee 20%, #a660d8 50%, #da6060 100%);
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -1302,8 +1302,8 @@ button {
 }
 
 .watch-flex button {
-    background-color: #373737;
-    color: white;
+    background-color: var(--button-bg);
+    color: var(--subtext);
     width: 125px;
     height: 50px;
     font-size: 1.4rem;
@@ -1335,6 +1335,7 @@ button {
 .watch-flex button svg {
     height: 80%;
     width: 80%;
+    fill: var(--subtext);
 }
 
 .watch-flex button.visible {
@@ -1349,12 +1350,12 @@ button {
 
 .watch-flex button:hover {
     transform: scale(1.1);
-    background-color: #4f4f4f;
+    background-color: var(--button-hover);
 }
 
 .watch-flex button:active {
     transform: scale(0.9);
-    background-color: #232323;
+    background-color: var(--button-active);
 }
 
 .watch-flex {
@@ -1372,11 +1373,44 @@ button {
     gap: 10px;
 }
 
+.task-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: var(--list-bg);
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
+}
+
+.task-pos {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: var(--subtext);
+    background-color: var(--list-tool-bg);
+    border-radius: 50pc;
+    padding: 2px 8px;
+}
+
+.task-name {
+    flex-grow: 1;
+    text-align: left;
+    margin-left: 15px;
+    color: var(--subtext);
+    font-weight: bold;
+    font-size: 1.25rem;
+}
+
+.task-duration {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #56adee;
+}
+
 @media (max-width: 871px) {
 
     body {
         flex-direction: column;
-        overflow-y: auto;
     }
 
     #loading-text {
@@ -1579,6 +1613,10 @@ button {
     .dialog {
         font-size: 1.25rem;
     }
+
+    .popup {
+        width: calc(100% - 50px);
+    }
 }
 
 @media (max-width: 480px) {
@@ -1630,11 +1668,6 @@ button {
         font-size: 0.8rem;
     }
 
-    .xp-controls {
-        padding: 10px;
-        gap: 10px;
-    }
-
     .xp-actions {
         padding: 8px;
     }
@@ -1651,11 +1684,15 @@ button {
 
     #xp-tex,
     #xp {
-        font-size: 2rem;
+        font-size: 3rem;
     }
 
     .xp-display h1 {
-        font-size: 2rem;
+        font-size: 2.5rem;
+    }
+    
+    .home-name-flex {
+        width: 80%;
     }
 
     .xp-flexbox {
@@ -1667,5 +1704,7 @@ button {
         flex-direction: column;
         align-items: center;
         gap: 10px;
+        padding: 10px;
+        height: 77%;
     }
 }

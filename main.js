@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById("openPiP").addEventListener("click", async () => {
         if (!("documentPictureInPicture" in window)) {
-            alert("Not supported");
+            showPopupWithType("Picture-in-Picture not supported.");
             return;
         }
 
