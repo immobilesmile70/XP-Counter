@@ -41,6 +41,7 @@ function showPopup(message, duration = 3000) {
 }
 
 const dialog = document.getElementById("dialog");
+const dialogContent = document.getElementById("dialog-content");
 const messageEl = document.getElementById("dialog-message");
 const subMessageEl = document.getElementById("dialog-sub-message");
 const buttonsContainer = document.getElementById("dialog-buttons");
@@ -63,14 +64,16 @@ function showDialog(message, subMessage, buttons = [], customContent = null) {
         }
         btn.onclick = () => {
             onClick();
+            dialogContent.classList.remove('show');
             dialog.classList.remove('show');
-            setTimeout(() => { dialog.classList.add('hide'); }, 100);
+            setTimeout(() => { dialogContent.classList.add('hide'); dialog.classList.add('hide'); }, 150);
         };
         buttonsContainer.appendChild(btn);
     });
 
     dialog.classList.remove('hide');
-    setTimeout(() => { dialog.classList.add('show'); }, 100);
+    dialogContent.classList.remove('hide'); 
+    setTimeout(() => { dialog.classList.add('show'); dialogContent.classList.add('show'); }, 10);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
