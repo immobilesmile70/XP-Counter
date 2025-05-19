@@ -47,6 +47,14 @@ const subMessageEl = document.getElementById("dialog-sub-message");
 const buttonsContainer = document.getElementById("dialog-buttons");
 const customContainer = document.getElementById("custom-element-dialog");
 
+dialog.addEventListener('click', (event) => {
+    if (event.target === dialog) {
+        dialogContent.classList.remove('show');
+        dialog.classList.remove('show');
+        setTimeout(() => { dialogContent.classList.add('hide'); dialog.classList.add('hide'); }, 100);
+    }
+});
+
 function showDialog(message, subMessage, buttons = [], customContent = null) {
     messageEl.textContent = message;
     subMessageEl.textContent = subMessage;
@@ -66,14 +74,14 @@ function showDialog(message, subMessage, buttons = [], customContent = null) {
             onClick();
             dialogContent.classList.remove('show');
             dialog.classList.remove('show');
-            setTimeout(() => { dialogContent.classList.add('hide'); dialog.classList.add('hide'); }, 150);
+            setTimeout(() => { dialogContent.classList.add('hide'); dialog.classList.add('hide'); }, 100);
         };
         buttonsContainer.appendChild(btn);
     });
 
     dialog.classList.remove('hide');
     dialogContent.classList.remove('hide'); 
-    setTimeout(() => { dialog.classList.add('show'); dialogContent.classList.add('show'); }, 10);
+    setTimeout(() => { dialog.classList.add('show'); dialogContent.classList.add('show'); }, 75);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
