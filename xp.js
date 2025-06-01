@@ -1,6 +1,7 @@
 import {
     auth, ref, set, database, get, onAuthStateChanged
 } from './firebase.js';
+import { showPopupWithType } from './script.js';
 
 let popupTimeout = null;
 let isInfoPopup = false;
@@ -14,9 +15,7 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
         if (user) {
             const xpElement = document.getElementById("xp");
             if (!xpElement) {
-                clearTimeout(popupTimeout);
-                isInfoPopup = false;
-                showPopup("XP element not found in the DOM.");
+                showPopupWithType("XP element not found in the DOM.", false);
                 return;
             }
             const userRef = ref(database, `users/${user.uid}`);
@@ -34,9 +33,7 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                             const currentXP = parseInt(xpElement.textContent || "0");
                             const newXP = currentXP + change;
                             if (newXP < -1000) {
-                                clearTimeout(popupTimeout);
-                                isInfoPopup = true;
-                                showPopup("XP cannot be less than -1000.");
+                                showPopupWithType("XP cannot be less than -1000.", false);
                                 return;
                             }
                             toggleShimmer("xp", true);
@@ -56,26 +53,20 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                                     pendingXP = 0;
                                 } catch (error) {
                                     console.error("Error flushing XP to the server:", error);
-                                    clearTimeout(popupTimeout);
-                                    isInfoPopup = false;
-                                    showPopup("Failed to send XP to the server.");
+                                    showPopupWithType("Failed to send XP to the server.", false);
                                 }
                             }, flushDelay);
                         });
                     });
                     const resetButton = document.getElementById("reset-xp");
                     if (!resetButton) {
-                        clearTimeout(popupTimeout);
-                        isInfoPopup = false;
-                        showPopup("Reset XP button not found in the DOM.");
+                        showPopupWithType("Reset XP button not found in the DOM.", false);
                         return;
                     }
                     resetButton.addEventListener("click", async () => {
                         const currentXP = parseInt(xpElement.textContent || "0");
                         if (currentXP === 0 && pendingXP === 0) {
-                            clearTimeout(popupTimeout);
-                            isInfoPopup = true;
-                            showPopup("XP is already zero.");
+                            showPopupWithType("XP is already zero.", false);
                             return;
                         }
                         toggleShimmer("xp", true);
@@ -93,13 +84,9 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                             }
                             updateXPDisplay(0);
                             xpElement.textContent = 0;
-                            clearTimeout(popupTimeout);
-                            isInfoPopup = true;
-                            showPopup("XP successfully reset!");
+                            showPopupWithType("XP successfully reset!", true);
                         } catch (error) {
-                            clearTimeout(popupTimeout);
-                            isInfoPopup = false;
-                            showPopup("Error resetting XP: " + error.message);
+                            showPopupWithType("Error resetting XP: " + error.message, false);
                         }
                     });
                 } else {
@@ -108,12 +95,31 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                     xpElement.textContent = 0;
                 }
             } catch (error) {
-                clearTimeout(popupTimeout);
-                isInfoPopup = false;
-                showPopup("Error fetching XP from the server: " + error.message);
+                showPopupWithType("Error fetching XP from the server: " + error.message, false);
             }
         } else {
             console.warn("No user signed in");
         }
     });
+}
+
+export async function pushXPToFirebase(xp) {
+    if (!auth.currentUser) {
+        throw new Error("No user is currently signed in.");
+    }
+    try {
+        const userXPRef = ref(database, `users/${auth.currentUser.uid}/xp`);
+        const currentXPSnap = await get(userXPRef);
+        let currentXP = 0;
+        if (currentXPSnap.exists()) {
+            currentXP = parseInt(currentXPSnap.val() || 0);
+        }
+        const newXP = currentXP + xp;
+        await set(userXPRef, newXP);
+        const xpElement = document.getElementById("xp");
+        if (xpElement) xpElement.textContent = newXP;
+        return newXP;
+    } catch (error) {
+        throw new Error("Failed to push XP to Firebase: " + error.message);
+    }
 }

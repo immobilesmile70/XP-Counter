@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Upgrind - Under Maintenance</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" href="https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/upgrind%20logo.ico"
+        type="image/x-icon" />
+    <style>
+        :root {
+            --bg: #eaeaea;
+            --text: black;
+            --subtext: #444444;
+            --footer: #cfcfcf;
+        }
+
+        [data-theme="dark"] {
+            --bg: #2c2c2c;
+            --text: white;
+            --subtext: #bfbfbf;
+            --footer: #1f1e1e;
+        }
+
+        [data-theme="light"] {
+            --bg: #eaeaea;
+            --text: black;
+            --subtext: #444444;
+            --footer: #cfcfcf;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            user-select: none;
+            gap: 20px;
+        }
+
+        .text-flex {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            margin: 0;
+        }
+
+        p {
+            font-size: 1.2rem;
+            max-width: 500px;
+            color: var(--subtext);
+            margin: 0;
+        }
+
+        .t-icon i {
+            font-size: 10rem;
+            color: var(--subtext);
+            margin-bottom: 1rem;
+            animation: rotate 10s ease-in-out infinite;
+            transform-origin: center;
+            transform: rotate(360deg);
+        }
+
+        @keyframes rotate {
+            0%, 100% {
+                transform: rotate(360deg);
+            }
+
+            20% {
+                transform: rotate(390deg);
+            }
+
+            40% {
+                transform: rotate(340deg);
+            }
+
+            55% {
+                transform: rotate(370deg);
+            }
+
+            70% {
+                transform: rotate(350deg);
+            }
+
+            85% {
+                transform: rotate(365deg);
+            }
+        }
+
+        .footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            text-align: center;
+            border-radius: 30px 30px 0 0;
+            background-color: var(--footer);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .footer p {
+            color: #7c7c7c;
+            font-size: 1rem;
+            max-width: 90%;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                flex-direction: column;
+                padding: 0 20px 0 20px;
+                gap: 10px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+            }
+
+            i {
+                font-size: 7rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="t-icon"><i class="fa-solid fa-screwdriver-wrench"></i></div>
+    <div class="text-flex">
+        <h1>We'll be right back!</h1>
+        <p>Our site is currently undergoing scheduled maintenance. We’ll be back shortly. Thanks for your patience!</p>
+    </div>
+
+    <div class="footer">
+        <p>
+            Developed by Shourya <b>|</b> © 2025 UpGrind. All rights reserved.
+            <a href="https://github.com/immobilesmile70" target="_blank"
+                style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                <i class="fab fa-github fa-lg"></i>
+            </a>
+            <a href="https://reddit.com/user/Exciting-Sherbert147" target="_blank"
+                style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                <i class="fab fa-reddit fa-lg"></i>
+            </a>
+            <a href="mailto:help.upgrind@gmail.com"
+                style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
+                <i class="fas fa-envelope fa-lg"></i>
+            </a>
+        </p>
+    </div>
+
+    <script>
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
+        function getSystemTheme() {
+            return mediaQuery.matches ? 'dark' : 'light';
+        }
+
+        function applyTheme(theme) {
+            const finalTheme = theme === 'system' ? getSystemTheme() : theme;
+            document.documentElement.setAttribute("data-theme", finalTheme);
+        }
+
+        let currentTheme = localStorage.getItem('theme') || 'system';
+        applyTheme(currentTheme);
+
+        mediaQuery.addEventListener('change', (e) => {
+            if (currentTheme === 'system') {
+                applyTheme('system');
+            }
+        });
+
+        localStorage.setItem('theme', currentTheme);
+    </script>
+</body>
+
+</html>

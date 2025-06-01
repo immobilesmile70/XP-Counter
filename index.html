@@ -167,9 +167,9 @@
                     style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
                     <i class="fab fa-github fa-lg"></i>
                 </a>
-                <a href="https://reddit.com/user/Exciting-Sherbert147" target="_blank"
+                <a href="https://www.instagram.com/beastgamer985/" target="_blank"
                     style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
-                    <i class="fab fa-reddit fa-lg"></i>
+                    <i class="fa-brands fa-instagram"></i>
                 </a>
                 <a href="mailto:help.upgrind@gmail.com"
                     style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
@@ -178,6 +178,7 @@
             </p>
         </div>
     </div>
+
     <div id="main-screen" class="main-screen hidden hide">
 
         <div class="t-sidebar-btn" id="open-sidebar-btn"><svg xmlns="http://www.w3.org/2000/svg" width="45" height="45"
@@ -212,7 +213,9 @@
             </div>
             <div class="sidebar-button-flex">
                 <button id="tasks">Tasks</button>
-                <button id="main">Timer</button>
+                <button id="create-task">Create Task</button>
+                <button id="main">Current Task</button>
+                <button id="timer">Timer</button>
                 <button id="counter">Spend XP</button>
                 <button id="leaderboard">Leaderboard</button>
             </div>
@@ -229,22 +232,87 @@
             <div class="xp-controls">
                 <div class="xp-flexbox">
                     <div class="xp-actions positive" style="gap: 10px;">
-                        <div class="tasks-header"><span style="margin-left: 8px;">Your Tasks (<span
-                                    id="created-tasks">6</span>/8)</span> <button><i class="fa-solid fa-plus"></i>
-                                Create</button></div>
+                        <div class="tasks-header"><span class="your-tasks">Your Tasks (<span
+                                    id="created-tasks">6</span>/8)</span> <button id="create-new-task"><i
+                                    class="fa-solid fa-plus"></i>
+                                Create</button>
+                        </div>
                         <div class="leaderboard-list" id="task-list" style="height: 80%;">
-                            <div class="task-list-item"><span class="task-pos">1</span><span class="task-name">DPP
-                                    Finish</span><span class="task-duration">30:00</span></div>
-                            <div class="task-list-item"><span class="task-pos">2</span><span class="task-name">Chem
-                                    HW</span><span class="task-duration">01:00:00</span></div>
-                            <div class="task-list-item"><span class="task-pos">3</span><span class="task-name">Phy
-                                    Lecture</span><span class="task-duration">20:00</span></div>
-                            <div class="task-list-item"><span class="task-pos">4</span><span class="task-name">Math
-                                    Matrices</span><span class="task-duration">40:00</span></div>
-                            <div class="task-list-item"><span class="task-pos">5</span><span class="task-name">Math
-                                    Determinants</span><span class="task-duration">50:00</span></div>
-                            <div class="task-list-item"><span class="task-pos">6</span><span
-                                    class="name">NCERT</span><span class="task-duration">10:00</span></div>
+                            <div class="task-list-item"></div>
+                            <div class="task-list-item"></div>
+                            <div class="task-list-item"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="xp-section hidden hide" id="create-task-section" style="gap: 100px;">
+            <div class="xp-display" style="top: 50px;">
+                <h1 id="current-status-eoc">Create Task</h1>
+            </div>
+            <div class="xp-controls">
+                <div class="xp-flexbox">
+                    <div class="xp-actions positive" style="gap: 10px;">
+                        <div class="leaderboard-list" id="create-task-list" style="height: 80%;">
+                            <div class="setting-item" style="gap: 100px;">
+                                <label>Task Name </label>
+                                <input type="text" class="task-name-input form-field" id="task-name-input"
+                                    placeholder="(e.g. Do this & that....)" required>
+                            </div>
+                            <div class="setting-item" style="gap: 62px;">
+                                <label>Timer Type </label>
+                                <div class="custom-timer-select" style="width:200px;">
+                                    <select>
+                                        <option value="up">Count Up</option>
+                                        <option value="down">Count Down</option>
+                                        <option value="pomo">Pomodoro</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-item" style="gap: 55px;">
+                                <label for="task-duration-input">Duration </label>
+                                <div id="task-duration-input" class="flex-duration-input">
+                                    <input type="number" min="0" max="8" placeholder="HH" class="duration-input"
+                                        id="duration-hours" />
+                                    <input type="number" min="0" max="59" placeholder="MM" class="duration-input"
+                                        id="duration-minutes" />
+                                    <input type="number" min="0" max="59" placeholder="SS" class="duration-input"
+                                        id="duration-seconds" />
+                                </div>
+                            </div>
+                            <div class="setting-item" style="gap: 37px;">
+                                <label for="break-duration-input">Short Break </label>
+                                <div id="break-duration-input" class="flex-duration-input">
+                                    <input type="number" min="0" max="2" placeholder="HH" class="duration-input"
+                                        id="short-break-hours" />
+                                    <input type="number" min="0" max="59" placeholder="MM" class="duration-input"
+                                        id="short-break-minutes" />
+                                    <input type="number" min="0" max="59" placeholder="SS" class="duration-input"
+                                        id="short-break-seconds" />
+                                </div>
+                            </div>
+                            <div class="setting-item" style="gap: 37px;">
+                                <label for="long-break-duration-input">Long Break </label>
+                                <div id="break-duration-input" class="flex-duration-input">
+                                    <input type="number" min="0" max="2" placeholder="HH" class="duration-input"
+                                        id="long-break-hours" />
+                                    <input type="number" min="0" max="59" placeholder="MM" class="duration-input"
+                                        id="long-break-minutes" />
+                                    <input type="number" min="0" max="59" placeholder="SS" class="duration-input"
+                                        id="long-break-seconds" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tasks-footer">
+                            <button id="cancel-task-button">Cancel</button>
+                            <div class="create-task-button-flex">
+                                <button id="create-task-button">Create Task</button>
+                                <button id="create-task-start" style="display: none;">Create & Start</button>
+                            </div>
+                            <div class="edit-task-button-flex" style="display: none;">
+                                <button id="edit-task-button">Done</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -254,25 +322,32 @@
         <div class="xp-section hidden hide" id="main-section" style="gap: 100px;">
             <div class="xp-display" style="top: 50px;">
                 <div class="home-name-flex">
-                    <span id="task-name">Complete DPP</span>
+                    <h1 id="task-name">Task Name</h1>
+                    <button id="back-to-main">
+                        < Back</button>
                 </div>
             </div>
             <div class="xp-actions" style="gap: 10px;">
                 <div class="watch-flex">
-                    <div id="stopwatch">00:00</div>
+                    <div id="timer-stat"
+                        style="text-align:center;color:var(--subtext);font-size:2rem;margin-bottom:4px;"></div>
+                    <div id="stopwatch">NaN:NaN</div>
+                    <div id="pomodoro-status"
+                        style="text-align:center;color:var(--subtext);font-size:1.1rem;margin-top:4px;"></div>
                     <div class="watch-btn-flex">
                         <button class="visible" id="start" style="padding-left: 2px; padding-right: 0px;"><i
                                 class="fas fa-play"></i><span>Start</span></button>
-                        <button class="hidden" id="resume" style="padding-left: 2px; padding-right: 0px;"><i
+                        <button class="visible" id="resume" style="padding-left: 2px; padding-right: 0px;"><i
                                 class="fas fa-play"></i><span>Resume</span></button>
-                        <button class="hidden" id="pause"><i class="fas fa-pause"></i><span>Pause</span></button>
-                        <button class="hidden" id="reset"><i class="fas fa-rotate-left"></i><span>Reset</span></button>
+                        <button class="visible" id="pause"><i class="fas fa-pause"></i><span>Pause</span></button>
+                        <button class="visible" id="reset"><i class="fas fa-rotate-left"></i><span>Reset</span></button>
                     </div>
-                    <button class="visible" id="openPiP"><svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
+                    <button class="hidden" id="openPiP"><svg width="40px" height="40px" viewBox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd" clip-rule="evenodd"
                                 d="M9.94358 2.25H14.0564C15.8942 2.24998 17.3498 2.24997 18.489 2.40314C19.6614 2.56076 20.6104 2.89288 21.3588 3.64124C22.1071 4.38961 22.4392 5.33856 22.5969 6.51098C22.75 7.65019 22.75 9.10583 22.75 10.9436V11C22.75 11.4142 22.4142 11.75 22 11.75C21.5858 11.75 21.25 11.4142 21.25 11C21.25 9.09318 21.2484 7.73851 21.1102 6.71085C20.975 5.70476 20.7213 5.12511 20.2981 4.7019C19.8749 4.27869 19.2952 4.02502 18.2892 3.88976C17.2615 3.75159 15.9068 3.75 14 3.75H10C8.09318 3.75 6.73851 3.75159 5.71085 3.88976C4.70476 4.02502 4.12511 4.27869 3.7019 4.7019C3.27869 5.12511 3.02502 5.70476 2.88976 6.71085C2.75159 7.73851 2.75 9.09318 2.75 11V13C2.75 14.9068 2.75159 16.2615 2.88976 17.2892C3.02502 18.2952 3.27869 18.8749 3.7019 19.2981C4.12511 19.7213 4.70476 19.975 5.71085 20.1102C6.73851 20.2484 8.09318 20.25 10 20.25H11C11.4142 20.25 11.75 20.5858 11.75 21C11.75 21.4142 11.4142 21.75 11 21.75H9.94359C8.10583 21.75 6.65019 21.75 5.51098 21.5969C4.33856 21.4392 3.38961 21.1071 2.64124 20.3588C1.89288 19.6104 1.56076 18.6614 1.40314 17.489C1.24997 16.3498 1.24998 14.8942 1.25 13.0564V10.9436C1.24998 9.10582 1.24997 7.65019 1.40314 6.51098C1.56076 5.33856 1.89288 4.38961 2.64124 3.64124C3.38961 2.89288 4.33856 2.56076 5.51098 2.40314C6.65019 2.24997 8.10582 2.24998 9.94358 2.25ZM6.96967 6.96967C7.26256 6.67678 7.73744 6.67678 8.03033 6.96967L10.75 9.68934V8.5C10.75 8.08579 11.0858 7.75 11.5 7.75C11.9142 7.75 12.25 8.08579 12.25 8.5V11.5C12.25 11.9142 11.9142 12.25 11.5 12.25H8.5C8.08579 12.25 7.75 11.9142 7.75 11.5C7.75 11.0858 8.08579 10.75 8.5 10.75H9.68934L6.96967 8.03033C6.67678 7.73744 6.67678 7.26256 6.96967 6.96967ZM16.948 12.25H18.052C18.9505 12.25 19.6997 12.2499 20.2945 12.3299C20.9223 12.4143 21.4891 12.6 21.9445 13.0555C22.4 13.5109 22.5857 14.0777 22.6701 14.7055C22.7501 15.3003 22.75 16.0495 22.75 16.948V17.052C22.75 17.9505 22.7501 18.6997 22.6701 19.2945C22.5857 19.9223 22.4 20.4891 21.9445 20.9445C21.4891 21.4 20.9223 21.5857 20.2945 21.6701C19.6997 21.7501 18.9505 21.75 18.052 21.75H16.948C16.0495 21.75 15.3003 21.7501 14.7055 21.6701C14.0777 21.5857 13.5109 21.4 13.0555 20.9445C12.6 20.4891 12.4143 19.9223 12.3299 19.2945C12.2499 18.6997 12.25 17.9505 12.25 17.052V16.948C12.25 16.0495 12.2499 15.3003 12.3299 14.7055C12.4143 14.0777 12.6 13.5109 13.0555 13.0555C13.5109 12.6 14.0777 12.4143 14.7055 12.3299C15.3003 12.2499 16.0495 12.25 16.948 12.25ZM14.9054 13.8165C14.4439 13.8786 14.2464 13.9858 14.1161 14.1161C13.9858 14.2464 13.8786 14.4439 13.8165 14.9054C13.7516 15.3884 13.75 16.036 13.75 17C13.75 17.964 13.7516 18.6116 13.8165 19.0946C13.8786 19.5561 13.9858 19.7536 14.1161 19.8839C14.2464 20.0142 14.4439 20.1214 14.9054 20.1835C15.3884 20.2484 16.036 20.25 17 20.25H18C18.964 20.25 19.6116 20.2484 20.0946 20.1835C20.5561 20.1214 20.7536 20.0142 20.8839 19.8839C21.0142 19.7536 21.1214 19.5561 21.1835 19.0946C21.2484 18.6116 21.25 17.964 21.25 17C21.25 16.036 21.2484 15.3884 21.1835 14.9054C21.1214 14.4439 21.0142 14.2464 20.8839 14.1161C20.7536 13.9858 20.5561 13.8786 20.0946 13.8165C19.6116 13.7516 18.964 13.75 18 13.75H17C16.036 13.75 15.3884 13.7516 14.9054 13.8165Z" />
-                        </svg></button>
+                        </svg>
+                    </button>
                 </div>
             </div>
             <div class="xp-controls" style="height: 18%;">
@@ -287,22 +362,18 @@
                 <h1 id="xp-tex"><span id="xp">0</span> XP</h1>
                 <button id="reset-xp"><svg width="50px" height="50px" viewBox="0 0 21 21"
                         xmlns="http://www.w3.org/2000/svg">
-
                         <g fill="none" fill-rule="evenodd" stroke="#bebebe" stroke-width="2px" stroke-linecap="round"
                             stroke-linejoin="round" transform="matrix(0 1 1 0 2.5 2.5)">
-
                             <path
                                 d="m3.98652376 1.07807068c-2.38377179 1.38514556-3.98652376 3.96636605-3.98652376 6.92192932 0 4.418278 3.581722 8 8 8s8-3.581722 8-8-3.581722-8-8-8" />
 
                             <path d="m4 1v4h-4" transform="matrix(1 0 0 -1 0 6)" />
-
                         </g>
-
-                    </svg></button>
+                    </svg>
+                </button>
             </div>
 
             <div class="xp-controls">
-
                 <div class="xp-flexbox">
                     <div class="xp-actions positive">
                         <h2>Spend XP</h2>
@@ -396,6 +467,8 @@
     <script type="module" src="xp.js"></script>
     <script type="module" src="leaderboard.js"></script>
     <script type="module" src="quotes.js"></script>
+    <script type="module" src="TimerManager.js"></script>
+    <script type="module" src="TaskManager.js"></script>
     <script type="module" src="main.js"></script>
 </body>
 

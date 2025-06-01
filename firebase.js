@@ -105,6 +105,28 @@ export const signInWithGoogle = async ({
     }
 };
 
+// --- Task Helper Functions for XP Counter ---
+export function getUserId() {
+    return auth.currentUser ? auth.currentUser.uid : null;
+}
+
+export async function updateTaskInFirebase(uid, task) {
+    return saveTaskToFirebase(uid, task);
+}
+
+export async function deleteTaskFromFirebase(uid, taskId) {
+    if (!uid || !taskId) return;
+    await remove(ref(database, `users/${uid}/tasks/${taskId}`));
+}
+
+export async function loadTasksFromFirebase(uid) {
+    if (!uid) return [];
+    const snapshot = await get(ref(database, `users/${uid}/tasks`));
+    if (!snapshot.exists()) return [];
+    const tasksObj = snapshot.val();
+    return Object.values(tasksObj || {});
+}
+
 export {
     auth, database, deleteUser, ref, set, get, remove, reauthenticateWithCredential, EmailAuthProvider, signInWithEmailAndPassword,
     onAuthStateChanged,

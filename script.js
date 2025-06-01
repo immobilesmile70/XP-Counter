@@ -12,6 +12,8 @@ import { initXPHandlers } from './xp.js';
 
 import { getLeaderboardData } from './leaderboard.js';
 
+import { initializeAndLoadTasks } from './main.js';
+
 
 const popup = document.getElementById('popup');
 const closePopupButton = document.getElementById("close-popup-button");
@@ -80,7 +82,7 @@ function showDialog(message, subMessage, buttons = [], customContent = null) {
     });
 
     dialog.classList.remove('hide');
-    dialogContent.classList.remove('hide'); 
+    dialogContent.classList.remove('hide');
     setTimeout(() => { dialog.classList.add('show'); dialogContent.classList.add('show'); }, 75);
 }
 
@@ -248,10 +250,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const tasksButton = document.getElementById("tasks");
     const tasksScreen = document.getElementById("tasks-section");
 
+    const createTasksButton = document.getElementById("create-task");
+    const createTasksScreen = document.getElementById("create-task-section");
+    const createNewTaskButton = document.getElementById("create-new-task");
+
     const mainButton = document.getElementById("main");
     const mainSection = document.getElementById("main-section");
-
-    const sidebarElement = document.getElementById("sidebar");
 
     let transitionLock = false;
 
@@ -261,6 +265,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     tasksButton.addEventListener("click", () => {
         showTasks();
+    });
+
+    createTasksButton.addEventListener("click", () => {
+        showCreateTasks();
+    });
+
+    createNewTaskButton.addEventListener("click", () => {
+        showCreateTasks();
     });
 
     mainButton.addEventListener("click", () => {
@@ -297,23 +309,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showCounter() {
-        showScreen(counterScreen, mainSection, tasksScreen, leaderboardScreen, settingsScreen);
+        showScreen(counterScreen, createTasksScreen, mainSection, tasksScreen, leaderboardScreen, settingsScreen);
     }
 
     function showTasks() {
-        showScreen(tasksScreen, mainSection, counterScreen, leaderboardScreen, settingsScreen);
+        showScreen(tasksScreen, createTasksScreen, mainSection, counterScreen, leaderboardScreen, settingsScreen);
+    }
+
+    function showCreateTasks() {
+        showScreen(createTasksScreen, mainSection, tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
     }
 
     function showMain() {
-        showScreen(mainSection, tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
+        showScreen(mainSection, createTasksScreen, tasksScreen, counterScreen, leaderboardScreen, settingsScreen);
     }
 
     function showLeaderboard() {
-        showScreen(leaderboardScreen, mainSection, tasksScreen, counterScreen, settingsScreen);
+        showScreen(leaderboardScreen, createTasksScreen, mainSection, tasksScreen, counterScreen, settingsScreen);
     }
 
     function showSettings() {
-        showScreen(settingsScreen, mainSection, tasksScreen, leaderboardScreen, counterScreen);
+        showScreen(settingsScreen, createTasksScreen, mainSection, tasksScreen, leaderboardScreen, counterScreen);
     }
 
     let localUsername = null;
@@ -474,6 +490,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
                 await populateLeaderboard();
                 await fadeScreen(loginScreen, mainScreen);
+                // --- XP Counter: Load tasks only after auth ---
+                await initializeAndLoadTasks();
             } else {
                 clearTimeout(popupTimeout);
                 isInfoPopup = true;
@@ -815,11 +833,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function checkScreenSize() {
         if (window.innerWidth < 871) {
-            sidebarElement.classList.add('hidden');
+            sidebar.classList.add('hidden');
             sidebarOverlay.classList.add("hidden");
             sidebarAllowed = true;
         } else {
-            sidebarElement.classList.remove('hidden');
+            sidebar.classList.remove('hidden');
             sidebarOverlay.classList.add("hidden");
             sidebarAllowed = false;
         }
@@ -956,5 +974,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
 export function showPopupWithType(message, info = false, duration = 3000) {
     isInfoPopup = info;
+    clearTimeout(popupTimeout);
     showPopup(message, duration);
 }
