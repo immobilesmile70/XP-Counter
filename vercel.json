@@ -8,6 +8,8 @@
     { "source": "/tos.html", "destination": "/terms-and-conditions.html" },
     { "source": "/terms-of-service", "destination": "/terms-and-conditions.html" },
     { "source": "/tos", "destination": "/terms-and-conditions.html" },
-    { "source": "/terms", "destination": "/terms-and-conditions.html" }
+    { "source": "/terms", "destination": "/terms-and-conditions.html" },
+    { "source": "/terms-and-conditions", "destination": "/terms-and-conditions.html" },
+    { "source": "/index", "destination": "/index.html" }
   ]
 }
