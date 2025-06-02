@@ -4,15 +4,15 @@ import {
     createUserWithEmailAndPassword,
     sendPasswordResetEmail,
     signOut, signInWithGoogle, GoogleAuthProvider, signInWithPopup
-} from './firebase.js';
+} from '/js/firebase.js';
 
-import { filter } from './profanity-filter.js';
+import { filter } from '/js/profanity-filter.js';
 
-import { initXPHandlers } from './xp.js';
+import { initXPHandlers } from '/js/xp.js';
 
-import { getLeaderboardData } from './leaderboard.js';
+import { getLeaderboardData } from '/js/leaderboard.js';
 
-import { initializeAndLoadTasks } from './main.js';
+import { initializeAndLoadTasks } from '/js/main.js';
 
 
 const popup = document.getElementById('popup');

@@ -1,14 +1,11 @@
 import {
     auth, ref, set, database, get, onAuthStateChanged
-} from './firebase.js';
-import { showPopupWithType } from './script.js';
+} from '/js/firebase.js';
+import { showPopupWithType } from '/js/script.js';
 
-let popupTimeout = null;
-let isInfoPopup = false;
 let flushDelay = 4200;
 let pendingXP = 0;
 let flushTimeout = null;
-let localUsername = null;
 
 export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay) {
     onAuthStateChanged(auth, async (user) => {

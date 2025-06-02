@@ -1,5 +1,5 @@
-import { database, ref, get } from './firebase.js';
-import { showPopupWithType } from './script.js';
+import { database, ref, get } from '/js/firebase.js';
+import { showPopupWithType } from '/js/script.js';
 
 export async function getLeaderboardData({limit = 10, showPopup}) {
     const usersRef = ref(database, 'users');

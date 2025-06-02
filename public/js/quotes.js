@@ -1,4 +1,4 @@
-import { auth, onAuthStateChanged, database, ref, get } from './firebase.js';
+import { auth, onAuthStateChanged, database, ref, get } from '/js/firebase.js';
 
 const QUOTE_CACHE_KEY = 'cachedQuote';
 const QUOTE_CACHE_TIME_KEY = 'cachedQuoteTime';

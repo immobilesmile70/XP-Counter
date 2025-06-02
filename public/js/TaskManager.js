@@ -1,4 +1,4 @@
-import { loadTasksFromFirebase, getUserId } from './firebase.js';
+import { loadTasksFromFirebase, getUserId } from '/js/firebase.js';
 
 class Task {
   constructor({

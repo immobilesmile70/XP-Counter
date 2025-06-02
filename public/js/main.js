@@ -1,10 +1,10 @@
 // --- UpGrind Main Script ---
 
-import { TaskManager } from './TaskManager.js';
-import { Timer } from './TimerManager.js';
-import { pushXPToFirebase } from './xp.js';
-import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId } from './firebase.js';
-import { showPopupWithType, showDialog } from './script.js';
+import { TaskManager } from '/js/TaskManager.js';
+import { Timer } from '/js/TimerManager.js';
+import { pushXPToFirebase } from '/js/xp.js';
+import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId } from '/js/firebase.js';
+import { showPopupWithType, showDialog } from '/js/script.js';
 
 // --- DOM Elements ---
 const nameInput = document.getElementById('task-name-input');
