@@ -6,6 +6,7 @@ import { showPopupWithType } from '/js/script.js';
 let flushDelay = 4200;
 let pendingXP = 0;
 let flushTimeout = null;
+let localUsername = null;
 
 export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay) {
     onAuthStateChanged(auth, async (user) => {
