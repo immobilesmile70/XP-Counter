@@ -492,7 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     signInWithGoogleButton.addEventListener("click", () => {
-        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before logging in.", [
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before logging in.", [
             {
                 text: "OK", onClick: () => {
                     signInWithGoogle({
@@ -505,7 +505,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     signUpWithGoogleButton.addEventListener("click", () => {
-        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before signing up.", [
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before signing up.", [
             {
                 text: "OK", onClick: () => {
                     signInWithGoogle({
@@ -569,7 +569,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInputLogin.value.trim();
 
         if (email && password) {
-        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before logging in.", [
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before logging in.", [
                 {
                     text: "OK", onClick: () => {
                         signInWithEmailAndPassword(auth, email, password)
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) return;
 
         showDialog(
-            "Do you really want to delete your account?", "Deleting your account will erase all your data and settings permanently. You won’t be able to recover them, even if you log in again. You can read the <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> for more information about how your data is handled after deletion.",
+            "Do you really want to delete your account?", "Deleting your account will erase all your data and settings permanently. You won’t be able to recover them, even if you log in again. You can read the <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> for more information about how your data is handled after deletion.",
             [
                 {
                     text: "Yes",
@@ -768,7 +768,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPopup("Username length must be between 3 and 18 characters.");
                 return;
             }
-            showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before signing up.", [
+            showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before signing up.", [
                 {
                     text: "OK", onClick: () => {
                         get(ref(database, "users")).then(async (snapshot) => {

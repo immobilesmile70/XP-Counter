@@ -1,15 +1,8 @@
 {
   "rewrites": [
-    { "source": "/privacy-policy", "destination": "/privacy-policy.html" }, 
     { "source": "/privacy", "destination": "/privacy-policy.html" },
     { "source": "/pp", "destination": "/privacy-policy.html" },
-    { "source": "/privacy-policy.html", "destination": "/privacy-policy.html" },
-    { "source": "/terms-of-service", "destination": "/terms-and-conditions.html" },
-    { "source": "/tos.html", "destination": "/terms-and-conditions.html" },
-    { "source": "/terms-of-service", "destination": "/terms-and-conditions.html" },
-    { "source": "/tos", "destination": "/terms-and-conditions.html" },
     { "source": "/terms", "destination": "/terms-and-conditions.html" },
-    { "source": "/terms-and-conditions", "destination": "/terms-and-conditions.html" },
-    { "source": "/index", "destination": "/index.html" }
+    { "source": "/tos", "destination": "/terms-and-conditions.html" }
   ]
 }
