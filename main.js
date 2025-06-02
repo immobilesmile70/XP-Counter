@@ -4,7 +4,7 @@ import { TaskManager } from './TaskManager.js';
 import { Timer } from './TimerManager.js';
 import { pushXPToFirebase } from './xp.js';
 import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId } from './firebase.js';
-import { showPopupWithType } from './script.js';
+import { showPopupWithType, showDialog } from './script.js';
 
 // --- DOM Elements ---
 const nameInput = document.getElementById('task-name-input');
@@ -33,6 +33,12 @@ const tasksSection = document.getElementById('tasks-section');
 const createNewTaskBtn = document.getElementById('create-new-task');
 const backToMainBtn = document.getElementById('back-to-main');
 const pomodoroStatusEl = document.getElementById('pomodoro-status');
+const taskSidebarButton = document.getElementById("tasks");
+const createTaskSidebarButton = document.getElementById("create-task");
+const mainTaskSidebarButton = document.getElementById("main");
+const timerSidebarButton = document.getElementById("timer");
+const counterSidebarButton = document.getElementById("counter");
+const leaderboardSidebarButton = document.getElementById("leaderboard");
 
 // --- Initialization & Managers ---
 function clampDurationInputs() {
@@ -219,10 +225,14 @@ async function createTask() {
         showPopupWithType('Please enter a task name.', false);
         return;
     }
+    if (name.length < 3 || name.length > 50) {
+        showPopupWithType('Please enter a shorter name.', false);
+        return;
+    }
     const type = getTaskType();
-    const duration = getDurationInSeconds(durationHoursInput, durationMinutesInput, durationSecondsInput); // seconds
-    const shortBreakDuration = getDurationInSeconds(shortBreakHoursInput, shortBreakMinutesInput, shortBreakSecondsInput, true); // seconds
-    const longBreakDuration = getDurationInSeconds(longBreakHoursInput, longBreakMinutesInput, longBreakSecondsInput, true); // seconds
+    const duration = getDurationInSeconds(durationHoursInput, durationMinutesInput, durationSecondsInput);
+    const shortBreakDuration = getDurationInSeconds(shortBreakHoursInput, shortBreakMinutesInput, shortBreakSecondsInput, true);
+    const longBreakDuration = getDurationInSeconds(longBreakHoursInput, longBreakMinutesInput, longBreakSecondsInput, true);
     if (type === 'count_down' && duration <= 0) {
         showPopupWithType('Please enter a valid duration for your countdown task.', false);
         return;
@@ -241,6 +251,14 @@ async function createTask() {
             return;
         }
     }
+
+    tasksSection.classList.remove('hide');
+    setTimeout(() => tasksSection.classList.remove('hidden'), 10);
+    createTaskSection.classList.add('hidden');
+    setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
+    taskSidebarButton.style.display = 'block';
+    createTaskSidebarButton.style.display = 'none';
+
     if (window.taskManager && typeof window.taskManager.getAllTasks === 'function') {
         const allTasks = window.taskManager.getAllTasks();
         if (allTasks.length >= 8) {
@@ -376,10 +394,28 @@ function refreshTaskList() {
                 setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
             }
 
+            taskSidebarButton.style.display = 'none';
+            mainTaskSidebarButton.style.display = 'block';
+            createTaskSidebarButton.style.display = 'none';
+
             const taskNameEl = document.getElementById('task-name');
             if (taskNameEl) taskNameEl.textContent = task.name;
         };
-        div.querySelector('.delete-task').onclick = () => deleteTask(task.id);
+        div.querySelector('.delete-task').onclick = () => {
+            showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as this action cannot be undone from our side.", [
+                {
+                    text: "Yes", onClick: () => {
+                        deleteTask(task.id);
+                    }
+                },
+                {
+                    text: "No", onClick: () => {
+                        console.log("Delete task cancelled.");
+                    }
+                }
+            ]);
+
+        };
         taskListEl.appendChild(div);
     });
 }
@@ -496,29 +532,40 @@ function resumeTask() {
 }
 
 function resetTask() {
-    if (activeTimer) {
-        activeTimer.reset();
-        if (stopwatchEl) {
-            if (activeTimer.type === 'pomodoro') {
-                stopwatchEl.textContent = Timer.formatTime(activeTimer.getCurrentTime());
-                Timer.updateTimerStat(activeTimer.getPomodoroBlockType());
-            } else {
-                stopwatchEl.textContent = Timer.formatTime(activeTimer.currentTime);
-                Timer.updateTimerStat();
+    showDialog("Do you really want to reset the timer?", "Once you reset the timer, all of your current progress realted to this task will be reset. This action cannot be undone.", [
+        {
+            text: "Yes", onClick: () => {
+                if (activeTimer) {
+                    activeTimer.reset();
+                    if (stopwatchEl) {
+                        if (activeTimer.type === 'pomodoro') {
+                            stopwatchEl.textContent = Timer.formatTime(activeTimer.getCurrentTime());
+                            Timer.updateTimerStat(activeTimer.getPomodoroBlockType());
+                        } else {
+                            stopwatchEl.textContent = Timer.formatTime(activeTimer.currentTime);
+                            Timer.updateTimerStat();
+                        }
+                    }
+                    stopPomodoroStatusInterval();
+                    startPomodoroStatusInterval();
+                    saveElapsedTimeToTask(true);
+                    const task = window.taskManager.getTask(activeTaskId);
+                    if (task) {
+                        if (activeTimer.type === 'pomodoro') {
+                            task.pomodoroState = activeTimer.getPomodoroState();
+                        }
+                        task.status = 'pending';
+                        queueFirebaseUpdate(task, { elapsedTime: 0, status: 'pending', pomodoroState: task.pomodoroState });
+                    }
+                }
+            }
+        }, 
+        {
+            text: "No", onClick: () => {
+                console.log("Reset task cancelled.");
             }
         }
-        stopPomodoroStatusInterval();
-        startPomodoroStatusInterval();
-        saveElapsedTimeToTask(true);
-        const task = window.taskManager.getTask(activeTaskId);
-        if (task) {
-            if (activeTimer.type === 'pomodoro') {
-                task.pomodoroState = activeTimer.getPomodoroState();
-            }
-            task.status = 'pending';
-            queueFirebaseUpdate(task, { elapsedTime: 0, status: 'pending', pomodoroState: task.pomodoroState });
-        }
-    }
+    ]);
 }
 
 function removeActiveTimer() {
@@ -586,6 +633,8 @@ function bindTaskFormEvents() {
             setTimeout(() => tasksSection.classList.remove('hidden'), 10);
             createTaskSection.classList.add('hidden');
             setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
+            taskSidebarButton.style.display = 'block';
+            createTaskSidebarButton.style.display = 'none';
         }
     };
 
@@ -599,6 +648,8 @@ function bindTaskFormEvents() {
             setTimeout(() => createTaskSection.classList.remove('hidden'), 10);
             tasksSection.classList.add('hidden');
             setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
+            taskSidebarButton.style.display = 'none';
+            createTaskSidebarButton.style.display = 'block';
         }
     };
 }
@@ -636,6 +687,8 @@ function bindGlobalUIEvents() {
             setTimeout(() => tasksSection.classList.remove('hidden'), 10);
             mainSection.classList.add('hidden');
             setTimeout(() => { mainSection.classList.add('hide'); }, 350);
+            taskSidebarButton.style.display = 'block';
+            mainTaskSidebarButton.style.display = 'none';
         };
     }
 }
@@ -669,6 +722,14 @@ function resetTaskForm() {
             }
         }
     }
+
+    // Hide all three fields
+    const durationFlex = document.getElementById('duration-flex');
+    const shortBreakFlex = document.getElementById('short-break-flex');
+    const longBreakFlex = document.getElementById('long-break-flex');
+    if (durationFlex) durationFlex.classList.add('hidden');
+    if (shortBreakFlex) shortBreakFlex.classList.add('hidden');
+    if (longBreakFlex) longBreakFlex.classList.add('hidden');
 }
 
 (function initCustomSelect() {
@@ -725,6 +786,7 @@ function resetTaskForm() {
                     }
                 }
                 h.click();
+                updateDurationBreakFields();
             });
             b.appendChild(c);
         }
@@ -751,6 +813,44 @@ function resetTaskForm() {
     document.addEventListener('click', function (e) {
         closeAllSelect(null);
     });
+})();
+
+// --- Show/hide duration/break fields based on timer type ---
+function updateDurationBreakFields() {
+    const durationFlex = document.getElementById('duration-flex');
+    const shortBreakFlex = document.getElementById('short-break-flex');
+    const longBreakFlex = document.getElementById('long-break-flex');
+    if (!counterTypeSelect) return;
+    const val = counterTypeSelect.value;
+    if (val === 'up') {
+        if (durationFlex) durationFlex.classList.add('hidden');
+        if (shortBreakFlex) shortBreakFlex.classList.add('hidden');
+        if (longBreakFlex) longBreakFlex.classList.add('hidden');
+    } else if (val === 'down') {
+        if (durationFlex) durationFlex.classList.remove('hidden');
+        if (shortBreakFlex) shortBreakFlex.classList.add('hidden');
+        if (longBreakFlex) longBreakFlex.classList.add('hidden');
+    } else if (val === 'pomo' || val === 'pomodoro') {
+        if (durationFlex) durationFlex.classList.remove('hidden');
+        if (shortBreakFlex) shortBreakFlex.classList.remove('hidden');
+        if (longBreakFlex) longBreakFlex.classList.remove('hidden');
+    }
+}
+
+if (counterTypeSelect) {
+    counterTypeSelect.addEventListener('change', updateDurationBreakFields);
+    // Also call on load to set initial state
+    updateDurationBreakFields();
+}
+
+// Patch custom select UI to also call updateDurationBreakFields
+(function patchCustomSelectForDurationFields() {
+    const selects = document.getElementsByClassName('custom-timer-select');
+    for (let i = 0; i < selects.length; i++) {
+        const sel = selects[i].getElementsByTagName('select')[0];
+        if (!sel) continue;
+        sel.addEventListener('change', updateDurationBreakFields);
+    }
 })();
 
 // Motivational/status messages for Pomodoro

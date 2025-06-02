@@ -57,9 +57,9 @@ dialog.addEventListener('click', (event) => {
     }
 });
 
-function showDialog(message, subMessage, buttons = [], customContent = null) {
+export function showDialog(message, subMessage, buttons = [], customContent = null) {
     messageEl.textContent = message;
-    subMessageEl.textContent = subMessage;
+    subMessageEl.innerHTML = subMessage;
     buttonsContainer.innerHTML = "";
 
     if (customContent) {
@@ -87,12 +87,29 @@ function showDialog(message, subMessage, buttons = [], customContent = null) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+
+    const cookieBanner = document.getElementById("cookie-banner");
+    const acceptCookiesButton = document.getElementById("accept-cookies-button");
+
+    if (localStorage.getItem("cookiesAccepted") === "true") {
+        document.getElementById("cookie-banner").classList.add("hide", "hidden");
+    }
+
+    acceptCookiesButton.onclick = () => {
+        cookieBanner.classList.add("hide");
+        setTimeout(() => {
+            cookieBanner.classList.add("hidden");
+        }, 300);
+        localStorage.setItem("cookiesAccepted", "true");
+    };
+
     const loginScreen = document.getElementById("login-screen");
     const mainScreen = document.getElementById("main-screen");
     const loadingScreen = document.getElementById("loading-screen");
 
     const loginButton = document.getElementById("login-button");
     const signInWithGoogleButton = document.getElementById("google-signin-button");
+    const signUpWithGoogleButton = document.getElementById("google-signup-button");
     const signUpButton = document.getElementById("signup-button");
     const forgetPassButton = document.getElementById("forget-pass-button");
     const logOutButton = document.getElementById("logout-button");
@@ -475,10 +492,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     signInWithGoogleButton.addEventListener("click", () => {
-        signInWithGoogle({
-            filter,
-            setJustSignedUp: () => justSignedUp = true
-        });
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before logging in.", [
+            {
+                text: "OK", onClick: () => {
+                    signInWithGoogle({
+                        filter,
+                        setJustSignedUp: () => justSignedUp = true
+                    });
+                }
+            }
+        ]);
+    });
+
+    signUpWithGoogleButton.addEventListener("click", () => {
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before signing up.", [
+            {
+                text: "OK", onClick: () => {
+                    signInWithGoogle({
+                        filter,
+                        setJustSignedUp: () => justSignedUp = true
+                    });
+                }
+            }
+        ]);
     });
 
     onAuthStateChanged(auth, async (user) => {
@@ -490,7 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
                 await populateLeaderboard();
                 await fadeScreen(loginScreen, mainScreen);
-                // --- XP Counter: Load tasks only after auth ---
                 await initializeAndLoadTasks();
             } else {
                 clearTimeout(popupTimeout);
@@ -534,26 +569,32 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInputLogin.value.trim();
 
         if (email && password) {
-            signInWithEmailAndPassword(auth, email, password)
-                .then(async (userCredential) => {
-                    const user = userCredential.user;
-                    const userSnap = await get(ref(database, `users/${user.uid}`));
-                    if (userSnap.exists()) {
-                        localUsername = userSnap.val().username;
-                        await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
-                    } else {
-                        clearTimeout(popupTimeout);
-                        isInfoPopup = false;
-                        showPopup("User data not found.");
+        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before logging in.", [
+                {
+                    text: "OK", onClick: () => {
+                        signInWithEmailAndPassword(auth, email, password)
+                            .then(async (userCredential) => {
+                                const user = userCredential.user;
+                                const userSnap = await get(ref(database, `users/${user.uid}`));
+                                if (userSnap.exists()) {
+                                    localUsername = userSnap.val().username;
+                                    await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+                                } else {
+                                    clearTimeout(popupTimeout);
+                                    isInfoPopup = false;
+                                    showPopup("User data not found.");
+                                }
+                                await fadeScreen(loginScreen, mainScreen);
+                            })
+                            .catch((error) => {
+                                const mappedMessage = mapErrorMessage(error);
+                                clearTimeout(popupTimeout);
+                                isInfoPopup = false;
+                                showPopup(`Login Failed: ${mappedMessage}`);
+                            });
                     }
-                    await fadeScreen(loginScreen, mainScreen);
-                })
-                .catch((error) => {
-                    const mappedMessage = mapErrorMessage(error);
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup(`Login Failed: ${mappedMessage}`);
-                });
+                }
+            ]);
         } else {
             clearTimeout(popupTimeout);
             isInfoPopup = false;
@@ -599,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) return;
 
         showDialog(
-            "Do you really want to delete your account?", "Deleting your account will erase all your data and settings permanently. You won’t be able to recover them, even if you log in again.",
+            "Do you really want to delete your account?", "Deleting your account will erase all your data and settings permanently. You won’t be able to recover them, even if you log in again. You can read the <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> for more information about how your data is handled after deletion.",
             [
                 {
                     text: "Yes",
@@ -727,47 +768,52 @@ document.addEventListener('DOMContentLoaded', () => {
                 showPopup("Username length must be between 3 and 18 characters.");
                 return;
             }
-
-            get(ref(database, "users")).then(async (snapshot) => {
-                const usersData = snapshot.val() || {};
-                const usernameTaken = Object.values(usersData).some(user => user.username === username);
-                if (usernameTaken) {
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup("Username already taken. Please choose another one.");
-                    return;
-                }
-                if (filter.isProfane(username)) {
-                    clearTimeout(popupTimeout);
-                    isInfoPopup = false;
-                    showPopup("Username contains profanity. Please choose another one.");
-                    return;
-                }
-                else {
-                    justSignedUp = true;
-                    createUserWithEmailAndPassword(auth, email, password)
-                        .then(async (userCredential) => {
-                            const user = userCredential.user;
-                            await set(ref(database, `users/${user.uid}`), {
-                                username: username,
-                                "E-Mail": email,
-                                xp: 0
-                            });
-                            localUsername = username;
-                            await fadeScreen(loginScreen, mainScreen);
-                            await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
-                        })
-                        .catch((error) => {
-                            const mappedMessage = mapErrorMessage(error);
-                            clearTimeout(popupTimeout);
-                            showPopup(`SignUp Failed: ${mappedMessage}`, 7500);
-                            console.log(error.message);
-                            console.log(mappedMessage);
+            showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"terms-and-conditions.html\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"privacy-policy.html\">Privacy Policy</a> before signing up.", [
+                {
+                    text: "OK", onClick: () => {
+                        get(ref(database, "users")).then(async (snapshot) => {
+                            const usersData = snapshot.val() || {};
+                            const usernameTaken = Object.values(usersData).some(user => user.username === username);
+                            if (usernameTaken) {
+                                clearTimeout(popupTimeout);
+                                isInfoPopup = false;
+                                showPopup("Username already taken. Please choose another one.");
+                                return;
+                            }
+                            if (filter.isProfane(username)) {
+                                clearTimeout(popupTimeout);
+                                isInfoPopup = false;
+                                showPopup("Username contains profanity. Please choose another one.");
+                                return;
+                            }
+                            else {
+                                justSignedUp = true;
+                                createUserWithEmailAndPassword(auth, email, password)
+                                    .then(async (userCredential) => {
+                                        const user = userCredential.user;
+                                        await set(ref(database, `users/${user.uid}`), {
+                                            username: username,
+                                            "E-Mail": email,
+                                            xp: 0
+                                        });
+                                        localUsername = username;
+                                        await fadeScreen(loginScreen, mainScreen);
+                                        await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+                                    })
+                                    .catch((error) => {
+                                        const mappedMessage = mapErrorMessage(error);
+                                        clearTimeout(popupTimeout);
+                                        showPopup(`SignUp Failed: ${mappedMessage}`, 7500);
+                                        console.log(error.message);
+                                        console.log(mappedMessage);
+                                    });
+                            }
+                        }).catch((error) => {
+                            showPopup("Error checking username availability: " + error.message);
                         });
+                    }
                 }
-            }).catch((error) => {
-                showPopup("Error checking username availability: " + error.message);
-            });
+            ]);
         } else {
             clearTimeout(popupTimeout);
             isInfoPopup = false;

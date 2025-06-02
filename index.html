@@ -5,11 +5,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UpGrind</title>
+    <meta name="description"
+        content="A sleek task manager with timers, XP rewards, and a clean UI. UpGrade yourself with UpGrind.">
+    <meta name="keywords"
+        content="task manager, productivity, pomodoro, xp rewards, web app, timer app, upgrind, upgrade, grind, grinding, upgrinding, count up, count down, counter, quotes">
     <link rel="icon" href="https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/upgrind%20logo.ico"
         type="image/x-icon" />
     <link rel="stylesheet" href="style.css">
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Open Graph -->
+    <meta property="og:title" content="UpGrind - UpGrade with Grind">
+    <meta property="og:description"
+        content="A sleek task manager with timers, XP rewards, and a clean UI. UpGrade yourself with UpGrind.">
+    <meta property="og:image"
+        content="https://upgrind.vercel.app/preview.png">
+    <meta property="og:url" content="https://upgrind.vercel.app">
+    <meta property="og:type" content="website">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="UpGrind - UpGrade with Grind">
+    <meta name="twitter:description" content="UpGrade yourself with UpGrind.">
+    <meta name="twitter:image" content="https://upgrind.vercel.app/preview.png">
 </head>
 
 <body>
@@ -90,6 +107,11 @@
         </div>
     </div>
 
+    <div id="cookie-banner" class="cookie-banner">
+        <p>We use cookies to enhance your experience. By using our site, you agree to our use of cookies.</p>
+        <button id="accept-cookies-button">Got it</button>
+    </div>
+
     <div id="login-screen" class="login-screen">
         <div class="header">
             <h1>UpGrind</h1>
@@ -125,7 +147,7 @@
                     <p>or</p>
                     <div class="line"></div>
                 </div>
-                <button id="google-signin-button"><i class="fab fa-google"></i> Sign in with Google</button>
+                <button id="google-signin-button"><i class="fab fa-google"></i> Login with Google</button>
             </div>
         </div>
 
@@ -147,6 +169,14 @@
                 <button id="login-switch"
                     style="background: transparent; font-size: 0.7rem; padding: 0; text-align: left;">Already logged
                     in?</button>
+            </div>
+            <div class="alt-flex-btn">
+                <div class="line-flex">
+                    <div class="line"></div>
+                    <p>or</p>
+                    <div class="line"></div>
+                </div>
+                <button id="google-signup-button"><i class="fab fa-google"></i> Sign up with Google</button>
             </div>
         </div>
         <div id="forget-pass-form" class="login-form hidden hide">
@@ -175,6 +205,8 @@
                     style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
                     <i class="fas fa-envelope fa-lg"></i>
                 </a>
+                <a href="terms-and-conditions.html" style="color: var(--subtext);">Terms</a>
+                <a href="privacy-policy.html" style="color: var(--subtext);">Privacy</a>
             </p>
         </div>
     </div>
@@ -212,10 +244,10 @@
                 </div>
             </div>
             <div class="sidebar-button-flex">
-                <button id="tasks">Tasks</button>
-                <button id="create-task">Create Task</button>
-                <button id="main">Current Task</button>
-                <button id="timer">Timer</button>
+                <button id="tasks" style="display: block;">Tasks</button>
+                <button id="create-task" style="display: none;">Create Task</button>
+                <button id="main" style="display: none;">Current Task</button>
+                <button id="timer" style="display: none;">Timer</button>
                 <button id="counter">Spend XP</button>
                 <button id="leaderboard">Leaderboard</button>
             </div>
@@ -252,15 +284,15 @@
                 <h1 id="current-status-eoc">Create Task</h1>
             </div>
             <div class="xp-controls">
-                <div class="xp-flexbox">
+                <div class="xp-flexbox create-t-flex">
                     <div class="xp-actions positive" style="gap: 10px;">
-                        <div class="leaderboard-list" id="create-task-list" style="height: 80%;">
-                            <div class="setting-item" style="gap: 100px;">
+                        <div class="leaderboard-list" id="create-task-list">
+                            <div class="setting-item" style="gap: 50px;">
                                 <label>Task Name </label>
                                 <input type="text" class="task-name-input form-field" id="task-name-input"
                                     placeholder="(e.g. Do this & that....)" required>
                             </div>
-                            <div class="setting-item" style="gap: 62px;">
+                            <div class="setting-item" style="gap: 49px;">
                                 <label>Timer Type </label>
                                 <div class="custom-timer-select" style="width:200px;">
                                     <select>
@@ -270,7 +302,7 @@
                                     </select>
                                 </div>
                             </div>
-                            <div class="setting-item" style="gap: 55px;">
+                            <div class="setting-item hidden" style="gap: 85px;" id="duration-flex">
                                 <label for="task-duration-input">Duration </label>
                                 <div id="task-duration-input" class="flex-duration-input">
                                     <input type="number" min="0" max="8" placeholder="HH" class="duration-input"
@@ -281,7 +313,7 @@
                                         id="duration-seconds" />
                                 </div>
                             </div>
-                            <div class="setting-item" style="gap: 37px;">
+                            <div class="setting-item hidden" style="gap: 35px;" id="short-break-flex">
                                 <label for="break-duration-input">Short Break </label>
                                 <div id="break-duration-input" class="flex-duration-input">
                                     <input type="number" min="0" max="2" placeholder="HH" class="duration-input"
@@ -292,7 +324,7 @@
                                         id="short-break-seconds" />
                                 </div>
                             </div>
-                            <div class="setting-item" style="gap: 37px;">
+                            <div class="setting-item hidden" style="gap: 41px;" id="long-break-flex">
                                 <label for="long-break-duration-input">Long Break </label>
                                 <div id="break-duration-input" class="flex-duration-input">
                                     <input type="number" min="0" max="2" placeholder="HH" class="duration-input"
