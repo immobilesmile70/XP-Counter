@@ -1570,6 +1570,10 @@ button {
     transition: background-color 0.3s ease, transform 0.4s ease;
     height: 40px;
     width: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
 }
 
 .leaderboard-list button {
@@ -1887,6 +1891,18 @@ input[type=number]::-webkit-outer-spin-button {
     .tasks-footer {
         height: 15%;
     }
+
+    #create-task-start {
+        display: none;
+    }
+
+    .tasks-footer button {
+        padding: 0;
+    }
+
+    #create-task-start {
+        width: 120px !important;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2018,7 +2034,27 @@ input[type=number]::-webkit-outer-spin-button {
         gap: 0px;
     }
 
-    #create-task-start {
-        display: none;
+    .task-footer button {
+        font-size: 0.75rem;
+        width: 120px;
+    }
+}
+
+@media (max-width: 320px) {
+    .task-duration {
+        font-size: 0.65rem;
+    }
+
+    .task-name {
+        font-size: 0.85rem;
+    }
+
+    .task-pos {
+        font-size: 0.85rem;
+        padding: 0px 4px;
+    }
+
+    .your-tasks {
+        font-size: 1rem;
     }
 }

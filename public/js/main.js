@@ -1,4 +1,4 @@
-// --- UpGrind Main Script ---
+// --- Xp-Counter Main Script ---
 
 import { TaskManager } from '/js/TaskManager.js';
 import { Timer } from '/js/TimerManager.js';
@@ -19,8 +19,8 @@ const longBreakHoursInput = document.getElementById('long-break-hours');
 const longBreakMinutesInput = document.getElementById('long-break-minutes');
 const longBreakSecondsInput = document.getElementById('long-break-seconds');
 const createTaskButton = document.getElementById('create-task-button');
+const createTaskStartButton = document.getElementById('create-task-start');
 const cancelTaskButton = document.getElementById('cancel-task-button');
-const editTaskButton = document.getElementById('edit-task-button');
 const taskListEl = document.getElementById('task-list');
 const stopwatchEl = document.getElementById('stopwatch');
 const startBtn = document.getElementById('start');
@@ -36,9 +36,6 @@ const pomodoroStatusEl = document.getElementById('pomodoro-status');
 const taskSidebarButton = document.getElementById("tasks");
 const createTaskSidebarButton = document.getElementById("create-task");
 const mainTaskSidebarButton = document.getElementById("main");
-const timerSidebarButton = document.getElementById("timer");
-const counterSidebarButton = document.getElementById("counter");
-const leaderboardSidebarButton = document.getElementById("leaderboard");
 
 // --- Initialization & Managers ---
 function clampDurationInputs() {
@@ -225,8 +222,12 @@ async function createTask() {
         showPopupWithType('Please enter a task name.', false);
         return;
     }
-    if (name.length < 3 || name.length > 50) {
+    if (name.length > 50) {
         showPopupWithType('Please enter a shorter name.', false);
+        return;
+    }
+    if (name.length < 3) {
+        showPopupWithType('Please enter a longer name.', false);
         return;
     }
     const type = getTaskType();
@@ -252,13 +253,6 @@ async function createTask() {
         }
     }
 
-    tasksSection.classList.remove('hide');
-    setTimeout(() => tasksSection.classList.remove('hidden'), 10);
-    createTaskSection.classList.add('hidden');
-    setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
-    taskSidebarButton.style.display = 'block';
-    createTaskSidebarButton.style.display = 'none';
-
     if (window.taskManager && typeof window.taskManager.getAllTasks === 'function') {
         const allTasks = window.taskManager.getAllTasks();
         if (allTasks.length >= 8) {
@@ -283,7 +277,7 @@ async function createTask() {
             console.error('Failed to save new task to Firebase:', e);
         }
     } else {
-        console.warn('No user ID found, task not saved to Firebase');
+        showPopupWithType('No user logged in, can\'t save task to Firebase', false);
     }
     queueFirebaseUpdate(task, { status: 'pending' });
 }
@@ -300,7 +294,7 @@ async function deleteTask(taskId) {
         try {
             await deleteTaskFromFirebase(uid, taskId);
         } catch (e) {
-            alert('Could not delete task from Firebase.');
+            showPopupWithType('Could not delete task from Firebase.', false);
         }
     }
 }
@@ -381,28 +375,24 @@ function refreshTaskList() {
             e.stopPropagation();
             window.taskManager.setCurrentTask(task.id);
             startTask(task.id);
-            if (mainSection) {
+            if (mainSection && tasksSection && createTaskSection) {
                 mainSection.classList.remove('hide');
                 setTimeout(() => mainSection.classList.remove('hidden'), 10);
-            }
-            if (tasksSection) {
                 tasksSection.classList.add('hidden');
                 setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
-            }
-            if (createTaskSection) {
                 createTaskSection.classList.add('hidden');
                 setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
             }
 
-            taskSidebarButton.style.display = 'none';
-            mainTaskSidebarButton.style.display = 'block';
-            createTaskSidebarButton.style.display = 'none';
+            if (taskSidebarButton) taskSidebarButton.style.display = 'none';
+            if (mainTaskSidebarButton) mainTaskSidebarButton.style.display = 'block';
+            if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
 
             const taskNameEl = document.getElementById('task-name');
             if (taskNameEl) taskNameEl.textContent = task.name;
         };
         div.querySelector('.delete-task').onclick = () => {
-            showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as this action cannot be undone from our side.", [
+            showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as <strong>this action cannot be undone from our side.</strong>", [
                 {
                     text: "Yes", onClick: () => {
                         deleteTask(task.id);
@@ -559,7 +549,7 @@ function resetTask() {
                     }
                 }
             }
-        }, 
+        },
         {
             text: "No", onClick: () => {
                 console.log("Reset task cancelled.");
@@ -625,7 +615,38 @@ function updateTimerButtons() {
 
 // --- Bindings ---
 function bindTaskFormEvents() {
-    if (createTaskButton) createTaskButton.onclick = createTask;
+    if (createTaskButton) createTaskButton.onclick = () => {
+        createTask();
+        if (tasksSection && createTaskSection) {
+            tasksSection.classList.remove('hide');
+            setTimeout(() => tasksSection.classList.remove('hidden'), 10);
+            createTaskSection.classList.add('hidden');
+            setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
+        }
+        if (taskSidebarButton) taskSidebarButton.style.display = 'block';
+        if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
+    };
+
+    if (createTaskStartButton) createTaskStartButton.onclick = async () => {
+        await createTask();
+        const currentTask = window.taskManager && typeof window.taskManager.getCurrentTask === 'function'
+            ? window.taskManager.getCurrentTask()
+            : null;
+        if (currentTask && currentTask.id) {
+            startTask(currentTask.id);
+            if (mainSection && createTaskSection) {
+                mainSection.classList.remove('hide');
+                setTimeout(() => mainSection.classList.remove('hidden'), 10);
+                createTaskSection.classList.add('hidden');
+                setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
+            }
+            if (mainTaskSidebarButton) mainTaskSidebarButton.style.display = 'block';
+            if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
+            const taskNameEl = document.getElementById('task-name');
+            if (taskNameEl) taskNameEl.textContent = currentTask.name;
+        }
+    };
+
     if (cancelTaskButton) cancelTaskButton.onclick = () => {
         if (typeof resetTaskForm === 'function') resetTaskForm();
         if (createTaskSection && tasksSection) {
@@ -633,13 +654,9 @@ function bindTaskFormEvents() {
             setTimeout(() => tasksSection.classList.remove('hidden'), 10);
             createTaskSection.classList.add('hidden');
             setTimeout(() => { createTaskSection.classList.add('hide'); }, 350);
-            taskSidebarButton.style.display = 'block';
-            createTaskSidebarButton.style.display = 'none';
         }
-    };
-
-    if (editTaskButton) editTaskButton.onclick = () => {
-        if (typeof editCurrentTask === 'function') editCurrentTask();
+        if (taskSidebarButton) taskSidebarButton.style.display = 'block';
+        if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
     };
 
     if (createNewTaskBtn) createNewTaskBtn.onclick = () => {
@@ -648,9 +665,9 @@ function bindTaskFormEvents() {
             setTimeout(() => createTaskSection.classList.remove('hidden'), 10);
             tasksSection.classList.add('hidden');
             setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
-            taskSidebarButton.style.display = 'none';
-            createTaskSidebarButton.style.display = 'block';
         }
+        if (taskSidebarButton) taskSidebarButton.style.display = 'none';
+        if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'block';
     };
 }
 
@@ -683,12 +700,14 @@ function bindGlobalUIEvents() {
                 activeTaskId = null;
             }
             refreshTaskList();
-            tasksSection.classList.remove('hide');
-            setTimeout(() => tasksSection.classList.remove('hidden'), 10);
-            mainSection.classList.add('hidden');
-            setTimeout(() => { mainSection.classList.add('hide'); }, 350);
-            taskSidebarButton.style.display = 'block';
-            mainTaskSidebarButton.style.display = 'none';
+            if (tasksSection && mainSection) {
+                tasksSection.classList.remove('hide');
+                setTimeout(() => tasksSection.classList.remove('hidden'), 10);
+                mainSection.classList.add('hidden');
+                setTimeout(() => { mainSection.classList.add('hide'); }, 350);
+            }
+            if (taskSidebarButton) taskSidebarButton.style.display = 'block';
+            if (mainTaskSidebarButton) mainTaskSidebarButton.style.display = 'none';
         };
     }
 }
@@ -953,7 +972,6 @@ function hasUnsavedChanges() {
 window.addEventListener('beforeunload', (e) => {
     if (hasUnsavedChanges()) {
         e.preventDefault();
-        e.returnValue = '';
         return;
     }
     try {
