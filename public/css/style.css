@@ -1675,7 +1675,22 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .xp-flexbox.watch {
-    flex-direction: column;;
+    flex-direction: column;
+}
+
+.xp-controls.watch {
+    align-items: flex-start;
+}
+
+.watch-container {
+    width: 100%;
+    height: 80%;
+}
+
+#ad-banner-main {
+    color: var(--subtext);
+    width: fit-content;
+    height: 20%;
 }
 
 @media (max-width: 871px) {
