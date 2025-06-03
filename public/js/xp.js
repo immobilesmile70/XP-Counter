@@ -85,6 +85,7 @@ export async function pushXPToFirebase(xp) {
         await set(userXPRef, newXP);
         const xpElement = document.getElementById("xp");
         if (xpElement) xpElement.textContent = newXP;
+        console.log(`Pushed ${xp} XP to Firebase. New total: ${newXP}`);
         return newXP;
     } catch (error) {
         throw new Error("Failed to push XP to Firebase: " + error.message);
