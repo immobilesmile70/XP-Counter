@@ -4,6 +4,63 @@ const TIMER_TYPE = {
     POMODORO: 'pomodoro',
 };
 
+const startBtn = document.getElementById('start');
+const pauseBtn = document.getElementById('pause');
+const resumeBtn = document.getElementById('resume');
+const resetBtn = document.getElementById('reset');
+
+function setTimerButtons(state = 'default') {
+    const allButtons = [startBtn, resumeBtn, pauseBtn, resetBtn];
+    let show = [];
+    if (state === 'running') {
+        show = [pauseBtn];
+    } else if (state === 'paused') {
+        show = [resumeBtn, resetBtn];
+    } else if (state === 'reset' || state === 'default') {
+        show = [startBtn];
+    } else if (state === 'continued') {
+        show = [pauseBtn];
+    }
+    const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
+    const toShow = show.filter(btn => !btn.classList.contains('visible'));
+    const toHide = currentlyVisible.filter(btn => !show.includes(btn));
+    if (toHide.length > 0) {
+        let transitionsLeft = toHide.length;
+        toHide.forEach(btn => {
+            btn.classList.remove('visible');
+            btn.addEventListener('transitionend', function handler() {
+                btn.classList.add('hidden');
+                btn.removeEventListener('transitionend', handler);
+                transitionsLeft--;
+                if (transitionsLeft === 0) {
+                    toShow.forEach(showBtn => {
+                        showBtn.classList.remove('hidden');
+                        void showBtn.offsetWidth;
+                        setTimeout(() => {
+                            showBtn.classList.add('visible');
+                        }, 10);
+                    });
+                }
+            });
+        });
+    } else {
+        toShow.forEach(showBtn => {
+            showBtn.classList.remove('hidden');
+            void showBtn.offsetWidth;
+            setTimeout(() => {
+                showBtn.classList.add('visible');
+            }, 350);
+        });
+    }
+    allButtons.forEach(btn => {
+        if (show.includes(btn)) {
+            btn.style.pointerEvents = 'auto';
+        } else {
+            btn.style.pointerEvents = 'none';
+        }
+    });
+}
+
 class Timer {
     constructor({
         type = TIMER_TYPE.COUNT_UP,
@@ -85,6 +142,7 @@ class Timer {
             this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
         }
         this._runTimer();
+        setTimerButtons('running');
     }
 
     pause() {
@@ -92,6 +150,20 @@ class Timer {
         this.isPaused = true;
         this.isRunning = false;
         clearInterval(this.interval);
+        setTimerButtons('paused');
+    }
+
+    reset() {
+        this.isRunning = false;
+        this.isPaused = false;
+        this.currentTime = this.type === TIMER_TYPE.COUNT_DOWN ? this.duration : 0;
+        clearInterval(this.interval);
+        if (this.type === TIMER_TYPE.POMODORO) {
+            this._generatePomodoroPlan();
+            this.pomoIndex = 0;
+            this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
+        }
+        setTimerButtons('reset');
     }
 
     continue() {
@@ -99,6 +171,7 @@ class Timer {
         this.isPaused = false;
         this.isRunning = true;
         this._runTimer();
+        setTimerButtons('continued');
     }
 
     _runTimer() {

@@ -36,6 +36,7 @@ const pomodoroStatusEl = document.getElementById('pomodoro-status');
 const taskSidebarButton = document.getElementById("tasks");
 const createTaskSidebarButton = document.getElementById("create-task");
 const mainTaskSidebarButton = document.getElementById("main");
+const noTaskEl = document.getElementById('no-task-at-all');
 
 let taskLimit = 8;
 
@@ -193,18 +194,6 @@ function queueFirebaseUpdate(task, changes = {}) {
     }, 1000);
 }
 
-function flushAllFirebaseUpdates() {
-    Object.keys(firebaseFlushQueue).forEach(id => {
-        clearTimeout(firebaseFlushQueue[id]);
-        const task = window.taskManager.getTask(id);
-        if (task) {
-            const uid = getUserId();
-            updateTaskInFirebase(uid, task);
-        }
-        delete firebaseFlushQueue[id];
-    });
-}
-
 // --- Task Type Selection Logic ---
 function getTaskType() {
     if (counterTypeSelect) {
@@ -319,10 +308,12 @@ async function loadAllTasksFromFirebase() {
         if (res.status === 404) return [];
         const data = await res.json();
         if (!data || typeof data !== 'object') return [];
+        noTaskEl.style.display = 'none';
         return Object.entries(data)
             .map(([id, task]) => ({ ...task, id }))
             .filter(task => task && typeof task === 'object' && task.name);
     } catch (e) {
+        noTaskEl.style.display = 'block';
         return [];
     }
 }
@@ -347,6 +338,13 @@ function refreshTaskList() {
     const createdTasksEl = document.getElementById('created-tasks');
     if (createdTasksEl) {
         createdTasksEl.textContent = `${tasks.length} / ${taskLimit}`;
+    }
+    if (typeof noTaskEl !== 'undefined' && noTaskEl) {
+        if (tasks.length === 0) {
+            noTaskEl.style.display = 'block';
+        } else {
+            noTaskEl.style.display = 'none';
+        }
     }
     tasks.forEach((task, idx) => {
         const div = document.createElement('div');
@@ -593,35 +591,6 @@ function saveElapsedTimeToTask(reset = false) {
         }
     }
 }
-
-/**
-function updateTimerButtons() {
-    // Show/hide timer control buttons based on timer state
-    if (!activeTimer) {
-        if (startBtn) startBtn.classList.remove('hidden');
-        if (pauseBtn) pauseBtn.classList.add('hidden');
-        if (resumeBtn) resumeBtn.classList.add('hidden');
-        if (resetBtn) resetBtn.classList.add('hidden');
-        return;
-    }
-    if (activeTimer.isRunning) {
-        if (startBtn) startBtn.classList.add('hidden');
-        if (pauseBtn) pauseBtn.classList.remove('hidden');
-        if (resumeBtn) resumeBtn.classList.add('hidden');
-        if (resetBtn) resetBtn.classList.remove('hidden');
-    } else if (activeTimer.currentTime > 0) {
-        if (startBtn) startBtn.classList.add('hidden');
-        if (pauseBtn) pauseBtn.classList.add('hidden');
-        if (resumeBtn) resumeBtn.classList.remove('hidden');
-        if (resetBtn) resetBtn.classList.remove('hidden');
-    } else {
-        if (startBtn) startBtn.classList.remove('hidden');
-        if (pauseBtn) pauseBtn.classList.add('hidden');
-        if (resumeBtn) resumeBtn.classList.add('hidden');
-        if (resetBtn) resetBtn.classList.add('hidden');
-    }
-}
-*/
 
 // --- Bindings ---
 function bindTaskFormEvents() {
