@@ -25,7 +25,7 @@
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
     --reset-btn-bg: #cb5151;
-    --chip: #999999;
+    --chip: #dfdfdf;
 }
 
 [data-theme="dark"] {
@@ -55,7 +55,7 @@
     --list-tool-bg: #4f4f4f;
     --divider-color: #8080808f;
     --reset-btn-bg: #8f3535;
-    --chip: #171717;
+    --chip: #424242;
 }
 
 [data-theme="light"] {
@@ -85,7 +85,7 @@
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
     --reset-btn-bg: #cb5151;
-    --chip:#999999;
+    --chip:#dfdfdf;
 }
 
 body,
@@ -1691,7 +1691,7 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 #created-tasks {
-    background-color: var(--chip-bg);
+    background-color: var(--chip);
     color: var(--subtext);
     font-size: 1.2rem;
     padding: 2px 5px 2px 5px;
