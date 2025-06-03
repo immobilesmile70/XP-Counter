@@ -85,7 +85,7 @@
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
     --reset-btn-bg: #cb5151;
-    --chip:#dfdfdf;
+    --chip: #dfdfdf;
 }
 
 body,
@@ -492,7 +492,7 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.25rem;
+    font-size: 1.75rem;
 }
 
 .header h1 {
@@ -1508,7 +1508,8 @@ button {
     font-size: 1.25rem;
 }
 
-.task-duration, .task-type {
+.task-duration,
+.task-type {
     font-size: 1rem;
     color: var(--subtext);
 }
@@ -2088,7 +2089,9 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 320px) {
-    .task-duration, .task-type {
+
+    .task-duration,
+    .task-type {
         font-size: 0.35rem;
     }
 
