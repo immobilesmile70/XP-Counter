@@ -37,6 +37,9 @@ const taskSidebarButton = document.getElementById("tasks");
 const createTaskSidebarButton = document.getElementById("create-task");
 const mainTaskSidebarButton = document.getElementById("main");
 const noTaskEl = document.getElementById('no-task-at-all');
+const editOrCreate = document.getElementById('current-status-eoc');
+const createTaskBtnFlex = document.getElementById('create-task-btn-flex');
+const editTaskBtnFlex = document.getElementById('edit-task-btn-flex');
 
 let taskLimit = 8;
 
@@ -373,6 +376,7 @@ function refreshTaskList() {
             </div>
             <div class="task-actions-flex">
             <button class="start-task" title="Start Task"><i class="fa-solid fa-play"></i></button>
+            <button class="edit-task" title="Edit Task"><i class="fa-solid fa-pencil"></i></button>
             <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
@@ -412,6 +416,27 @@ function refreshTaskList() {
             ]);
 
         };
+        div.querySelector('.edit-task').onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            if (tasksSection && createTaskSection) {
+                tasksSection.classList.add('hidden');
+                setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
+                createTaskSection.classList.remove('hidden');
+                setTimeout(() => { createTaskSection.classList.remove('hide'); }, 350);
+            }
+
+            if (taskSidebarButton) taskSidebarButton.style.display = 'none';
+            if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'block';
+
+            editOrCreate.textContent = 'Edit Task';
+            if (createTaskBtnFlex) createTaskBtnFlex.style.display = 'none';
+            if (editTaskBtnFlex) editTaskBtnFlex.style.display = 'flex';
+
+            loadEditValues(task.id);
+        };
+
         taskListEl.appendChild(div);
     });
 }
@@ -645,6 +670,9 @@ function bindTaskFormEvents() {
         }
         if (taskSidebarButton) taskSidebarButton.style.display = 'none';
         if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'block';
+        editOrCreate.textContent = 'Create Task';
+        if (createTaskBtnFlex) createTaskBtnFlex.style.display = 'flex';
+        if (editTaskBtnFlex) editTaskBtnFlex.style.display = 'none';
     };
 }
 
@@ -689,6 +717,88 @@ function bindGlobalUIEvents() {
     }
 }
 
+// --- Load Values For Editing ---
+function loadEditValues(taskId) {
+    const task = window.taskManager.getTask(taskId);
+    if (!task) return;
+    if (typeof resetTaskForm === 'function') resetTaskForm();
+    if (nameInput) nameInput.value = task.name || '';
+    if (counterTypeSelect) {
+        let typeVal = 'up';
+        if (task.type === 'count_up') typeVal = 'up';
+        else if (task.type === 'count_down') typeVal = 'down';
+        else if (task.type === 'pomodoro' || task.type === 'pomo') typeVal = 'pomo';
+        counterTypeSelect.value = typeVal;
+        const parent = counterTypeSelect.closest('.custom-timer-select');
+        if (parent) {
+            const selectedDiv = parent.querySelector('.select-selected');
+            const itemsDiv = parent.querySelector('.select-items');
+            if (selectedDiv && itemsDiv) {
+                const option = Array.from(counterTypeSelect.options).find(opt => opt.value === typeVal);
+                if (option) {
+                    selectedDiv.textContent = option.text;
+                    itemsDiv.querySelectorAll('.select-item').forEach(item => item.classList.remove('selected'));
+                    const item = Array.from(itemsDiv.querySelectorAll('.select-item')).find(item => item.textContent === option.text);
+                    if (item) item.classList.add('selected');
+                }
+            }
+        }
+        if (typeof updateDurationBreakFields === 'function') updateDurationBreakFields();
+    }
+    function setDurationInputs(val, hInput, mInput, sInput) {
+        val = Math.max(0, parseInt(val) || 0);
+        if (!hInput || !mInput || !sInput) return;
+        hInput.value = Math.floor(val / 3600) || '';
+        mInput.value = Math.floor((val % 3600) / 60) || '';
+        sInput.value = (val % 60) || '';
+    }
+    if (task.type === 'count_down' || task.type === 'pomodoro' || task.type === 'pomo') {
+        setDurationInputs(task.duration, durationHoursInput, durationMinutesInput, durationSecondsInput);
+    }
+    if (task.type === 'pomodoro' || task.type === 'pomo') {
+        setDurationInputs(task.shortBreakDuration, shortBreakHoursInput, shortBreakMinutesInput, shortBreakSecondsInput);
+        setDurationInputs(task.longBreakDuration, longBreakHoursInput, longBreakMinutesInput, longBreakSecondsInput);
+    }
+    window.currentEditingTaskId = taskId;
+}
+
+// --- Edit Task Apply Handler ---
+const editTaskButton = document.getElementById('edit-task-button');
+if (editTaskButton) {
+    editTaskButton.onclick = async function () {
+        const taskId = window.currentEditingTaskId;
+        if (!taskId) return;
+        const task = window.taskManager.getTask(taskId);
+        if (!task) return;
+        const newName = nameInput ? nameInput.value.trim() : '';
+        let newType = getTaskType();
+        let newDuration = getDurationInSeconds(durationHoursInput, durationMinutesInput, durationSecondsInput);
+        let newShortBreak = getDurationInSeconds(shortBreakHoursInput, shortBreakMinutesInput, shortBreakSecondsInput, true);
+        let newLongBreak = getDurationInSeconds(longBreakHoursInput, longBreakMinutesInput, longBreakSecondsInput, true);
+        let changed = false;
+        if (task.name !== newName) changed = true;
+        if (task.type !== newType) changed = true;
+        if (newType === 'count_down' && task.duration !== newDuration) changed = true;
+        if (newType === 'pomodoro' && (
+            task.duration !== newDuration ||
+            task.shortBreakDuration !== newShortBreak ||
+            task.longBreakDuration !== newLongBreak
+        )) changed = true;
+        if (!changed) return;
+        task.name = newName;
+        task.type = newType;
+        if (newType === 'count_down') {
+            task.duration = newDuration;
+        } else if (newType === 'pomodoro') {
+            task.duration = newDuration;
+            task.shortBreakDuration = newShortBreak;
+            task.longBreakDuration = newLongBreak;
+        }
+        queueFirebaseUpdate(task, { name: newName, type: newType, duration: task.duration, shortBreakDuration: task.shortBreakDuration, longBreakDuration: task.longBreakDuration });
+        refreshTaskList();
+    };
+}
+
 // --- Reset Task Form ---
 function resetTaskForm() {
     if (nameInput) nameInput.value = '';
@@ -719,7 +829,6 @@ function resetTaskForm() {
         }
     }
 
-    // Hide all three fields
     const durationFlex = document.getElementById('duration-flex');
     const shortBreakFlex = document.getElementById('short-break-flex');
     const longBreakFlex = document.getElementById('long-break-flex');
