@@ -64,7 +64,7 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                     resetButton.addEventListener("click", async () => {
                         await showDialogAsync(
                             "Do you want to reset your XP?",
-                            "Resetting your xp will result in a loss of all your current XP. <strong>This action cannot be undone.</strong>",                            [
+                            "Resetting your xp will result in a loss of all your current XP. <span style=\"color: red;\">This action cannot be undone.</span>",                            [
                                 {
                                     text: "Yes", onClick: async () => {
                                         const currentXP = parseInt(xpElement.textContent || "0");

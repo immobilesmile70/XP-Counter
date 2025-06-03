@@ -398,7 +398,7 @@ function refreshTaskList() {
             if (taskNameEl) taskNameEl.textContent = task.name;
         };
         div.querySelector('.delete-task').onclick = () => {
-            showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as <strong>this action cannot be undone from our side.</strong>", [
+            showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as <span style=\"color: red;\">this action cannot be undone from our side.</span>", [
                 {
                     text: "Yes", onClick: () => {
                         deleteTask(task.id);
@@ -528,7 +528,7 @@ function resumeTask() {
 }
 
 function resetTask() {
-    showDialog("Do you really want to reset the timer?", "Once you reset the timer, all of your current progress realted to this task will be reset. <strong>This action cannot be undone.</strong>", [
+    showDialog("Do you really want to reset the timer?", "Once you reset the timer, all of your current progress realted to this task will be reset. <span style=\"color: red;\">This action cannot be undone.</span>", [
         {
             text: "Yes", onClick: () => {
                 if (activeTimer) {

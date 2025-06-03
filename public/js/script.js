@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logOutButton.addEventListener("click", () => {
-        showDialog("Do you really want to logout?", "Logging out will <p style=\"color: red;\">remove your local data and settings</p>. You can log back in anytime to restore them.", [
+        showDialog("Do you really want to logout?", "Logging out will <span style=\"color: red;\">remove your local data and settings</span>. You can log back in anytime to restore them.", [
             {
                 text: "Yes", onClick: () => {
                     signOut(auth)
@@ -640,7 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!user) return;
 
         showDialog(
-            "Do you really want to delete your account?", "Deleting your account will <strong>erase all your data and settings permanently.</strong> You won’t be able to recover them, even if you log in again. You can read the <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> for more information about how your data is handled after deletion.",
+            "Do you really want to delete your account?", "Deleting your account will <span style=\"color: red;\">erase all your data and settings permanently.</span> You won’t be able to recover them, even if you log in again. You can read the <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> for more information about how your data is handled after deletion.",
             [
                 {
                     text: "Yes",
@@ -654,7 +654,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             setTimeout(() => {
                                 showDialog(
-                                    "Please re-enter your password to delete your account.", "To delete your account, please re-enter your password to confirm your identity. <strong>This ensures your account is deleted securely and intentionally.</strong>",
+                                    "Please re-enter your password to delete your account.", "To delete your account, please re-enter your password to confirm your identity. <span style=\"color: blue;\">This ensures your account is deleted securely and intentionally.</span>",
                                     [
                                         {
                                             text: "Delete",
@@ -698,7 +698,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         else if (user.providerData[0].providerId === "google.com") {
                             setTimeout(() => {
                                 showDialog(
-                                    "Please re-authenticate with Google to delete your account.", "To delete your account, please re-authenticate using your Google account. <strong>This step is required to verify your identity and complete the deletion process securely.</strong>",
+                                    "Please re-authenticate with Google to delete your account.", "To delete your account, please re-authenticate using your Google account. <span style=\"color: blue;\">This step is required to verify your identity and complete the deletion process securely.</span>",
                                     [
                                         {
                                             text: "Delete",
