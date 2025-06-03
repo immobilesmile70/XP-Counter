@@ -256,7 +256,13 @@ async function createTask() {
     if (window.taskManager && typeof window.taskManager.getAllTasks === 'function') {
         const allTasks = window.taskManager.getAllTasks();
         if (allTasks.length >= 8) {
-            alert('You can only have up to 8 tasks saved. Please delete a task before adding a new one.');
+            showDialog("For your information", "You can only have up to 8 tasks saved. <strong>Please delete a task before adding a new one.</strong>", [
+                {
+                    text: "OK", onClick: () => {
+                        console.log("Task creation cancelled due to task limit.");
+                    }
+                }
+            ]);
             return;
         }
     }
@@ -522,7 +528,7 @@ function resumeTask() {
 }
 
 function resetTask() {
-    showDialog("Do you really want to reset the timer?", "Once you reset the timer, all of your current progress realted to this task will be reset. This action cannot be undone.", [
+    showDialog("Do you really want to reset the timer?", "Once you reset the timer, all of your current progress realted to this task will be reset. <strong>This action cannot be undone.</strong>", [
         {
             text: "Yes", onClick: () => {
                 if (activeTimer) {
