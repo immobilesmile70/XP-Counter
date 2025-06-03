@@ -111,7 +111,9 @@ export function getUserId() {
 }
 
 export async function updateTaskInFirebase(uid, task) {
-    return saveTaskToFirebase(uid, task);
+    if (!uid || !task || !task.id) return;
+    const taskRef = ref(database, `users/${uid}/tasks/${task.id}`);
+    await set(taskRef, task);
 }
 
 export async function deleteTaskFromFirebase(uid, taskId) {

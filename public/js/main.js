@@ -376,7 +376,7 @@ function refreshTaskList() {
             </div>
             <div class="task-actions-flex">
             <button class="start-task" title="Start Task"><i class="fa-solid fa-play"></i></button>
-            <button class="edit-task" title="Edit Task"><i class="fa-solid fa-pencil"></i></button>
+            <button class="edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i></button>
             <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
@@ -770,11 +770,43 @@ if (editTaskButton) {
         if (!taskId) return;
         const task = window.taskManager.getTask(taskId);
         if (!task) return;
-        const newName = nameInput ? nameInput.value.trim() : '';
+        clampDurationInputs();
+        if (!nameInput) return;
+        const newName = nameInput.value.trim();
+        if (!newName) {
+            showPopupWithType('Please enter a task name.', false);
+            return;
+        }
+        if (newName.length > 50) {
+            showPopupWithType('Please enter a shorter name.', false);
+            return;
+        }
+        if (newName.length < 3) {
+            showPopupWithType('Please enter a longer name.', false);
+            return;
+        }
         let newType = getTaskType();
         let newDuration = getDurationInSeconds(durationHoursInput, durationMinutesInput, durationSecondsInput);
         let newShortBreak = getDurationInSeconds(shortBreakHoursInput, shortBreakMinutesInput, shortBreakSecondsInput, true);
         let newLongBreak = getDurationInSeconds(longBreakHoursInput, longBreakMinutesInput, longBreakSecondsInput, true);
+        if (newType === 'count_down' && newDuration <= 0) {
+            showPopupWithType('Please enter a valid duration for your countdown task.', false);
+            return;
+        }
+        if (newType === 'pomodoro') {
+            if (newDuration <= 0) {
+                showPopupWithType('Please enter a valid work duration for your Pomodoro task.', false);
+                return;
+            }
+            if (newShortBreak <= 0) {
+                showPopupWithType('Please enter a valid short break duration for your Pomodoro task.', false);
+                return;
+            }
+            if (newLongBreak <= 0) {
+                showPopupWithType('Please enter a valid long break duration for your Pomodoro task.', false);
+                return;
+            }
+        }
         let changed = false;
         if (task.name !== newName) changed = true;
         if (task.type !== newType) changed = true;
@@ -789,10 +821,16 @@ if (editTaskButton) {
         task.type = newType;
         if (newType === 'count_down') {
             task.duration = newDuration;
+            task.shortBreakDuration = undefined;
+            task.longBreakDuration = undefined;
         } else if (newType === 'pomodoro') {
             task.duration = newDuration;
             task.shortBreakDuration = newShortBreak;
             task.longBreakDuration = newLongBreak;
+        } else {
+            task.duration = undefined;
+            task.shortBreakDuration = undefined;
+            task.longBreakDuration = undefined;
         }
         queueFirebaseUpdate(task, { name: newName, type: newType, duration: task.duration, shortBreakDuration: task.shortBreakDuration, longBreakDuration: task.longBreakDuration });
         refreshTaskList();
@@ -944,11 +982,9 @@ function updateDurationBreakFields() {
 
 if (counterTypeSelect) {
     counterTypeSelect.addEventListener('change', updateDurationBreakFields);
-    // Also call on load to set initial state
     updateDurationBreakFields();
 }
 
-// Patch custom select UI to also call updateDurationBreakFields
 (function patchCustomSelectForDurationFields() {
     const selects = document.getElementsByClassName('custom-timer-select');
     for (let i = 0; i < selects.length; i++) {
