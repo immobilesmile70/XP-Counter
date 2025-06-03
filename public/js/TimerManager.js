@@ -20,45 +20,35 @@ function setTimerButtons(state = 'default') {
         show = [startBtn];
     } else if (state === 'continued') {
         show = [pauseBtn];
+    } else {
+        show = [startBtn];
     }
     const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
     const toShow = show.filter(btn => !btn.classList.contains('visible'));
     const toHide = currentlyVisible.filter(btn => !show.includes(btn));
     if (toHide.length > 0) {
-        let transitionsLeft = toHide.length;
         toHide.forEach(btn => {
             btn.classList.remove('visible');
-            btn.addEventListener('transitionend', function handler() {
+            setTimeout(() => {
                 btn.classList.add('hidden');
-                btn.removeEventListener('transitionend', handler);
-                transitionsLeft--;
-                if (transitionsLeft === 0) {
-                    toShow.forEach(showBtn => {
-                        showBtn.classList.remove('hidden');
-                        void showBtn.offsetWidth;
-                        setTimeout(() => {
-                            showBtn.classList.add('visible');
-                        }, 10);
-                    });
-                }
-            });
+            }, 300);
         });
+        setTimeout(() => {
+            toShow.forEach(showBtn => {
+                showBtn.classList.remove('hidden');
+                setTimeout(() => {
+                    showBtn.classList.add('visible');
+                }, 10);
+            });
+        }, 300);
     } else {
         toShow.forEach(showBtn => {
             showBtn.classList.remove('hidden');
-            void showBtn.offsetWidth;
             setTimeout(() => {
                 showBtn.classList.add('visible');
-            }, 350);
+            }, 10);
         });
     }
-    allButtons.forEach(btn => {
-        if (show.includes(btn)) {
-            btn.style.pointerEvents = 'auto';
-        } else {
-            btn.style.pointerEvents = 'none';
-        }
-    });
 }
 
 class Timer {

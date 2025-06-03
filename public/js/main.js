@@ -308,12 +308,10 @@ async function loadAllTasksFromFirebase() {
         if (res.status === 404) return [];
         const data = await res.json();
         if (!data || typeof data !== 'object') return [];
-        noTaskEl.style.display = 'none';
         return Object.entries(data)
             .map(([id, task]) => ({ ...task, id }))
             .filter(task => task && typeof task === 'object' && task.name);
     } catch (e) {
-        noTaskEl.style.display = 'block';
         return [];
     }
 }
