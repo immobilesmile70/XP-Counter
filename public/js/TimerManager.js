@@ -14,7 +14,7 @@ function setTimerButtons(state = 'default') {
         running: [pauseBtn],
         paused: [resumeBtn, resetBtn],
         reset: [startBtn],
-        default: [startBtn],
+        default: [],
         continued: [pauseBtn]
     };
 
