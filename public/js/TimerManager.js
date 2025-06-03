@@ -10,33 +10,44 @@ const resumeBtn = document.getElementById('resume');
 const resetBtn = document.getElementById('reset');
 
 function setTimerButtons(state = 'default') {
-    const config = {
-        running: [pauseBtn],
-        paused: [resumeBtn, resetBtn],
-        reset: [startBtn],
-        default: [],
-        continued: [pauseBtn]
-    };
-
     const allButtons = [startBtn, resumeBtn, pauseBtn, resetBtn];
-    const targetButtons = config[state] || [];
-
-    allButtons.forEach(btn => {
-        const shouldBeVisible = targetButtons.includes(btn);
-        if (shouldBeVisible) {
-            if (!btn.classList.contains('visible')) {
-                btn.classList.remove('hidden');
-                setTimeout(() => btn.classList.add('visible'), 10);
-            }
-        } else {
-            if (btn.classList.contains('visible')) {
-                btn.classList.remove('visible');
-                setTimeout(() => btn.classList.add('hidden'), 300);
-            }
-        }
-    });
+    let show = [];
+    if (state === 'running') {
+        show = [pauseBtn];
+    } else if (state === 'paused') {
+        show = [resumeBtn, resetBtn];
+    } else if (state === 'reset' || state === 'default') {
+        show = [startBtn];
+    } else if (state === 'continued') {
+        show = [pauseBtn];
+    }
+    const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
+    const toShow = show.filter(btn => !btn.classList.contains('visible'));
+    const toHide = currentlyVisible.filter(btn => !show.includes(btn));
+    if (toHide.length > 0) {
+        toHide.forEach(btn => {
+            btn.classList.remove('visible');
+            setTimeout(() => {
+                btn.classList.add('hidden');
+            }, 300);
+        });
+        setTimeout(() => {
+            toShow.forEach(showBtn => {
+                showBtn.classList.remove('hidden');
+                setTimeout(() => {
+                    showBtn.classList.add('visible');
+                }, 10);
+            });
+        }, 300);
+    } else {
+        toShow.forEach(showBtn => {
+            showBtn.classList.remove('hidden');
+            setTimeout(() => {
+                showBtn.classList.add('visible');
+            }, 10);
+        });
+    }
 }
-
 
 class Timer {
     constructor({

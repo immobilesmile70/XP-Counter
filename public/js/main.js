@@ -476,6 +476,13 @@ function stopPomodoroStatusInterval() {
     }
 }
 
+function hideStartButtonImmediate() {
+    if (startBtn) {
+        startBtn.classList.remove('visible');
+        startBtn.classList.add('hidden');
+    }
+}
+
 function startTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
@@ -532,6 +539,7 @@ function startTask(taskId) {
         refreshTaskList();
     };
     activeTimer.start();
+    hideStartButtonImmediate(); 
 }
 
 function pauseTask() {
