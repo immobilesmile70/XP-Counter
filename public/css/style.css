@@ -24,6 +24,7 @@
     --xp-btn-active: #458cbc;
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
+    --reset-btn-bg: #cb5151;
 }
 
 [data-theme="dark"] {
@@ -52,6 +53,7 @@
     --xp-btn-active: #1a5473;
     --list-tool-bg: #4f4f4f;
     --divider-color: #8080808f;
+    --reset-btn-bg: #8f3535;
 }
 
 [data-theme="light"] {
@@ -80,6 +82,7 @@
     --xp-btn-active: #458cbc;
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
+    --reset-btn-bg: #cb5151;
 }
 
 body,
@@ -1123,18 +1126,21 @@ button {
     text-align: center;
     border-radius: 50%;
     border: none;
-    background-color: #8f3535;
+    background-color: var(--reset-btn-bg);
     transition: background-color 0.3s ease, transform 0.3s ease;
     transform: scale(1);
     display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+    font-size: 1.75rem;
+    color: var(--refresh-btn-svg);
 }
 
 .xp-display svg {
     width: 80%;
     height: 80%;
+    stroke: var(--refresh-btn-svg);
 }
 
 .xp-display button:hover {
@@ -1220,10 +1226,6 @@ button {
 
 #refresh-leaderboard:active {
     background-color: var(--refresh-btn-active-bg);
-}
-
-#refresh-leaderboard svg {
-    stroke: var(--refresh-btn-svg);
 }
 
 .settings-list::-webkit-scrollbar {
