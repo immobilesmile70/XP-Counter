@@ -20,8 +20,6 @@ function setTimerButtons(state = 'default') {
         show = [startBtn];
     } else if (state === 'continued') {
         show = [pauseBtn];
-    } else {
-        show = [startBtn];
     }
     const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
     const toShow = show.filter(btn => !btn.classList.contains('visible'));
