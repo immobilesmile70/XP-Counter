@@ -16,10 +16,14 @@ function setTimerButtons(state = 'default') {
         show = [pauseBtn];
     } else if (state === 'paused') {
         show = [resumeBtn, resetBtn];
-    } else if (state === 'reset' || state === 'default') {
+    } else if (state === 'reset') {
         show = [startBtn];
     } else if (state === 'continued') {
         show = [pauseBtn];
+    }
+    if (state !== 'reset' && startBtn) {
+        startBtn.classList.remove('visible');
+            startBtn.classList.add('hidden');
     }
     const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
     const toShow = show.filter(btn => !btn.classList.contains('visible'));
