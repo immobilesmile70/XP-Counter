@@ -423,12 +423,15 @@ function refreshTaskList() {
             if (tasksSection && createTaskSection) {
                 tasksSection.classList.add('hidden');
                 setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
-                createTaskSection.classList.remove('hidden');
-                setTimeout(() => { createTaskSection.classList.remove('hide'); }, 350);
+                createTaskSection.classList.remove('hide');
+                setTimeout(() => { createTaskSection.classList.remove('hidden'); }, 10);
             }
 
             if (taskSidebarButton) taskSidebarButton.style.display = 'none';
-            if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'block';
+            if (createTaskSidebarButton) {
+                createTaskSidebarButton.style.display = 'block';
+                createTaskSidebarButton.textContent = 'Edit Task';
+            }
 
             editOrCreate.textContent = 'Edit Task';
             if (createTaskBtnFlex) createTaskBtnFlex.style.display = 'none';
@@ -669,7 +672,10 @@ function bindTaskFormEvents() {
             setTimeout(() => { tasksSection.classList.add('hide'); }, 350);
         }
         if (taskSidebarButton) taskSidebarButton.style.display = 'none';
-        if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'block';
+        if (createTaskSidebarButton) {
+                createTaskSidebarButton.style.display = 'block';
+                createTaskSidebarButton.textContent = 'Create Task';
+            }
         editOrCreate.textContent = 'Create Task';
         if (createTaskBtnFlex) createTaskBtnFlex.style.display = 'flex';
         if (editTaskBtnFlex) editTaskBtnFlex.style.display = 'none';
