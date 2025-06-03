@@ -476,7 +476,6 @@ function stopPomodoroStatusInterval() {
     }
 }
 
-
 function startTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;

@@ -21,12 +21,21 @@ function setTimerButtons(state = 'default') {
     } else if (state === 'continued') {
         show = [pauseBtn];
     }
-    if (state !== 'reset' && startBtn) {
+    if (state !== 'reset') {
         startBtn.classList.remove('visible');
+        setTimeout(() => {
             startBtn.classList.add('hidden');
+        }, 1);
+    } else if (state === 'reset') {
+        startBtn.classList.remove('hidden');
+        setTimeout(() => {
+            startBtn.classList.add('visible');
+        }, 10);
     }
-    const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
-    const toShow = show.filter(btn => !btn.classList.contains('visible'));
+
+    const otherButtons = allButtons.filter(btn => btn !== startBtn);
+    const currentlyVisible = otherButtons.filter(btn => btn.classList.contains('visible'));
+    const toShow = show.filter(btn => btn !== startBtn && !btn.classList.contains('visible'));
     const toHide = currentlyVisible.filter(btn => !show.includes(btn));
     if (toHide.length > 0) {
         toHide.forEach(btn => {
