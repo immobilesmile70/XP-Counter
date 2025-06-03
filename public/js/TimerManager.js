@@ -10,43 +10,33 @@ const resumeBtn = document.getElementById('resume');
 const resetBtn = document.getElementById('reset');
 
 function setTimerButtons(state = 'default') {
-    const allButtons = [startBtn, resumeBtn, pauseBtn, resetBtn];
     let show = [];
+    let hide = [];
     if (state === 'running') {
         show = [pauseBtn];
+        hide = [startBtn, resumeBtn, resetBtn];
     } else if (state === 'paused') {
         show = [resumeBtn, resetBtn];
+        hide = [startBtn, pauseBtn];
     } else if (state === 'reset' || state === 'default') {
         show = [startBtn];
+        hide = [pauseBtn, resumeBtn, resetBtn];
     } else if (state === 'continued') {
         show = [pauseBtn];
+        hide = [startBtn, resumeBtn, resetBtn];
     }
-    const currentlyVisible = allButtons.filter(btn => btn.classList.contains('visible'));
-    const toShow = show.filter(btn => !btn.classList.contains('visible'));
-    const toHide = currentlyVisible.filter(btn => !show.includes(btn));
-    if (toHide.length > 0) {
-        toHide.forEach(btn => {
-            btn.classList.remove('visible');
-            setTimeout(() => {
-                btn.classList.add('hidden');
-            }, 300);
-        });
+    hide.forEach(btn => {
+        btn.classList.remove('visible');
         setTimeout(() => {
-            toShow.forEach(showBtn => {
-                showBtn.classList.remove('hidden');
-                setTimeout(() => {
-                    showBtn.classList.add('visible');
-                }, 10);
-            });
+            btn.classList.add('hidden');
         }, 300);
-    } else {
-        toShow.forEach(showBtn => {
-            showBtn.classList.remove('hidden');
-            setTimeout(() => {
-                showBtn.classList.add('visible');
-            }, 10);
-        });
-    }
+    });
+    show.forEach(btn => {
+        btn.classList.remove('hidden');
+        setTimeout(() => {
+            btn.classList.add('visible');
+        }, 10);
+    });
 }
 
 class Timer {
