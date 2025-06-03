@@ -8,7 +8,7 @@ import {
     GoogleAuthProvider,
     signInWithPopup
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-import { getDatabase, ref, get, set, remove } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
+import { getDatabase, ref, get, set, remove, runTransaction } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-database.js";
 import { initializeAppCheck, ReCaptchaV3Provider } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app-check.js";
 import { showPopupWithType } from '/js/script.js';
 
@@ -125,6 +125,29 @@ export async function loadTasksFromFirebase(uid) {
     if (!snapshot.exists()) return [];
     const tasksObj = snapshot.val();
     return Object.values(tasksObj || {});
+}
+
+/**
+ * Increment the user's taskCount in Firebase by 1.
+ */
+export async function incrementTaskCount(uid) {
+    if (!uid) return;
+    const countRef = ref(database, `users/${uid}/taskCount`);
+    await runTransaction(countRef, (current) => {
+        return (typeof current === 'number' ? current : 0) + 1;
+    });
+}
+
+/**
+ * Decrement the user's taskCount in Firebase by 1 (min 0).
+ */
+export async function decrementTaskCount(uid) {
+    if (!uid) return;
+    const countRef = ref(database, `users/${uid}/taskCount`);
+    await runTransaction(countRef, (current) => {
+        const next = (typeof current === 'number' ? current : 0) - 1;
+        return next < 0 ? 0 : next;
+    });
 }
 
 export {

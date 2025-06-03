@@ -3,7 +3,7 @@
 import { TaskManager } from '/js/TaskManager.js';
 import { Timer } from '/js/TimerManager.js';
 import { pushXPToFirebase } from '/js/xp.js';
-import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId } from '/js/firebase.js';
+import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId, incrementTaskCount, decrementTaskCount } from '/js/firebase.js';
 import { showPopupWithType, showDialog } from '/js/script.js';
 
 // --- DOM Elements ---
@@ -36,6 +36,8 @@ const pomodoroStatusEl = document.getElementById('pomodoro-status');
 const taskSidebarButton = document.getElementById("tasks");
 const createTaskSidebarButton = document.getElementById("create-task");
 const mainTaskSidebarButton = document.getElementById("main");
+
+let taskLimit = 8;
 
 // --- Initialization & Managers ---
 function clampDurationInputs() {
@@ -255,7 +257,7 @@ async function createTask() {
 
     if (window.taskManager && typeof window.taskManager.getAllTasks === 'function') {
         const allTasks = window.taskManager.getAllTasks();
-        if (allTasks.length >= 8) {
+        if (allTasks.length >= taskLimit) {
             showDialog("For your information", "You can only have up to 8 tasks saved. <strong>Please delete a task before adding a new one.</strong>", [
                 {
                     text: "OK", onClick: () => {
@@ -279,6 +281,7 @@ async function createTask() {
     if (uid) {
         try {
             await updateTaskInFirebase(uid, task);
+            await incrementTaskCount(uid);
         } catch (e) {
             console.error('Failed to save new task to Firebase:', e);
         }
@@ -299,6 +302,7 @@ async function deleteTask(taskId) {
     if (uid) {
         try {
             await deleteTaskFromFirebase(uid, taskId);
+            await decrementTaskCount(uid);
         } catch (e) {
             showPopupWithType('Could not delete task from Firebase.', false);
         }
@@ -331,7 +335,7 @@ function completeTask(taskId) {
         queueFirebaseUpdate(task, { status: 'completed' });
     }
     refreshTaskList();
-    // Firebase: Mark as completed
+
     const uid = getUserId();
     if (uid && task) updateTaskInFirebase(uid, task);
 }
@@ -342,7 +346,7 @@ function refreshTaskList() {
     const tasks = window.taskManager.getAllTasks();
     const createdTasksEl = document.getElementById('created-tasks');
     if (createdTasksEl) {
-        createdTasksEl.textContent = tasks.length;
+        createdTasksEl.textContent = `${tasks.length} / ${taskLimit}`;
     }
     tasks.forEach((task, idx) => {
         const div = document.createElement('div');

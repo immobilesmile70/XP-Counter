@@ -25,6 +25,7 @@
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
     --reset-btn-bg: #cb5151;
+    --chip: #999999;
 }
 
 [data-theme="dark"] {
@@ -54,6 +55,7 @@
     --list-tool-bg: #4f4f4f;
     --divider-color: #8080808f;
     --reset-btn-bg: #8f3535;
+    --chip: #171717;
 }
 
 [data-theme="light"] {
@@ -83,6 +85,7 @@
     --list-tool-bg: #cccccc;
     --divider-color: #bdbdbd;
     --reset-btn-bg: #cb5151;
+    --chip:#999999;
 }
 
 body,
@@ -1684,13 +1687,17 @@ input[type=number]::-webkit-outer-spin-button {
 
 .watch-container {
     width: 100%;
-    height: 80%;
+    height: 100%;
 }
 
-#ad-banner-main {
+#created-tasks {
+    background-color: var(--chip-bg);
     color: var(--subtext);
-    width: fit-content;
-    height: 20%;
+    font-size: 1.2rem;
+    padding: 2px 5px 2px 5px;
+    border-radius: 5px;
+    font-weight: bolder;
+    margin-left: 7px;
 }
 
 @media (max-width: 871px) {
@@ -2096,5 +2103,11 @@ input[type=number]::-webkit-outer-spin-button {
 
     .your-tasks {
         font-size: 1rem;
+    }
+
+    #created-tasks {
+        font-size: 0.8rem;
+        padding: 2px 3px;
+        margin: 0;
     }
 }
