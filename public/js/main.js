@@ -370,7 +370,7 @@ function refreshTaskList() {
             <div class="task-values-flex">
             <span class="task-name">${task.name}</span>
             <div class="v-divider"></div>
-            <span class="task-duration">${task.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
+            <span class="task-type">${task.type.replace('_', ' ').replace(/\b\w/g, c => c.toUpperCase())}</span>
             <div class="v-divider"></div>
             <span class="task-duration">${timeDisplay}</span>
             </div>

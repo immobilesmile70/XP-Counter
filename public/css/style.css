@@ -1508,7 +1508,7 @@ button {
     font-size: 1.25rem;
 }
 
-.task-duration {
+.task-duration, .task-type {
     font-size: 1rem;
     color: var(--subtext);
 }
@@ -2088,8 +2088,8 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 @media (max-width: 320px) {
-    .task-duration {
-        font-size: 0.65rem;
+    .task-duration, .task-type {
+        font-size: 0.35rem;
     }
 
     .task-name {
@@ -2109,5 +2109,9 @@ input[type=number]::-webkit-outer-spin-button {
         font-size: 0.8rem;
         padding: 2px 3px;
         margin: 0;
+    }
+
+    .task-values-flex {
+        gap: 2px;
     }
 }
