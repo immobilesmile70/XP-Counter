@@ -376,6 +376,7 @@ function refreshTaskList() {
             </div>
             <div class="task-actions-flex">
             <button class="start-task" title="Start Task"><i class="fa-solid fa-play"></i></button>
+            <button class="complete-task" title="Complete Task"><i class="fa-solid fa-check"></i></button>
             <button class="edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i></button>
             <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
             </div>
@@ -401,7 +402,9 @@ function refreshTaskList() {
             const taskNameEl = document.getElementById('task-name');
             if (taskNameEl) taskNameEl.textContent = task.name;
         };
-        div.querySelector('.delete-task').onclick = () => {
+        div.querySelector('.delete-task').onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             showDialog("Do you really want to delete the task?", "Once deleted, it can't be restored as <span style=\"color: red;\">this action cannot be undone from our side.</span>", [
                 {
                     text: "Yes", onClick: () => {
@@ -438,6 +441,13 @@ function refreshTaskList() {
             if (editTaskBtnFlex) editTaskBtnFlex.style.display = 'flex';
 
             loadEditValues(task.id);
+        };
+
+        div.querySelector('.complete-task').onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            completeTask(task.id);
         };
 
         taskListEl.appendChild(div);
@@ -673,9 +683,9 @@ function bindTaskFormEvents() {
         }
         if (taskSidebarButton) taskSidebarButton.style.display = 'none';
         if (createTaskSidebarButton) {
-                createTaskSidebarButton.style.display = 'block';
-                createTaskSidebarButton.textContent = 'Create Task';
-            }
+            createTaskSidebarButton.style.display = 'block';
+            createTaskSidebarButton.textContent = 'Create Task';
+        }
         editOrCreate.textContent = 'Create Task';
         if (createTaskBtnFlex) createTaskBtnFlex.style.display = 'flex';
         if (editTaskBtnFlex) editTaskBtnFlex.style.display = 'none';
@@ -840,6 +850,14 @@ if (editTaskButton) {
         }
         queueFirebaseUpdate(task, { name: newName, type: newType, duration: task.duration, shortBreakDuration: task.shortBreakDuration, longBreakDuration: task.longBreakDuration });
         refreshTaskList();
+        if (tasksSection && createTaskSection) {
+            createTaskSection.classList.add('hidden');
+            setTimeout(() => createTaskSection.classList.add('hide'), 350);
+            tasksSection.classList.remove('hide');
+            setTimeout(() => { tasksSection.classList.remove('hidden'); }, 10);
+        }
+        if (taskSidebarButton) taskSidebarButton.style.display = 'block';
+        if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
     };
 }
 
