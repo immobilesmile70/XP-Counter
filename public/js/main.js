@@ -539,12 +539,13 @@ function startTask(taskId) {
         refreshTaskList();
     };
     activeTimer.start();
-    hideStartButtonImmediate(); 
+   hideStartButtonImmediate(); hideStartButtonImmediate();
 }
 
 function pauseTask() {
     if (activeTimer) {
         activeTimer.pause();
+        hideStartButtonImmediate();
         saveElapsedTimeToTask();
         const task = window.taskManager.getTask(activeTaskId);
         if (task) {
@@ -560,6 +561,7 @@ function pauseTask() {
 function resumeTask() {
     if (activeTimer) {
         activeTimer.continue();
+        hideStartButtonImmediate();
     }
 }
 
@@ -604,6 +606,7 @@ function removeActiveTimer() {
     if (activeTimer) {
         stopPomodoroStatusInterval();
         activeTimer.pause();
+        hideStartButtonImmediate(); // Hide start button when timer is removed
         activeTimer = null;
         activeTaskId = null;
     }
