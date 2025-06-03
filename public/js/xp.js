@@ -1,7 +1,7 @@
 import {
     auth, ref, set, database, get, onAuthStateChanged
 } from '/js/firebase.js';
-import { showPopupWithType, showDialog } from '/js/script.js';
+import { showPopupWithType } from '/js/script.js';
 
 let flushDelay = 4200;
 let pendingXP = 0;
@@ -56,51 +56,6 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                             }, flushDelay);
                         });
                     });
-                    const resetButton = document.getElementById("reset-xp");
-                    if (!resetButton) {
-                        showPopupWithType("Reset XP button not found in the DOM.", false);
-                        return;
-                    }
-                    resetButton.addEventListener("click", async () => {
-                        await showDialogAsync(
-                            "Do you want to reset your XP?",
-                            "Resetting your xp will result in a loss of all your current XP. <span style=\"color: red;\">This action cannot be undone.</span>",                            [
-                                {
-                                    text: "Yes", onClick: async () => {
-                                        const currentXP = parseInt(xpElement.textContent || "0");
-                                        if (currentXP === 0 && pendingXP === 0) {
-                                            showPopupWithType("XP is already zero.", false);
-                                            return;
-                                        }
-                                        toggleShimmer("xp", true);
-                                        toggleShimmer("xp-tex", true);
-                                        setTimeout(() => {
-                                            toggleShimmer("xp", false);
-                                            toggleShimmer("xp-tex", false);
-                                        }, 300);
-                                        try {
-                                            pendingXP = 0;
-                                            clearTimeout(flushTimeout);
-                                            flushTimeout = null;
-                                            if (currentXP !== 0) {
-                                                await set(ref(database, `users/${auth.currentUser.uid}/xp`), 0);
-                                            }
-                                            updateXPDisplay(0);
-                                            xpElement.textContent = 0;
-                                            showPopupWithType("XP successfully reset!", true);
-                                        } catch (error) {
-                                            showPopupWithType("Error resetting XP: " + error.message, false);
-                                        }
-                                    }
-                                },
-                                {
-                                    text: "No", onClick: () => {
-                                        console.log("XP reset cancelled.");
-                                    }
-                                }
-                            ]
-                        );
-                    });
                 } else {
                     await set(ref(database, `users/${user.uid}/xp`), 0);
                     updateXPDisplay(0);
@@ -112,24 +67,6 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
         } else {
             console.warn("No user signed in");
         }
-    });
-}
-
-function showDialogAsync(title, message, buttons) {
-    return new Promise((resolve, reject) => {
-        const wrappedButtons = buttons.map(btn => {
-            return {
-                ...btn,
-                onClick: () => {
-                    try {
-                        if (btn.onClick) btn.onClick();
-                    } finally {
-                        resolve(btn.text);
-                    }
-                }
-            };
-        });
-        showDialog(title, message, wrappedButtons);
     });
 }
 

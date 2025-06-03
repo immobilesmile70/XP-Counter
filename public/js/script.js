@@ -603,7 +603,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     logOutButton.addEventListener("click", () => {
-        showDialog("Do you really want to logout?", "Logging out will <span style=\"color: red;\">remove your local data and settings</span>. You can log back in anytime to restore them.", [
+        showDialog("Do you really want to logout?", "Logging out will <span style=\"color: red;\">remove your local data and settings</span>, but will keep your cloud data like tasks, xp, etc. You can log back in anytime to restore them.", [
             {
                 text: "Yes", onClick: () => {
                     signOut(auth)
