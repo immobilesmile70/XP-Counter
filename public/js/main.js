@@ -372,8 +372,8 @@ function refreshTaskList() {
             <span class="task-duration">${timeDisplay}</span>
             </div>
             <div class="task-actions-flex">
-            <button class="start-task"><i class="fa-solid fa-play"></i></button>
-            <button class="delete-task"><i class="fa-solid fa-trash"></i></button>
+            <button class="start-task" title="Start Task"><i class="fa-solid fa-play"></i></button>
+            <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
             </div>
         `;
         div.querySelector('.start-task').onclick = (e) => {

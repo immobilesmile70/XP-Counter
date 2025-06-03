@@ -1137,7 +1137,7 @@ button {
     color: var(--refresh-btn-svg);
 }
 
-.xp-display svg {
+.xp-display button svg {
     width: 80%;
     height: 80%;
     stroke: var(--refresh-btn-svg);
@@ -2016,5 +2016,9 @@ input[type=number]::-webkit-outer-spin-button {
 
     .task-actions-flex {
         gap: 0px;
+    }
+
+    #create-task-start {
+        display: none;
     }
 }
