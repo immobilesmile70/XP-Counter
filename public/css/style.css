@@ -1709,7 +1709,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 .more-options-dropdown {
     position: absolute;
-    background-color: var(--sidebar-bg);
+    background-color: var(--button-active);
     min-width: 150px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 2px 4px;
     border-radius: 12px;
@@ -1720,7 +1720,9 @@ input[type=number]::-webkit-outer-spin-button {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
-    z-index: 10;
+    right: 0px;
+    top: 30px;
+    padding: 5px 10px;
 }
 
 .more-options-dropdown.show {
@@ -1730,6 +1732,13 @@ input[type=number]::-webkit-outer-spin-button {
 
 .more-options-dropdown.hide {
     display: none;
+}
+
+.more-options-dropdown button {
+    width: unset;
+    justify-content: flex-start;
+    gap: 7px;
+    font-size: unset;
 }
 
 .complete-task,
