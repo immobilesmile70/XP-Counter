@@ -167,7 +167,8 @@ class Timer {
             this.interval = setInterval(() => {
                 if (!this.isRunning) return;
                 if (this.pomoBlockRemaining > 0) {
-                    this.pomoBlockRemaining--;
+                    let elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    this.pomoBlockRemaining = initialRemainingTime - elapsed;
                 }
                 if (typeof this.onTick === 'function') {
                     const block = this.pomodoroPlan[this.pomoIndex];
@@ -198,17 +199,16 @@ class Timer {
             this.interval = setInterval(() => {
                 if (!this.isRunning) return;
                 if (this.type === TIMER_TYPE.COUNT_UP) {
-                    this.currentTime++;
+                    this.currentTime = Math.floor((Date.now() - startTimestamp) / 1000) + initialTime;
                 } else if (this.type === TIMER_TYPE.COUNT_DOWN) {
-                    this.currentTime--;
+                    let elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+                    this.currentTime = Math.max(0, initialTime - elapsed);
                     if (this.currentTime <= 0) {
-                        if (this.currentTime <= 0) {
-                            this.currentTime = 0;
-                            if (typeof this.onCompleteTask === 'function') {
-                                this.onCompleteTask();
-                            } else {
-                                this.pause();
-                            }
+                        this.currentTime = 0;
+                        if (typeof this.onCompleteTask === 'function') {
+                            this.onCompleteTask();
+                        } else {
+                            this.pause();
                         }
                     }
                 }
