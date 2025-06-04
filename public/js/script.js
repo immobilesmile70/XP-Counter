@@ -494,11 +494,12 @@ document.addEventListener('DOMContentLoaded', () => {
     signInWithGoogleButton.addEventListener("click", () => {
         showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before logging in.", [
             {
-                text: "OK", onClick: () => {
-                    signInWithGoogle({
+                text: "OK", onClick: async () => {
+                    await signInWithGoogle({
                         filter,
                         setJustSignedUp: () => justSignedUp = true
                     });
+
                 }
             }
         ]);
@@ -507,8 +508,8 @@ document.addEventListener('DOMContentLoaded', () => {
     signUpWithGoogleButton.addEventListener("click", () => {
         showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before signing up.", [
             {
-                text: "OK", onClick: () => {
-                    signInWithGoogle({
+                text: "OK", onClick: async () => {
+                    await signInWithGoogle({
                         filter,
                         setJustSignedUp: () => justSignedUp = true
                     });
