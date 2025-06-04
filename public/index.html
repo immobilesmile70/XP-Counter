@@ -111,6 +111,22 @@
         <button id="accept-cookies-button">Got it</button>
     </div>
 
+    <div id="complete-screen" class="complete-screen-container hide">
+        <div class="completion-screen">
+            <div class="message-box">
+                <h1>Congratulations, <span id="cs-username">Rick</span>!</h1>
+                <p class="task-info">Great job at completing <span id="cs-task-name">Math Revision</span>.</p>
+                <div class="stats">
+                    <p><i class="fas fa-clock"></i> Time Spent: <span id="time-spent">45 mins</span></p>
+                    <p><i class="fas fa-star"></i> XP Earned: <span id="xp-earned">0</span></p>
+                </div>
+                <button class="cs-btn-close">Close</button>
+            </div>
+        </div>
+
+        <div class="confetti-container"></div>
+    </div>
+
     <div id="login-screen" class="login-screen">
         <div class="header">
             <h1>UpGrind</h1>
@@ -250,22 +266,6 @@
                 <button id="counter">Spend XP</button>
                 <button id="leaderboard">Leaderboard</button>
             </div>
-        </div>
-
-        <div id="complete-screen" class="complete-screen-container hide">
-            <div class="completion-screen">
-                <div class="message-box">
-                    <h1>Congratulations, <span id="cs-username">Rick</span>!</h1>
-                    <p class="task-info">Great job at completing <span id="cs-task-name">Math Revision</span>.</p>
-                    <div class="stats">
-                        <p><i class="fas fa-clock"></i> Time Spent: <span id="time-spent">45 mins</span></p>
-                        <p><i class="fas fa-star"></i> XP Earned: <span id="xp-earned">0</span></p>
-                    </div>
-                    <button class="cs-btn-close">Close</button>
-                </div>
-            </div>
-
-            <div class="confetti-container"></div>
         </div>
 
         <div class="xp-section" id="tasks-section" style="gap: 100px;">
