@@ -1171,9 +1171,9 @@ button {
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-bg);
     border-radius: 25px 38px 38px 25px;
-    color: var(--text);
+    color: var(--subtext);
     text-align: center;
-    font-size: 3rem;
+    font-size: 1rem;
 }
 
 .leaderboard-list::-webkit-scrollbar {

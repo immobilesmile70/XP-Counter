@@ -452,7 +452,7 @@ function clearConfetti() {
 
 function refreshTaskList() {
     if (!taskListEl) return;
-    taskListEl.innerHTML = '<span id="no-tasks-at-all" style="display: none;" color: var(--subtext); font-size: 1rem;">You don\'t have any tasks right now. Try Creating one!</span>';
+    taskListEl.innerHTML = '<span id="no-tasks-at-all" style="display: none;">You don\'t have any tasks right now. Try Creating one!</span>';
     const tasks = window.taskManager.getAllTasks();
     const createdTasksEl = document.getElementById('created-tasks');
     if (createdTasksEl) {
