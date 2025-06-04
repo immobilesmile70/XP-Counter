@@ -252,6 +252,22 @@
             </div>
         </div>
 
+        <div id="complete-screen" class="complete-screen-container hide">
+            <div class="completion-screen">
+                <div class="message-box">
+                    <h1>Congratulations, <span id="cs-username">Rick</span>!</h1>
+                    <p class="task-info">Great job at completing <span id="cs-task-name">Math Revision</span>.</p>
+                    <div class="stats">
+                        <p><i class="fas fa-clock"></i> Time Spent: <span id="time-spent">45 mins</span></p>
+                        <p><i class="fas fa-star"></i> XP Earned: <span id="xp-earned">0</span></p>
+                    </div>
+                    <button class="cs-btn-close">Close</button>
+                </div>
+            </div>
+
+            <div class="confetti-container"></div>
+        </div>
+
         <div class="xp-section" id="tasks-section" style="gap: 100px;">
             <div class="xp-display" style="top: 50px;">
                 <div class="home-name-flex">
@@ -485,7 +501,8 @@
                                     style="text-decoration: none; margin-top: 5px; display: inline-block;">
                                     <i class="fa-brands fa-instagram"></i> Instagram
                                 </button>
-                                <button onclick="window.location.href='mailto:help.upgrind@gmail.com?subject=New%20Query&body=I%20Wanted%20To%20Know%20About%20UpGrind'"
+                                <button
+                                    onclick="window.location.href='mailto:help.upgrind@gmail.com?subject=New%20Query&body=I%20Wanted%20To%20Know%20About%20UpGrind'"
                                     style="text-decoration: none; margin-top: 5px; display: inline-block;">
                                     <i class="fas fa-envelope fa-lg"></i> Mail Us
                                 </button>

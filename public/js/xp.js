@@ -23,7 +23,7 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                     const userData = userSnap.val();
                     localUsername = userData.username;
                     const xp = parseInt(userData.xp || 0);
-                    updateXPDisplay(xp);
+                    animateXP(0, xp);
                     xpElement.textContent = xp;
                     document.querySelectorAll(".xp-button").forEach(button => {
                         button.addEventListener("click", () => {
@@ -34,14 +34,11 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                                 showPopupWithType("XP cannot be less than -1000.", false);
                                 return;
                             }
-                            toggleShimmer("xp", true);
-                            toggleShimmer("xp-tex", true);
-                            setTimeout(() => {
-                                toggleShimmer("xp", false);
-                                toggleShimmer("xp-tex", false);
-                            }, 300);
-                            updateXPDisplay(newXP);
-                            xpElement.textContent = newXP;
+                            if (newXP > 1000000) {
+                                showPopupWithType("XP cannot exceed 1,000,000.", false);
+                                return;
+                            }
+                            animateXP(currentXP, newXP);
                             pendingXP = newXP;
                             if (flushTimeout) clearTimeout(flushTimeout);
                             flushTimeout = setTimeout(async () => {
@@ -58,7 +55,8 @@ export async function initXPHandlers(user, showPopup, toggleShimmer, updateXPDis
                     });
                 } else {
                     await set(ref(database, `users/${user.uid}/xp`), 0);
-                    updateXPDisplay(0);
+                    animateXP(0, 0);
+                    console.warn("User data not found in Firebase, initializing XP to 0.");
                     xpElement.textContent = 0;
                 }
             } catch (error) {
@@ -83,11 +81,48 @@ export async function pushXPToFirebase(xp) {
         }
         const newXP = currentXP + xp;
         await set(userXPRef, newXP);
-        const xpElement = document.getElementById("xp");
-        if (xpElement) xpElement.textContent = newXP;
+        animateXP(currentXP, newXP);
         console.log(`Pushed ${xp} XP to Firebase. New total: ${newXP}`);
         return newXP;
     } catch (error) {
         throw new Error("Failed to push XP to Firebase: " + error.message);
     }
+}
+
+function animateXP(currentXP, targetXP) {
+    const xpEl = document.getElementById('xp');
+
+    if (currentXP === targetXP) {
+        xpEl.textContent = `${targetXP} XP`;
+        return;
+    }
+
+    const diff = targetXP - currentXP;
+
+    const minDuration = 700;
+    const maxDuration = 2000;
+    const duration = Math.max(minDuration, maxDuration - diff);
+    const frameRate = 60;
+    const totalFrames = Math.round((duration / 1000) * frameRate);
+
+    let frame = 0;
+
+    const easeOutQuad = (t) => t * (2 - t);
+
+    const update = () => {
+        frame++;
+        const progress = frame / totalFrames;
+        const eased = easeOutQuad(progress);
+
+        const currentValue = Math.round(currentXP + eased * diff);
+        xpEl.textContent = `${currentValue} XP`;
+
+        if (frame < totalFrames) {
+            requestAnimationFrame(update);
+        } else {
+            xpEl.textContent = `${targetXP} XP`;
+        }
+    };
+
+    requestAnimationFrame(update);
 }

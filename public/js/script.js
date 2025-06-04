@@ -416,6 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             localUsername = newUsername;
             usernameChangeInput.value = localUsername;
+            localStorage.setItem('username', localUsername);
             userNameTextHome.textContent = localUsername || "Student";
             clearTimeout(popupTimeout);
             isInfoPopup = true;
@@ -481,7 +482,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (xpElement) xpElement.textContent = xp;
     }
 
-
     function toggleShimmer(elementId, shouldShimmer) {
         const el = document.getElementById(elementId);
         if (shouldShimmer) {
@@ -519,21 +519,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     onAuthStateChanged(auth, async (user) => {
         if (user && !justSignedUp) {
-            const userSnap = await get(ref(database, `users/${user.uid}`));
-            if (userSnap.exists()) {
-                localUsername = userSnap.val().username;
+            const storedUsername = localStorage.getItem('username');
+
+            if (storedUsername) {
+                localUsername = storedUsername;
                 usernameChangeInput.value = localUsername;
-                await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
-                await populateLeaderboard();
-                await fadeScreen(loginScreen, mainScreen);
-                await initializeAndLoadTasks();
             } else {
-                clearTimeout(popupTimeout);
-                isInfoPopup = true;
-                showPopup("No user data found.");
-                localUsername = "Student404";
-                await fadeScreen(loginScreen, mainScreen);
+                const userSnap = await get(ref(database, `users/${user.uid}`));
+                if (userSnap.exists()) {
+                    localUsername = userSnap.val().username;
+                    localStorage.setItem('username', localUsername);
+                    usernameChangeInput.value = localUsername;
+                } else {
+                    clearTimeout(popupTimeout);
+                    isInfoPopup = true;
+                    showPopup("No user data found.");
+                    localUsername = "Student404";
+                    localStorage.setItem('username', localUsername);
+                    await fadeScreen(loginScreen, mainScreen);
+                    return;
+                }
             }
+
+            await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
+            await populateLeaderboard();
+            await fadeScreen(loginScreen, mainScreen);
+            await initializeAndLoadTasks();
         } else {
             console.warn("No user signed in.");
             fadeScreen(mainScreen, loginScreen);
@@ -569,7 +580,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = passwordInputLogin.value.trim();
 
         if (email && password) {
-        showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before logging in.", [
+            showDialog("For your information", "Please accept the <a style=\"color: var(--subtext);\" href=\"/terms\">Terms and Conditions</a> and <a style=\"color: var(--subtext);\" href=\"/privacy\">Privacy Policy</a> before logging in.", [
                 {
                     text: "OK", onClick: () => {
                         signInWithEmailAndPassword(auth, email, password)
@@ -578,6 +589,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const userSnap = await get(ref(database, `users/${user.uid}`));
                                 if (userSnap.exists()) {
                                     localUsername = userSnap.val().username;
+                                    localStorage.setItem('username', localUsername);
                                     await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
                                 } else {
                                     clearTimeout(popupTimeout);
@@ -621,6 +633,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             signUpForm.classList.add("hidden");
                             forgetPassForm.classList.add("hidden");
                             localUsername = null;
+                            localStorage.removeItem('username');
                             showTasks();
                         })
                         .catch((error) => {
@@ -679,6 +692,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     loginForm.classList.remove("hidden");
                                                     forgetPassForm.classList.add("hidden");
                                                     localUsername = null;
+                                                    localStorage.removeItem('username');
                                                     usernameChangeInput.value = "";
                                                 } catch (error) {
                                                     const mappedMessage = mapErrorMessage(error);
@@ -725,6 +739,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     loginForm.classList.remove("hidden");
                                                     forgetPassForm.classList.add("hidden");
                                                     localUsername = null;
+                                                    localStorage.removeItem('username');
                                                 } catch (error) {
                                                     const mappedMessage = mapErrorMessage(error);
                                                     clearTimeout(popupTimeout);
@@ -797,6 +812,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                             xp: 0
                                         });
                                         localUsername = username;
+                                        localStorage.setItem('username', localUsername);
                                         await fadeScreen(loginScreen, mainScreen);
                                         await initXPHandlers(user, showPopup, toggleShimmer, updateXPDisplay);
                                     })
