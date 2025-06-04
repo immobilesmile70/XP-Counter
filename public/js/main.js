@@ -351,13 +351,23 @@ function completeTask(taskId) {
     completeScreen.classList.remove('hide');
     setTimeout(() => completeScreen.classList.add('visible'), 10);
 
-    setTimeout(() => { deleteTask(task.id); }, 500);
+    setTimeout(async () => {
+        window.taskManager.removeTask(taskId);
+        if (activeTaskId === taskId) {
+            removeActiveTimer();
+        }
+        refreshTaskList();
+        try {
+            await deleteTaskFromFirebase(uid, taskId);
+            await decrementTaskCount(uid);
+        } catch (e) {
+            showPopupWithType('Could not delete task from Firebase.', false);
+        }
+    }, 500);
 
     if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
         window.taskManager.setCurrentTask(null);
     }
-
-    refreshTaskList();
 }
 
 function closeBtnCS() {
