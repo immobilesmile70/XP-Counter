@@ -40,7 +40,6 @@ const noTaskEl = document.getElementById('no-task-at-all');
 const editOrCreate = document.getElementById('current-status-eoc');
 const createTaskBtnFlex = document.getElementById('create-task-btn-flex');
 const editTaskBtnFlex = document.getElementById('edit-task-btn-flex');
-const closeBtnComplete = document.getElementById('cs-btn-close');
 const csUsername = document.getElementById('cs-username');
 const csTaskName = document.getElementById('cs-task-name');
 const timeSpentText = document.getElementById('time-spent');
@@ -327,53 +326,63 @@ async function loadAllTasksFromFirebase() {
 function completeTask(taskId) {
     window.taskManager.updateStatus(taskId, 'completed');
     const task = window.taskManager.getTask(taskId);
-    if (task) {
-        task.status = 'completed';
-        queueFirebaseUpdate(task, { status: 'completed' });
+    if (!task) return;
+
+    if (typeof pendingXP !== 'undefined' && pendingXP > 0) {
+        task.xpearned = (task.xpearned || 0) + pendingXP;
+        pushXPToFirebase(pendingXP);
+        pendingXP = 0;
     }
-    refreshTaskList();
+
+    task.status = 'completed';
+    queueFirebaseUpdate(task, { status: 'completed', xpearned: task.xpearned });
+
     launchConfetti();
+
     const uid = getUserId();
-    if (uid && task) updateTaskInFirebase(uid, task);
+    if (uid) updateTaskInFirebase(uid, task);
 
     const storedUsername = localStorage.getItem('username');
     csUsername.textContent = storedUsername || 'Student404';
-
     csTaskName.textContent = task.name || 'Task404';
-
     timeSpentText.textContent = Timer.formatTime(task.elapsedTime || 0);
+    animateXP(0, task.xpearned || 0);
 
     completeScreen.classList.remove('hide');
-    setTimeout(() => { completeScreen.classList.add('visible'); }, 10);
-
-    animateXP(0, task.xpEarned);
+    setTimeout(() => completeScreen.classList.add('visible'), 10);
 
     setTimeout(() => { deleteTask(task.id); }, 500);
+
+    if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
+        window.taskManager.setCurrentTask(null);
+    }
+
+    refreshTaskList();
 }
 
-if (closeBtnComplete) {
-    closeBtnComplete.onclick = () => {
-        completeScreen.classList.remove('visible');
-        setTimeout(() => {
-            completeScreen.classList.add('hide');
-            clearConfetti();
-        }, 350);
+function closeBtnCS() {
+    completeScreen.classList.remove('visible');
+    setTimeout(() => {
+        completeScreen.classList.add('hide');
+        clearConfetti();
+    }, 350);
 
-        if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
-            window.taskManager.setCurrentTask(null);
-        }
+    if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
+        window.taskManager.setCurrentTask(null);
+    }
 
-        if (taskSidebarButton) taskSidebarButton.style.display = 'block';
-        if (mainTaskSidebarButton) mainTaskSidebarButton.style.display = 'none';
+    if (taskSidebarButton) taskSidebarButton.style.display = 'block';
+    if (mainTaskSidebarButton) mainTaskSidebarButton.style.display = 'none';
 
-        if (tasksSection && mainSection) {
-            tasksSection.classList.remove('hide');
-            setTimeout(() => tasksSection.classList.remove('hidden'), 10);
-            mainSection.classList.add('hidden');
-            setTimeout(() => { mainSection.classList.add('hide'); }, 350);
-        }
+    if (tasksSection && mainSection) {
+        tasksSection.classList.remove('hide');
+        setTimeout(() => tasksSection.classList.remove('hidden'), 10);
+        mainSection.classList.add('hidden');
+        setTimeout(() => { mainSection.classList.add('hide'); }, 350);
     }
 }
+
+window.closeBtnCS = closeBtnCS;
 
 function animateXP(currentXP, targetXP) {
     const xpEl = document.getElementById('xp-earned');
@@ -1287,11 +1296,11 @@ resetTask = function () {
     flushPendingXP();
     origResetTask.apply(this, arguments);
 };
-const origCompleteTask = typeof completeTask === 'function' ? completeTask : () => { };
+/*const origCompleteTask = typeof completeTask === 'function' ? completeTask : () => { };
 completeTask = function () {
     flushPendingXP();
     origCompleteTask.apply(this, arguments);
-};
+};*/
 
 function hasUnsavedChanges() {
     return activeTimer && activeTimer.isRunning;
