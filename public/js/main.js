@@ -346,9 +346,9 @@ function completeTask(taskId) {
     completeScreen.classList.remove('hide');
     setTimeout(() => { completeScreen.classList.add('visible'); }, 10);
 
-    animateXP(0, task.xpEarned || 0);
+    animateXP(0, task.xpEarned);
 
-    setTimeout(() => { deleteTask(task.id); }, 350);
+    setTimeout(() => { deleteTask(task.id); }, 500);
 }
 
 if (closeBtnComplete) {

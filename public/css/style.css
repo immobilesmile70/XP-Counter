@@ -1755,16 +1755,13 @@ input[type=number]::-webkit-outer-spin-button {
 .complete-screen-container {
     height: 100%;
     width: 100%;
-    font-family: 'Segoe UI', sans-serif;
     background: var(--loader-bg);
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
     z-index: 5000;
-}
-
-.complete-screen-container {
+    position: fixed;
     backdrop-filter: blur(10px);
     opacity: 0;
     pointer-events: none;
