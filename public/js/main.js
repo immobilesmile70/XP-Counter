@@ -682,7 +682,10 @@ function startTask(taskId) {
         type: timerType,
         duration: task.duration,
         shortBreakDuration: task.shortBreakDuration || 0,
-        longBreakDuration: task.longBreakDuration || 0
+        longBreakDuration: task.longBreakDuration || 0,
+        onCompleteTask: () => {
+            completeTask(task.id);
+        }
     });
     if (timerType === 'pomodoro') {
         if (task.pomodoroState) {

@@ -57,6 +57,7 @@ class Timer {
         this.longBreakDuration = longBreakDuration;
         this.cyclesPerSet = cyclesPerSet;
         this.reset();
+        this.onCompleteTask = options.onCompleteTask || null;
     }
 
     reset() {
@@ -179,7 +180,11 @@ class Timer {
                 if (this.pomoBlockRemaining <= 0) {
                     this.pomoIndex++;
                     if (this.pomoIndex >= this.pomodoroPlan.length) {
-                        this.pause();
+                        if (typeof this.onCompleteTask === 'function') {
+                            this.onCompleteTask();
+                        } else {
+                            this.pause();
+                        }
                         return;
                     }
                     this.pomoBlockRemaining = this.pomodoroPlan[this.pomoIndex].duration;
@@ -193,8 +198,14 @@ class Timer {
                 } else if (this.type === TIMER_TYPE.COUNT_DOWN) {
                     this.currentTime--;
                     if (this.currentTime <= 0) {
-                        this.currentTime = 0;
-                        this.pause();
+                        if (this.currentTime <= 0) {
+                            this.currentTime = 0;
+                            if (typeof this.onCompleteTask === 'function') {
+                                this.onCompleteTask();
+                            } else {
+                                this.pause();
+                            }
+                        }
                     }
                 }
                 if (typeof this.onTick === 'function') {
