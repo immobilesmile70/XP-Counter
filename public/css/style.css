@@ -1720,6 +1720,7 @@ input[type=number]::-webkit-outer-spin-button {
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.2s ease;
+    z-index: 10;
 }
 
 .more-options-dropdown.show {
