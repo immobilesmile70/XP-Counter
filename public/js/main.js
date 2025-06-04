@@ -379,6 +379,14 @@ function refreshTaskList() {
             <button class="complete-task" title="Complete Task"><i class="fa-solid fa-check"></i></button>
             <button class="edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i></button>
             <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
+            <div class="more-options-container">
+                <button class="more-options-btn" title="More Options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                <div class="more-options-dropdown" style="display: none; position: absolute; z-index: 10;">
+                    <button class="mo-complete-task" title="Complete Task"><i class="fa-solid fa-check"></i></button>
+                    <button class="mo-edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i></button>
+                    <button class="mo-delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            </div>
             </div>
         `;
         div.querySelector('.start-task').onclick = (e) => {
@@ -449,6 +457,48 @@ function refreshTaskList() {
 
             completeTask(task.id);
         };
+
+        const moreOptionsBtn = div.querySelector('.more-options-btn');
+        const moreOptionsDropdown = div.querySelector('.more-options-dropdown');
+        if (moreOptionsBtn && moreOptionsDropdown) {
+            moreOptionsBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                document.querySelectorAll('.more-options-dropdown').forEach(el => {
+                    if (el !== moreOptionsDropdown) {
+                        el.classList.remove('show');
+                    }
+                });
+                moreOptionsDropdown.classList.toggle('show');
+            };
+
+            document.addEventListener('click', function hideDropdown(e) {
+                if (!div.contains(e.target)) {
+                    moreOptionsDropdown.classList.remove('show');
+                }
+            });
+        }
+
+        if (moreOptionsDropdown) {
+            moreOptionsDropdown.querySelector('.mo-complete-task').onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                completeTask(task.id);
+                moreOptionsDropdown.classList.remove('show');
+            };
+            moreOptionsDropdown.querySelector('.mo-edit-task').onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                div.querySelector('.edit-task').click();
+                moreOptionsDropdown.classList.remove('show');
+            };
+            moreOptionsDropdown.querySelector('.mo-delete-task').onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                div.querySelector('.delete-task').click();
+                moreOptionsDropdown.classList.remove('show');
+            };
+        }
 
         taskListEl.appendChild(div);
     });
@@ -839,14 +889,20 @@ if (editTaskButton) {
             task.duration = newDuration;
             task.shortBreakDuration = undefined;
             task.longBreakDuration = undefined;
+            task.elapsedTime = 0;
         } else if (newType === 'pomodoro') {
             task.duration = newDuration;
             task.shortBreakDuration = newShortBreak;
             task.longBreakDuration = newLongBreak;
+            task.elapsedTime = 0;
+            task.pomodoroState = null;
+            task.pomodoroState.pomoIndex = 0;
+            task.pomodoroState.pomoBlockRemaining = null;
         } else {
             task.duration = undefined;
             task.shortBreakDuration = undefined;
             task.longBreakDuration = undefined;
+            task.elapsedTime = 0;
         }
         queueFirebaseUpdate(task, { name: newName, type: newType, duration: task.duration, shortBreakDuration: task.shortBreakDuration, longBreakDuration: task.longBreakDuration });
         refreshTaskList();
