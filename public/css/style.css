@@ -358,6 +358,7 @@ button {
     justify-content: space-between;
     flex-direction: column;
     font-size: 1.8rem;
+    width: fit-content;
 }
 
 .dialog p {
@@ -2269,6 +2270,10 @@ input[type=number]::-webkit-outer-spin-button {
 
     .more-options-btn {
         display: flex !important;
+    }
+
+    .dialog {
+        width: calc(100% - 50px);
     }
 }
 
