@@ -36,7 +36,6 @@ const pomodoroStatusEl = document.getElementById('pomodoro-status');
 const taskSidebarButton = document.getElementById("tasks");
 const createTaskSidebarButton = document.getElementById("create-task");
 const mainTaskSidebarButton = document.getElementById("main");
-const noTaskEl = document.getElementById('no-task-at-all');
 const editOrCreate = document.getElementById('current-status-eoc');
 const createTaskBtnFlex = document.getElementById('create-task-btn-flex');
 const editTaskBtnFlex = document.getElementById('edit-task-btn-flex');
@@ -459,12 +458,9 @@ function refreshTaskList() {
     if (createdTasksEl) {
         createdTasksEl.textContent = `${tasks.length} / ${taskLimit}`;
     }
-    if (typeof noTaskEl !== 'undefined' && noTaskEl) {
-        if (tasks.length === 0) {
-            noTaskEl.style.display = 'block';
-        } else {
-            noTaskEl.style.display = 'none';
-        }
+    const noTaskEl = document.getElementById('no-tasks-at-all');
+    if (noTaskEl) {
+        noTaskEl.style.display = tasks.length === 0 ? 'block' : 'none';
     }
     tasks.forEach((task, idx) => {
         const div = document.createElement('div');
