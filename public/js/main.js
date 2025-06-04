@@ -362,7 +362,7 @@ function completeTask(taskId) {
         } catch (e) {
             showPopupWithType('Could not delete task from Firebase.', false);
         }
-    }, 500);
+    }, 1500);
 
     if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
         window.taskManager.setCurrentTask(null);
