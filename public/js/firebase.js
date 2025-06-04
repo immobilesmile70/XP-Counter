@@ -83,6 +83,8 @@ export const signInWithGoogle = async ({
                 xp: 0
             });
 
+            localStorage.setItem('username', rawUsername);
+
             setJustSignedUp();
 
         } else {
@@ -90,9 +92,11 @@ export const signInWithGoogle = async ({
             if (!userData.username) {
                 rawUsername = `user${Math.floor(Math.random() * 10000)}`;
                 await set(ref(database, `users/${uid}/username`), rawUsername);
+                localStorage.setItem('username', rawUsername);
                 console.log(`Fallback: Username set for user ${uid}: ${rawUsername}`);
             } else {
                 rawUsername = userData.username;
+                localStorage.setItem('username', rawUsername);
             }
         }
 

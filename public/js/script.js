@@ -525,9 +525,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 localUsername = storedUsername;
                 usernameChangeInput.value = localUsername;
             } else {
-                const userSnap = await get(ref(database, `users/${user.uid}`));
+                let retries = 0;
+                let userSnap;
+                do {
+                    userSnap = await get(ref(database, `users/${user.uid}`));
+                    if (!userSnap.exists()) {
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                        retries++;
+                    }
+                } while (!userSnap.exists() && retries < 5);
+
                 if (userSnap.exists()) {
-                    localUsername = userSnap.val().username;
+                    localUsername = userSnap.val().username || `user${Math.floor(Math.random() * 10000)}`;
                     localStorage.setItem('username', localUsername);
                     usernameChangeInput.value = localUsername;
                 } else {
