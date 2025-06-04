@@ -381,7 +381,7 @@ function refreshTaskList() {
             <button class="delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
             <div class="more-options-container">
                 <button class="more-options-btn" title="More Options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
-                <div class="more-options-dropdown">
+                <div class="more-options-dropdown hide">
                     <button class="mo-complete-task" title="Complete Task"><i class="fa-solid fa-check"></i>Complete Task</button>
                     <button class="mo-edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i>Edit Task</button>
                     <button class="mo-delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i>Delete Task</button>

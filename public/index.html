@@ -200,7 +200,7 @@
                     style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
                     <i class="fa-brands fa-instagram"></i>
                 </a>
-                <a href="mailto:help.upgrind@gmail.com"
+                <a href="mailto:help.upgrind@gmail.com?subject=New%20Query&body=I%20Wanted%20To%20Know%20About%20UpGrind"
                     style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
                     <i class="fas fa-envelope fa-lg"></i>
                 </a>
@@ -272,7 +272,8 @@
                             <div class="task-list-item"></div>
                             <div class="task-list-item"></div>
                             <div class="task-list-item"></div>
-                            <span id="no-tasks-at-all" style="color: var(--subtext); font-size: 1rem;">You don't have any tasks right now. Try Creating one!</span>
+                            <span id="no-tasks-at-all" style="color: var(--subtext); font-size: 1rem;">You don't have
+                                any tasks right now. Try Creating one!</span>
                         </div>
                     </div>
                 </div>
@@ -375,8 +376,7 @@
                                         class="fas fa-play"></i><span>Start</span></button>
                                 <button class="" id="resume" style="padding-left: 2px; padding-right: 0px;"><i
                                         class="fas fa-play"></i><span>Resume</span></button>
-                                <button class="" id="pause"><i
-                                        class="fas fa-pause"></i><span>Pause</span></button>
+                                <button class="" id="pause"><i class="fas fa-pause"></i><span>Pause</span></button>
                                 <button class="" id="reset"><i
                                         class="fas fa-rotate-left"></i><span>Reset</span></button>
                             </div>
@@ -468,6 +468,35 @@
                                 <label>Account</label>
                                 <button id="delete-user-button">Delete Account</button>
                                 <button id="logout-button">Logout</button>
+                            </div>
+                            <div class="setting-item" style="gap: 75px;">
+                                <label>Feedback</label>
+                                <button
+                                    onclick="window.location.href='mailto:help.upgrind@gmail.com?subject=Feedback'">Provide
+                                    Feedback</button>
+                                <button
+                                    onclick="window.location.href='mailto:help.upgrind@gmail.com?subject=Bug(s)%20Found'">Report
+                                    Bug(s)</button>
+                            </div>
+                            <div class="setting-item" style="gap: 75px;">
+                                <label>Reach Us</label>
+                                <a href="https://github.com/immobilesmile70" target="_blank"
+                                    style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                                    <i class="fab fa-github fa-lg"></i>
+                                </a>
+                                <a href="https://www.instagram.com/upgrind.community/" target="_blank"
+                                    style="color: inherit; text-decoration: none; margin-top: 5px; display: inline-block;">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </a>
+                                <a href="mailto:help.upgrind@gmail.com"
+                                    style="text-decoration: none; margin-top: 5px; display: inline-block; color: inherit;">
+                                    <i class="fas fa-envelope fa-lg"></i>
+                                </a>
+                            </div>
+                            <div class="setting-item" style="gap: 75px;">
+                                <label>Legal</label>
+                                <button onclick="window.location.href='/terms'">Terms and Conditions</button>
+                                <button onclick="window.location.href='/privacy'">Privacy Policy</button>
                             </div>
                         </div>
                     </div>
