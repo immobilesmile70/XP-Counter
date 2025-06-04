@@ -44,20 +44,24 @@ function showButton(...buttonsToShow) {
 }
 
 class Timer {
-    constructor({
-        type = TIMER_TYPE.COUNT_UP,
-        duration = 0,
-        shortBreakDuration = 0,
-        longBreakDuration = 0,
-        cyclesPerSet = 4
-    } = {}) {
+    constructor(options = {}) {
+        const {
+            type = TIMER_TYPE.COUNT_UP,
+            duration = 0,
+            shortBreakDuration = 0,
+            longBreakDuration = 0,
+            cyclesPerSet = 4,
+            onCompleteTask = null
+        } = options;
+
         this.type = type;
         this.duration = duration;
         this.shortBreakDuration = shortBreakDuration;
         this.longBreakDuration = longBreakDuration;
         this.cyclesPerSet = cyclesPerSet;
+        this.onCompleteTask = onCompleteTask;
+
         this.reset();
-        this.onCompleteTask = options.onCompleteTask || null;
     }
 
     reset() {
