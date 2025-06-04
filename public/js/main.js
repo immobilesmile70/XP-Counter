@@ -382,9 +382,9 @@ function refreshTaskList() {
             <div class="more-options-container">
                 <button class="more-options-btn" title="More Options"><i class="fa-solid fa-ellipsis-vertical"></i></button>
                 <div class="more-options-dropdown">
-                    <button class="mo-complete-task" title="Complete Task"><i class="fa-solid fa-check"></i></button>
-                    <button class="mo-edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i></button>
-                    <button class="mo-delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i></button>
+                    <button class="mo-complete-task" title="Complete Task"><i class="fa-solid fa-check"></i>Complete Task</button>
+                    <button class="mo-edit-task" title="Edit Task"><i class="fa-solid fa-pen"></i>Edit Task</button>
+                    <button class="mo-delete-task" title="Delete Task"><i class="fa-solid fa-trash"></i>Delete Task</button>
                 </div>
             </div>
             </div>
@@ -464,17 +464,27 @@ function refreshTaskList() {
             moreOptionsBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
+
                 document.querySelectorAll('.more-options-dropdown').forEach(el => {
                     if (el !== moreOptionsDropdown) {
                         el.classList.remove('show');
+                        setTimeout(() => el.classList.add('hide'), 200);
                     }
                 });
-                moreOptionsDropdown.classList.toggle('show');
+
+                if (moreOptionsDropdown.classList.contains('show')) {
+                    moreOptionsDropdown.classList.remove('show');
+                    setTimeout(() => moreOptionsDropdown.classList.add('hide'), 200);
+                } else {
+                    moreOptionsDropdown.classList.remove('hide');
+                    setTimeout(() => moreOptionsDropdown.classList.add('show'), 10);
+                }
             };
 
             document.addEventListener('click', function hideDropdown(e) {
                 if (!div.contains(e.target)) {
                     moreOptionsDropdown.classList.remove('show');
+                    setTimeout(() => moreOptionsDropdown.classList.add('hide'), 200);
                 }
             });
         }
@@ -485,18 +495,21 @@ function refreshTaskList() {
                 e.stopPropagation();
                 completeTask(task.id);
                 moreOptionsDropdown.classList.remove('show');
+                setTimeout(() => moreOptionsDropdown.classList.add('hide'), 200);
             };
             moreOptionsDropdown.querySelector('.mo-edit-task').onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 div.querySelector('.edit-task').click();
                 moreOptionsDropdown.classList.remove('show');
+                setTimeout(() => moreOptionsDropdown.classList.add('hide'), 200);
             };
             moreOptionsDropdown.querySelector('.mo-delete-task').onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 div.querySelector('.delete-task').click();
                 moreOptionsDropdown.classList.remove('show');
+                setTimeout(() => moreOptionsDropdown.classList.add('hide'), 200);
             };
         }
 
