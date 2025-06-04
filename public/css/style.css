@@ -1723,6 +1723,7 @@ input[type=number]::-webkit-outer-spin-button {
     right: 0px;
     top: 30px;
     padding: 5px 10px;
+    justify-content: flex-start;
 }
 
 .more-options-dropdown.show {
@@ -1735,10 +1736,10 @@ input[type=number]::-webkit-outer-spin-button {
 }
 
 .more-options-dropdown button {
-    width: unset;
+    width: 100%;
     justify-content: flex-start;
     gap: 7px;
-    font-size: unset;
+    font-size: revert;
 }
 
 .complete-task,
@@ -2109,7 +2110,8 @@ input[type=number]::-webkit-outer-spin-button {
         font-size: 1rem;
     }
 
-    .task-duration {
+    .task-duration,
+    .task-type {
         font-size: 0.75rem;
     }
 
@@ -2152,7 +2154,7 @@ input[type=number]::-webkit-outer-spin-button {
 
     .task-duration,
     .task-type {
-        font-size: 0.35rem;
+        font-size: 0.45rem;
     }
 
     .task-name {
