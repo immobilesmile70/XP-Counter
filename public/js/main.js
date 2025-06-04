@@ -858,6 +858,8 @@ if (editTaskButton) {
         }
         if (taskSidebarButton) taskSidebarButton.style.display = 'block';
         if (createTaskSidebarButton) createTaskSidebarButton.style.display = 'none';
+        resetTaskForm();
+        window.currentEditingTaskId = null;
     };
 }
 
