@@ -64,17 +64,6 @@ class Timer {
         this.reset();
     }
 
-    reset() {
-        this.isRunning = false;
-        this.isPaused = false;
-        this.currentTime = this.type === TIMER_TYPE.COUNT_DOWN ? this.duration : 0;
-        this.interval = null;
-        if (this.type === TIMER_TYPE.POMODORO) {
-            this._generatePomodoroPlan();
-            this.pomoIndex = 0;
-            this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
-        }
-    }
 
     _generatePomodoroPlan() {
         this.pomodoroPlan = [];
@@ -123,6 +112,8 @@ class Timer {
         if (this.isRunning) return;
         this.isRunning = true;
         this.isPaused = false;
+        this.startTimestamp = Date.now();
+        this.initialTime = this.currentTime;
         if (this.type === TIMER_TYPE.POMODORO && (!this.pomodoroPlan || !this.pomodoroPlan.length)) {
             this._generatePomodoroPlan();
             this.pomoIndex = 0;
@@ -144,7 +135,9 @@ class Timer {
         this.isRunning = false;
         this.isPaused = false;
         this.currentTime = this.type === TIMER_TYPE.COUNT_DOWN ? this.duration : 0;
-        clearInterval(this.interval);
+        this.interval = null;
+        this.startTimestamp = null;
+        this.initialTime = 0;
         if (this.type === TIMER_TYPE.POMODORO) {
             this._generatePomodoroPlan();
             this.pomoIndex = 0;
@@ -157,6 +150,8 @@ class Timer {
         if (!this.isPaused) return;
         this.isPaused = false;
         this.isRunning = true;
+        this.startTimestamp = Date.now();
+        this.initialTime = this.currentTime;
         this._runTimer();
         setTimerButtons('continued');
     }
@@ -198,11 +193,14 @@ class Timer {
         } else {
             this.interval = setInterval(() => {
                 if (!this.isRunning) return;
+
+                const elapsed = Math.floor((Date.now() - this.startTimestamp) / 1000);
+
                 if (this.type === TIMER_TYPE.COUNT_UP) {
-                    this.currentTime = Math.floor((Date.now() - startTimestamp) / 1000) + initialTime;
+                    this.currentTime = this.initialTime + elapsed;
                 } else if (this.type === TIMER_TYPE.COUNT_DOWN) {
-                    let elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
-                    this.currentTime = Math.max(0, initialTime - elapsed);
+                    this.currentTime = Math.max(0, this.initialTime - elapsed);
+
                     if (this.currentTime <= 0) {
                         this.currentTime = 0;
                         if (typeof this.onCompleteTask === 'function') {
@@ -210,11 +208,14 @@ class Timer {
                         } else {
                             this.pause();
                         }
+                        return;
                     }
                 }
+
                 if (typeof this.onTick === 'function') {
                     this.onTick(this.currentTime);
                 }
+
                 if (typeof this.onTickXP === 'function') {
                     if (!this._xpTickCounter) this._xpTickCounter = 0;
                     this._xpTickCounter++;
