@@ -60,6 +60,7 @@ class Timer {
         this.longBreakDuration = longBreakDuration;
         this.cyclesPerSet = cyclesPerSet;
         this.onCompleteTask = onCompleteTask;
+        this.lastXPCheck = null;
 
         this.reset();
     }
@@ -123,6 +124,7 @@ class Timer {
             this.pomoStartTimestamp = Date.now();
             this.initialPomoRemaining = this.pomoBlockRemaining;
         }
+        this.lastXPCheck = Date.now();
         this._runTimer();
         setTimerButtons('running');
     }
@@ -144,6 +146,7 @@ class Timer {
         this.initialTime = 0;
         this.pomoStartTimestamp = null;
         this.initialPomoRemaining = 0;
+        this.lastXPCheck = null;
         if (this.type === TIMER_TYPE.POMODORO) {
             this._generatePomodoroPlan();
             this.pomoIndex = 0;
@@ -158,6 +161,7 @@ class Timer {
         this.isRunning = true;
         this.startTimestamp = Date.now();
         this.initialTime = this.currentTime;
+        this.lastXPCheck = Date.now();
         this._runTimer();
         setTimerButtons('continued');
         if (this.type === TIMER_TYPE.POMODORO) {
@@ -181,11 +185,14 @@ class Timer {
                 }
 
                 if (typeof this.onTickXP === 'function') {
-                    if (!this._xpTickCounter) this._xpTickCounter = 0;
-                    this._xpTickCounter++;
-                    if (this._xpTickCounter >= 60) {
-                        this.onTickXP();
-                        this._xpTickCounter = 0;
+                    const now = Date.now();
+                    const secondsSinceLastXP = Math.floor((now - this.lastXPCheck) / 1000);
+                    if (secondsSinceLastXP >= 60) {
+                        const xpChunks = Math.floor(secondsSinceLastXP / 60);
+                        for (let i = 0; i < xpChunks; i++) {
+                            this.onTickXP();
+                        }
+                        this.lastXPCheck += xpChunks * 60 * 1000;
                     }
                 }
 
@@ -233,11 +240,14 @@ class Timer {
                 }
 
                 if (typeof this.onTickXP === 'function') {
-                    if (!this._xpTickCounter) this._xpTickCounter = 0;
-                    this._xpTickCounter++;
-                    if (this._xpTickCounter >= 60) {
-                        this.onTickXP();
-                        this._xpTickCounter = 0;
+                    const now = Date.now();
+                    const secondsSinceLastXP = Math.floor((now - this.lastXPCheck) / 1000);
+                    if (secondsSinceLastXP >= 60) {
+                        const xpChunks = Math.floor(secondsSinceLastXP / 60);
+                        for (let i = 0; i < xpChunks; i++) {
+                            this.onTickXP();
+                        }
+                        this.lastXPCheck += xpChunks * 60 * 1000;
                     }
                 }
             }, 1000);
