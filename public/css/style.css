@@ -816,7 +816,6 @@ button {
     pointer-events: auto;
     background-color: var(--loader-bg);
     opacity: 1;
-    backdrop-filter: blur(15px);
     transition: opacity 0.3s ease;
     z-index: 2;
     will-change: opacity;
@@ -1601,6 +1600,7 @@ button {
 .tasks-footer button:hover,
 .leaderboard-list button:hover {
     transform: scale(1.1);
+    transform: rotate(10deg);
 }
 
 .tasks-footer button:active,
