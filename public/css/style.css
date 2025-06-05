@@ -1597,7 +1597,9 @@ button {
     justify-content: center;
 }
 
-.tasks-footer button:hover,
+.tasks-footer button:hover {
+    transform: scale(1.2);
+}
 .leaderboard-list button:hover {
     transform: rotate(10deg) scale(1.2);
 }
