@@ -334,9 +334,12 @@ async function loadAllTasksFromFirebase() {
 }
 
 function completeTask(taskId) {
-    window.taskManager.updateStatus(taskId, 'completed');
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
+
+    if (window.timer && typeof window.timer.elapsedTime === 'number') {
+        task.elapsedTime = window.timer.elapsedTime;
+    }
 
     if (typeof pendingXP !== 'undefined' && pendingXP > 0) {
         task.xpearned = (task.xpearned || 0) + pendingXP;
@@ -345,9 +348,11 @@ function completeTask(taskId) {
     }
 
     task.status = 'completed';
-    queueFirebaseUpdate(task, { status: 'completed', xpearned: task.xpearned });
-
-    launchConfetti();
+    queueFirebaseUpdate(task, {
+        status: 'completed',
+        xpearned: task.xpearned,
+        elapsedTime: task.elapsedTime
+    });
 
     const uid = getUserId();
     if (uid) updateTaskInFirebase(uid, task);
@@ -355,8 +360,10 @@ function completeTask(taskId) {
     const storedUsername = localStorage.getItem('username');
     csUsername.textContent = storedUsername || 'Student404';
     csTaskName.textContent = task.name || 'Task404';
-    timeSpentText.textContent = Timer.formatTime(task.elapsedTime || 0); 
+    timeSpentText.textContent = Timer.formatTime(task.elapsedTime || 0);
     animateXP(0, task.xpearned || 0);
+
+    launchConfetti();
 
     completeScreen.classList.remove('hide');
     setTimeout(() => completeScreen.classList.add('visible'), 10);
@@ -366,18 +373,20 @@ function completeTask(taskId) {
         if (activeTaskId === taskId) {
             removeActiveTimer();
         }
+
         refreshTaskList();
+
         try {
             await deleteTaskFromFirebase(uid, taskId);
             await decrementTaskCount(uid);
         } catch (e) {
             showPopupWithType('Could not delete task from Firebase.', false);
         }
-    }, 1500);
 
-    if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
-        window.taskManager.setCurrentTask(null);
-    }
+        if (window.taskManager && typeof window.taskManager.setCurrentTask === 'function') {
+            window.taskManager.setCurrentTask(null);
+        }
+    }, 1500);
 }
 
 function closeBtnCS() {
@@ -701,6 +710,7 @@ function startTask(taskId) {
         shortBreakDuration: task.shortBreakDuration || 0,
         longBreakDuration: task.longBreakDuration || 0,
         onCompleteTask: () => {
+            task.elapsedTime = activeTimer.elapsedTime;
             completeTask(task.id);
         }
     });

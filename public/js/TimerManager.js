@@ -61,6 +61,8 @@ class Timer {
         this.cyclesPerSet = cyclesPerSet;
         this.onCompleteTask = onCompleteTask;
         this.lastXPCheck = null;
+        this.elapsedTime = 0;
+        this._elapsedStartTime = null;
 
         this.reset();
     }
@@ -115,6 +117,7 @@ class Timer {
         this.isPaused = false;
         this.startTimestamp = Date.now();
         this.initialTime = this.currentTime;
+        this._elapsedStartTime = Date.now();
         if (this.type === TIMER_TYPE.POMODORO) {
             if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
                 this._generatePomodoroPlan();
@@ -133,6 +136,11 @@ class Timer {
         if (!this.isRunning) return;
         this.isPaused = true;
         this.isRunning = false;
+        if (this._elapsedStartTime) {
+            const elapsedNow = Math.floor((Date.now() - this._elapsedStartTime) / 1000);
+            this.elapsedTime += elapsedNow;
+            this._elapsedStartTime = null;
+        }
         clearInterval(this.interval);
         setTimerButtons('paused');
     }
@@ -152,6 +160,11 @@ class Timer {
             this.pomoIndex = 0;
             this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
         }
+        if (this._elapsedStartTime) {
+            const elapsedNow = Math.floor((Date.now() - this._elapsedStartTime) / 1000);
+            this.elapsedTime += elapsedNow;
+            this._elapsedStartTime = null;
+        }
         setTimerButtons('reset');
     }
 
@@ -162,6 +175,7 @@ class Timer {
         this.startTimestamp = Date.now();
         this.initialTime = this.currentTime;
         this.lastXPCheck = Date.now();
+        this._elapsedStartTime = Date.now();
         this._runTimer();
         setTimerButtons('continued');
         if (this.type === TIMER_TYPE.POMODORO) {
@@ -176,12 +190,45 @@ class Timer {
             this.interval = setInterval(() => {
                 if (!this.isRunning) return;
 
-                const elapsed = Math.floor((Date.now() - this.pomoStartTimestamp) / 1000);
-                this.pomoBlockRemaining = this.initialPomoRemaining - elapsed;
+                const totalElapsed = Math.floor((Date.now() - this.pomodoroStartTimestamp) / 1000);
+                
+                let timePassed = 0;
+                let found = false;
 
-                if (typeof this.onTick === 'function') {
-                    const block = this.pomodoroPlan[this.pomoIndex];
-                    this.onTick(this.pomoBlockRemaining, block.type, false, this.pomoIndex, this.pomodoroPlan.length);
+                for (let i = 0; i < this.pomodoroPlan.length; i++) {
+                    const block = this.pomodoroPlan[i];
+                    const nextTimePassed = timePassed + block.duration;
+
+                    if (totalElapsed < nextTimePassed) {
+                        this.pomoIndex = i;
+                        this.pomoBlockRemaining = nextTimePassed - totalElapsed;
+                        found = true;
+
+                        if (typeof this.onTick === 'function') {
+                            this.onTick(this.pomoBlockRemaining, block.type, false, i, this.pomodoroPlan.length);
+                        }
+
+                        break;
+                    }
+
+                    timePassed = nextTimePassed;
+                }
+
+                if (!found) {
+                    this.pomoIndex = this.pomodoroPlan.length;
+                    this.pomoBlockRemaining = 0;
+
+                    if (typeof this._elapsedStartTime === 'number') {
+                        const elapsedNow = Math.floor((Date.now() - this._elapsedStartTime) / 1000);
+                        this.elapsedTime += elapsedNow;
+                        this._elapsedStartTime = null;
+                    }
+
+                    if (typeof this.onCompleteTask === 'function') {
+                        this.onCompleteTask();
+                    } else {
+                        this.pause();
+                    }
                 }
 
                 if (typeof this.onTickXP === 'function') {
@@ -194,22 +241,6 @@ class Timer {
                         }
                         this.lastXPCheck += xpChunks * 60 * 1000;
                     }
-                }
-
-                if (this.pomoBlockRemaining <= 0) {
-                    this.pomoIndex++;
-                    if (this.pomoIndex >= this.pomodoroPlan.length) {
-                        if (typeof this.onCompleteTask === 'function') {
-                            this.onCompleteTask();
-                        } else {
-                            this.pause();
-                        }
-                        return;
-                    }
-
-                    this.pomoBlockRemaining = this.pomodoroPlan[this.pomoIndex].duration;
-                    this.initialPomoRemaining = this.pomoBlockRemaining;
-                    this.pomoStartTimestamp = Date.now();
                 }
 
             }, 1000);
