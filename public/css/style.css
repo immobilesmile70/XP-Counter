@@ -671,7 +671,7 @@ button {
 }
 
 .footer p {
-    color: #7c7c7c;
+    color: var(--subtext);
     font-size: 1rem;
     margin-left: 290px;
 }

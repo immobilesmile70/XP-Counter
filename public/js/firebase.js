@@ -163,5 +163,6 @@ export {
     sendPasswordResetEmail,
     signOut,
     GoogleAuthProvider,
-    signInWithPopup
+    signInWithPopup,
+    appCheck 
 };

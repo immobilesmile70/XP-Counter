@@ -3,7 +3,7 @@
 import { TaskManager } from '/js/TaskManager.js';
 import { Timer } from '/js/TimerManager.js';
 import { pushXPToFirebase } from '/js/xp.js';
-import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId, incrementTaskCount, decrementTaskCount } from '/js/firebase.js';
+import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId, incrementTaskCount, decrementTaskCount, appCheck } from '/js/firebase.js';
 import { showPopupWithType, showDialog } from '/js/script.js';
 
 // --- DOM Elements ---
@@ -308,12 +308,22 @@ async function deleteTask(taskId) {
 async function loadAllTasksFromFirebase() {
     const uid = getUserId();
     if (!uid) return [];
+
     try {
+        const tokenResponse = await getToken(appCheck, false);
         const url = `https://audio-5dacc-default-rtdb.asia-southeast1.firebasedatabase.app/users/${uid}/tasks.json`;
-        const res = await fetch(url);
+
+        const res = await fetch(url, {
+            headers: {
+                'X-Firebase-AppCheck': tokenResponse.token
+            }
+        });
+
         if (res.status === 404) return [];
+
         const data = await res.json();
         if (!data || typeof data !== 'object') return [];
+
         return Object.entries(data)
             .map(([id, task]) => ({ ...task, id }))
             .filter(task => task && typeof task === 'object' && task.name);
