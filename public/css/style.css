@@ -1599,13 +1599,12 @@ button {
 
 .tasks-footer button:hover,
 .leaderboard-list button:hover {
-    transform: scale(1.1);
-    transform: rotate(10deg);
+    transform: rotate(10deg) scale(1.2);
 }
 
 .tasks-footer button:active,
 .leaderboard-list button:active {
-    transform: scale(0.9);
+    transform: rotate(0) scale(0.9);
 }
 
 .leaderboard-list label {
