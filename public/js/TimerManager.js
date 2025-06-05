@@ -115,17 +115,17 @@ class Timer {
         if (this.isRunning) return;
         this.isRunning = true;
         this.isPaused = false;
-        this.startTimestamp = Date.now();
-        this.initialTime = this.currentTime;
-        this._elapsedStartTime = Date.now();
         if (this.type === TIMER_TYPE.POMODORO) {
             if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
                 this._generatePomodoroPlan();
                 this.pomoIndex = 0;
-                this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
             }
-            this.pomoStartTimestamp = Date.now();
-            this.initialPomoRemaining = this.pomoBlockRemaining;
+            this.pomodoroStartTimestamp = Date.now();
+            this._elapsedStartTime = Date.now();
+        } else {
+            this.startTimestamp = Date.now();
+            this.initialTime = this.currentTime;
+            this._elapsedStartTime = Date.now();
         }
         this.lastXPCheck = Date.now();
         this._runTimer();
@@ -172,16 +172,21 @@ class Timer {
         if (!this.isPaused) return;
         this.isPaused = false;
         this.isRunning = true;
-        this.startTimestamp = Date.now();
-        this.initialTime = this.currentTime;
+        if (this.type === TIMER_TYPE.POMODORO) {
+            if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
+                this._generatePomodoroPlan();
+                this.pomoIndex = 0;
+            }
+            this.pomodoroStartTimestamp = Date.now();
+            this._elapsedStartTime = Date.now();
+        } else {
+            this.startTimestamp = Date.now();
+            this.initialTime = this.currentTime;
+            this._elapsedStartTime = Date.now();
+        }
         this.lastXPCheck = Date.now();
-        this._elapsedStartTime = Date.now();
         this._runTimer();
         setTimerButtons('continued');
-        if (this.type === TIMER_TYPE.POMODORO) {
-            this.pomoStartTimestamp = Date.now();
-            this.initialPomoRemaining = this.pomoBlockRemaining;
-        }
     }
 
     _runTimer() {
@@ -191,7 +196,7 @@ class Timer {
                 if (!this.isRunning) return;
 
                 const totalElapsed = Math.floor((Date.now() - this.pomodoroStartTimestamp) / 1000);
-                
+
                 let timePassed = 0;
                 let found = false;
 
