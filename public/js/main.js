@@ -1059,7 +1059,6 @@ if (editTaskButton) {
             task.longBreakDuration = newLongBreak;
             task.elapsedTime = 0;
             task.pomodoroState = null;
-            task.pomodoroState.pomoBlockRemaining = null;
         } else {
             task.duration = undefined;
             task.shortBreakDuration = undefined;
