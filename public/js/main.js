@@ -5,6 +5,7 @@ import { Timer } from '/js/TimerManager.js';
 import { pushXPToFirebase } from '/js/xp.js';
 import { deleteTaskFromFirebase, updateTaskInFirebase, getUserId, incrementTaskCount, decrementTaskCount, appCheck } from '/js/firebase.js';
 import { showPopupWithType, showDialog } from '/js/script.js';
+import { getToken } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app-check.js";
 
 // --- DOM Elements ---
 const nameInput = document.getElementById('task-name-input');
