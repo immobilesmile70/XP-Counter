@@ -344,7 +344,7 @@ function completeTask(taskId) {
     const storedUsername = localStorage.getItem('username');
     csUsername.textContent = storedUsername || 'Student404';
     csTaskName.textContent = task.name || 'Task404';
-    timeSpentText.textContent = task.elapsedTime || 0;
+    timeSpentText.textContent = task.elapsedTime || 0; //todo: fix formatting this.
     animateXP(0, task.xpearned || 0);
 
     completeScreen.classList.remove('hide');

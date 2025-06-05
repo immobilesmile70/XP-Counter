@@ -114,10 +114,14 @@ class Timer {
         this.isPaused = false;
         this.startTimestamp = Date.now();
         this.initialTime = this.currentTime;
-        if (this.type === TIMER_TYPE.POMODORO && (!this.pomodoroPlan || !this.pomodoroPlan.length)) {
-            this._generatePomodoroPlan();
-            this.pomoIndex = 0;
-            this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
+        if (this.type === TIMER_TYPE.POMODORO) {
+            if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
+                this._generatePomodoroPlan();
+                this.pomoIndex = 0;
+                this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
+            }
+            this.pomoStartTimestamp = Date.now();
+            this.initialPomoRemaining = this.pomoBlockRemaining;
         }
         this._runTimer();
         setTimerButtons('running');
@@ -138,6 +142,8 @@ class Timer {
         this.interval = null;
         this.startTimestamp = null;
         this.initialTime = 0;
+        this.pomoStartTimestamp = null;
+        this.initialPomoRemaining = 0;
         if (this.type === TIMER_TYPE.POMODORO) {
             this._generatePomodoroPlan();
             this.pomoIndex = 0;
@@ -154,6 +160,10 @@ class Timer {
         this.initialTime = this.currentTime;
         this._runTimer();
         setTimerButtons('continued');
+        if (this.type === TIMER_TYPE.POMODORO) {
+            this.pomoStartTimestamp = Date.now();
+            this.initialPomoRemaining = this.pomoBlockRemaining;
+        }
     }
 
     _runTimer() {
@@ -161,14 +171,15 @@ class Timer {
         if (this.type === TIMER_TYPE.POMODORO) {
             this.interval = setInterval(() => {
                 if (!this.isRunning) return;
-                if (this.pomoBlockRemaining > 0) {
-                    let elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
-                    this.pomoBlockRemaining = initialRemainingTime - elapsed;
-                }
+
+                const elapsed = Math.floor((Date.now() - this.pomoStartTimestamp) / 1000);
+                this.pomoBlockRemaining = this.initialPomoRemaining - elapsed;
+
                 if (typeof this.onTick === 'function') {
                     const block = this.pomodoroPlan[this.pomoIndex];
                     this.onTick(this.pomoBlockRemaining, block.type, false, this.pomoIndex, this.pomodoroPlan.length);
                 }
+
                 if (typeof this.onTickXP === 'function') {
                     if (!this._xpTickCounter) this._xpTickCounter = 0;
                     this._xpTickCounter++;
@@ -177,6 +188,7 @@ class Timer {
                         this._xpTickCounter = 0;
                     }
                 }
+
                 if (this.pomoBlockRemaining <= 0) {
                     this.pomoIndex++;
                     if (this.pomoIndex >= this.pomodoroPlan.length) {
@@ -187,8 +199,12 @@ class Timer {
                         }
                         return;
                     }
+
                     this.pomoBlockRemaining = this.pomodoroPlan[this.pomoIndex].duration;
+                    this.initialPomoRemaining = this.pomoBlockRemaining;
+                    this.pomoStartTimestamp = Date.now();
                 }
+
             }, 1000);
         } else {
             this.interval = setInterval(() => {
