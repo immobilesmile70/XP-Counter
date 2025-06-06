@@ -357,8 +357,11 @@ function completeTask(taskId) {
     csTaskName.textContent = task.name || 'Task404';
     animateXP(0, task.xpearned || 0);
 
-    launchConfetti();
+    clearConfetti();
+    setTimeout(launchConfetti, 10);
 
+    dialogAudio.pause();
+    dialogAudio.currentTime = 0;
     completeTaskAudio.volume = 0.9;
     completeTaskAudio.play();
 
@@ -386,7 +389,7 @@ function completeTask(taskId) {
     }, 1500);
 }
 
-if(completeScreen) {
+if (completeScreen) {
     completeScreen.addEventListener('click', () => {
         closeBtnCS();
     });
