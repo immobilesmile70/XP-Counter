@@ -146,6 +146,8 @@ class Timer {
         setTimerButtons('paused');
     }
 
+    //Pomodoro is bugged *fucked
+
     reset() {
         this.isRunning = false;
         this.isPaused = false;

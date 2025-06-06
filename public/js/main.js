@@ -337,8 +337,13 @@ function completeTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
 
-    if (window.timer && typeof window.timer.elapsedTime === 'number') {
-        task.elapsedTime = window.timer.elapsedTime;
+    if (window.timer) {
+        if (typeof window.timer.pause === 'function') window.timer.pause(); 
+        const finalElapsed = window.timer.elapsedTime;
+        task.elapsedTime = finalElapsed;
+        if (task.type === "pomodoro") {
+            task.pomodoroState.elapsedTime = finalElapsed;
+        }
     }
 
     if (typeof pendingXP !== 'undefined' && pendingXP > 0) {
