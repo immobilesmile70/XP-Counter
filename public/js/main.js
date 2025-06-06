@@ -340,7 +340,7 @@ function completeTask(taskId) {
     if (window.timer) {
         if (typeof window.timer.pause === 'function') window.timer.pause();
         const finalElapsed = window.timer.elapsedTime;
-        task.elapsedTime = finalElapsed;
+        task.elapsedTime = isNaN(finalElapsed) ? 0 : finalElapsed;
         if (task.type === "pomodoro") {
             task.pomodoroState.elapsedTime = finalElapsed;
         }
