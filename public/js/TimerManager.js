@@ -119,8 +119,8 @@ class Timer {
         this.isPaused = false;
 
         if (this.type === TIMER_TYPE.POMODORO) {
-            this.pomodoroStartTimestamp = Date.now();
             this._elapsedStartTime = Date.now();
+            const block = this.pomodoroPlan[this.pomoIndex];
             this.currentBlockStartTimestamp = Date.now() - (block.duration - this.pomoBlockRemaining) * 1000;
         } else {
             this.startTimestamp = Date.now();
@@ -146,8 +146,6 @@ class Timer {
         clearInterval(this.interval);
         setTimerButtons('paused');
     }
-
-    //Pomodoro is bugged *fucked
 
     reset() {
         this.isRunning = false;
@@ -181,8 +179,8 @@ class Timer {
         this.isRunning = true;
 
         if (this.type === TIMER_TYPE.POMODORO) {
-            this.pomodoroStartTimestamp = Date.now();
-            this._elapsedStartTime = Date.now();
+            this._elapsedStartTime = now;
+            const block = this.pomodoroPlan[this.pomoIndex];
             this.currentBlockStartTimestamp = Date.now() - (block.duration - this.pomoBlockRemaining) * 1000;
         } else {
             this.startTimestamp = Date.now();
