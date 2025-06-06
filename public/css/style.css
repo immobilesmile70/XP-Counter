@@ -1598,10 +1598,14 @@ button {
 }
 
 .tasks-footer button:hover {
-    transform: scale(1.2);
+    transform: scale(1.1);
 }
 .leaderboard-list button:hover {
-    transform: rotate(10deg) scale(1.2);
+    transform: scale(1.1);
+}
+
+.leaderboard-list button:hover i {
+    transform: rotate(12.5deg);
 }
 
 .tasks-footer button:active,

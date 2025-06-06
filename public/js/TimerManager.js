@@ -205,28 +205,29 @@ class Timer {
 
                 for (let i = 0; i < this.pomodoroPlan.length; i++) {
                     const block = this.pomodoroPlan[i];
-                    const nextTimePassed = timePassed + block.duration;
+                    const blockStart = timePassed;
+                    const blockEnd = timePassed + block.duration;
 
-                    if (totalElapsed < nextTimePassed) {
+                    if (totalElapsed < blockEnd) {
                         this.pomoIndex = i;
-                        this.pomoBlockRemaining = nextTimePassed - totalElapsed;
-                        found = true;
+                        this.pomoBlockRemaining = blockEnd - totalElapsed;
 
                         if (typeof this.onTick === 'function') {
                             this.onTick(this.pomoBlockRemaining, block.type, false, i, this.pomodoroPlan.length);
                         }
 
+                        found = true;
                         break;
                     }
 
-                    timePassed = nextTimePassed;
+                    timePassed = blockEnd;
                 }
 
                 if (!found) {
                     this.pomoIndex = this.pomodoroPlan.length;
                     this.pomoBlockRemaining = 0;
 
-                    if (typeof this._elapsedStartTime === 'number') {
+                    if (this._elapsedStartTime) {
                         const elapsedNow = Math.floor((Date.now() - this._elapsedStartTime) / 1000);
                         this.elapsedTime += elapsedNow;
                         this._elapsedStartTime = null;
@@ -244,9 +245,7 @@ class Timer {
                     const secondsSinceLastXP = Math.floor((now - this.lastXPCheck) / 1000);
                     if (secondsSinceLastXP >= 60) {
                         const xpChunks = Math.floor(secondsSinceLastXP / 60);
-                        for (let i = 0; i < xpChunks; i++) {
-                            this.onTickXP();
-                        }
+                        for (let i = 0; i < xpChunks; i++) this.onTickXP();
                         this.lastXPCheck += xpChunks * 60 * 1000;
                     }
                 }
