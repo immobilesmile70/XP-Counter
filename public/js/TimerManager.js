@@ -117,8 +117,13 @@ class Timer {
         this.isPaused = false;
         if (this.type === TIMER_TYPE.POMODORO) {
             if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
-                this._generatePomodoroPlan();
-                this.pomoIndex = 0;
+                if (task.pomodoroState?.plan) {
+                    this.pomodoroPlan = task.pomodoroState.plan;
+                    this.pomoIndex = task.pomodoroState.pomoIndex || 0;
+                } else {
+                    this._generatePomodoroPlan();
+                    this.pomoIndex = 0;
+                }
             }
             this.pomodoroStartTimestamp = Date.now();
             this._elapsedStartTime = Date.now();
@@ -174,8 +179,13 @@ class Timer {
         this.isRunning = true;
         if (this.type === TIMER_TYPE.POMODORO) {
             if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
-                this._generatePomodoroPlan();
-                this.pomoIndex = 0;
+                if (task.pomodoroState?.plan) {
+                    this.pomodoroPlan = task.pomodoroState.plan;
+                    this.pomoIndex = task.pomodoroState.pomoIndex || 0;
+                } else {
+                    this._generatePomodoroPlan();
+                    this.pomoIndex = 0;
+                }
             }
             this.pomodoroStartTimestamp = Date.now();
             this._elapsedStartTime = Date.now();
@@ -298,25 +308,38 @@ class Timer {
     }
 
     getPomodoroBlockType() {
-        if (this.type === TIMER_TYPE.POMODORO && this.pomodoroPlan) {
-            return this.pomodoroPlan[this.pomoIndex]?.type || 'work';
+        if (this.type !== TIMER_TYPE.POMODORO || !this.pomodoroPlan) return null;
+
+        const totalElapsed = Math.floor((Date.now() - this.pomodoroStartTimestamp) / 1000);
+        let timePassed = 0;
+
+        for (let i = 0; i < this.pomodoroPlan.length; i++) {
+            const block = this.pomodoroPlan[i];
+            timePassed += block.duration;
+
+            if (totalElapsed < timePassed) {
+                return block.type;
+            }
         }
+
         return null;
     }
 
     getPomodoroState() {
         if (this.type !== TIMER_TYPE.POMODORO) return null;
         return {
+            plan: this.pomodoroPlan,
             pomoIndex: this.pomoIndex,
-            pomoBlockRemaining: this.pomoBlockRemaining
+            pomoStartTimestamp: this.pomodoroStartTimestamp,
+            elapsedTime: this.elapsedTime,
         };
     }
 
     restorePomodoroState(state) {
         if (this.type !== TIMER_TYPE.POMODORO || !state) return;
-        this._generatePomodoroPlan();
-        this.pomoIndex = typeof state.pomoIndex === 'number' ? state.pomoIndex : 0;
-        this.pomoBlockRemaining = typeof state.pomoBlockRemaining === 'number' ? state.pomoBlockRemaining : this.pomodoroPlan[0]?.duration || 0;
+        this.pomodoroPlan = state.plan || [];
+        this.pomoIndex = state.pomoIndex || 0;
+        this.pomodoroStartTimestamp = state.pomoStartTimestamp || Date.now();
     }
 
     static formatTime(seconds, blockType = null) {

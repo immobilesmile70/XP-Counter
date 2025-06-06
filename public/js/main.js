@@ -667,6 +667,7 @@ function refreshTaskList() {
 let activeTimer = null;
 let activeTaskId = null;
 let pomodoroStatusInterval = null;
+let lastBlockType = null;
 
 function getCurrentPomodoroBlockType() {
     if (activeTimer && activeTimer.type === 'pomodoro') {
@@ -678,8 +679,11 @@ function getCurrentPomodoroBlockType() {
 function updatePomodoroStatusMessage() {
     if (!pomodoroStatusEl) return;
     const blockType = getCurrentPomodoroBlockType();
-    pomodoroStatusEl.textContent = getRandomPomodoroMessage(blockType);
-    pomodoroStatusEl.style.display = '';
+    if (blockType !== lastBlockType) {
+        lastBlockType = blockType;
+        pomodoroStatusEl.textContent = getRandomPomodoroMessage(blockType);
+        pomodoroStatusEl.style.display = '';
+    }
 }
 
 function startPomodoroStatusInterval() {
@@ -799,7 +803,7 @@ function resetTask() {
                     const task = window.taskManager.getTask(activeTaskId);
                     if (task) {
                         if (activeTimer.type === 'pomodoro') {
-                            task.pomodoroState = activeTimer.getPomodoroState();
+                            task.pomodoroState = null;
                         }
                         task.status = 'pending';
                         queueFirebaseUpdate(task, { elapsedTime: 0, status: 'pending', pomodoroState: task.pomodoroState });
@@ -921,6 +925,9 @@ function bindGlobalUIEvents() {
                     }
                     if (!task.status || task.status === 'pending') {
                         task.status = 'paused';
+                    }
+                    if (task.type === 'pomodoro') {
+                        task.pomodoroState = Timer.getPomodoroState();
                     }
                     queueFirebaseUpdate(task, { elapsedTime: task.elapsedTime, status: task.status });
                 }
