@@ -158,8 +158,10 @@ class Timer {
         this.pomoStartTimestamp = null;
         this.initialPomoRemaining = 0;
         this.lastXPCheck = null;
-        if (this.type === TIMER_TYPE.POMODORO) {
+        if (this.type === TIMER_TYPE.POMODORO && !this.pomodoroPlan?.length) {
             this._generatePomodoroPlan();
+        }
+        if (this.type === TIMER_TYPE.POMODORO) {
             this.pomoIndex = 0;
             this.pomoBlockRemaining = this.pomodoroPlan[0]?.duration || 0;
         }
@@ -325,6 +327,7 @@ class Timer {
             pomoIndex: this.pomoIndex,
             pomoStartTimestamp: this.pomodoroStartTimestamp,
             elapsedTime: this.elapsedTime,
+            pomoBlockRemaining: activeTimer.pomoBlockRemaining
         };
     }
 
@@ -333,20 +336,20 @@ class Timer {
 
         this.pomodoroPlan = state.plan || [];
         this.pomoIndex = state.pomoIndex || 0;
+        this.elapsedTime = state.elapsedTime || 0;
 
         const timeUsedBeforePause = this.pomodoroPlan
             .slice(0, this.pomoIndex)
             .reduce((sum, block) => sum + block.duration, 0);
 
         const currentBlock = this.pomodoroPlan[this.pomoIndex];
-        const timeUsedInBlock = currentBlock
-            ? currentBlock.duration - (state.pomoBlockRemaining || currentBlock.duration)
-            : 0;
+        const remainingInBlock = state.pomoBlockRemaining ?? currentBlock?.duration ?? 0;
 
-        const totalTimePassed = timeUsedBeforePause + timeUsedInBlock;
+        const totalTimePassed = timeUsedBeforePause + (currentBlock ? (currentBlock.duration - remainingInBlock) : 0);
 
-        this.pomodoroStartTimestamp = Date.now() - (totalTimePassed * 1000);
-        this._elapsedStartTime = Date.now() - (state.elapsedTime || 0) * 1000;
+        this.pomoBlockRemaining = remainingInBlock;
+        this.pomodoroStartTimestamp = Date.now() - totalTimePassed * 1000;
+        this._elapsedStartTime = Date.now() - this.elapsedTime * 1000;
     }
 
 
