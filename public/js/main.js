@@ -42,7 +42,6 @@ const createTaskBtnFlex = document.getElementById('create-task-btn-flex');
 const editTaskBtnFlex = document.getElementById('edit-task-btn-flex');
 const csUsername = document.getElementById('cs-username');
 const csTaskName = document.getElementById('cs-task-name');
-const timeSpentText = document.getElementById('time-spent');
 const completeScreen = document.getElementById('complete-screen');
 
 let taskLimit = 8;
@@ -337,17 +336,6 @@ function completeTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
 
-    console.log("Calling completeTask with timer.elapsedTime =", window.timer?.elapsedTime);
-
-    if (window.timer) {
-        if (typeof window.timer.pause === 'function') window.timer.pause();
-        const finalElapsed = window.timer.elapsedTime;
-        task.elapsedTime = isNaN(finalElapsed) ? 0 : finalElapsed;
-        if (task.type === "pomodoro") {
-            task.pomodoroState.elapsedTime = finalElapsed;
-        }
-    }
-
     if (typeof pendingXP !== 'undefined' && pendingXP > 0) {
         task.xpearned = (task.xpearned || 0) + pendingXP;
         pushXPToFirebase(pendingXP);
@@ -358,7 +346,6 @@ function completeTask(taskId) {
     queueFirebaseUpdate(task, {
         status: 'completed',
         xpearned: task.xpearned,
-        elapsedTime: task.elapsedTime
     });
 
     const uid = getUserId();
@@ -367,9 +354,6 @@ function completeTask(taskId) {
     const storedUsername = localStorage.getItem('username');
     csUsername.textContent = storedUsername || 'Student404';
     csTaskName.textContent = task.name || 'Task404';
-    console.log("Type:", typeof task.elapsedTime, "Value:", task.elapsedTime);
-    console.log("Formatted:", Timer.formatTime(task.elapsedTime));
-    timeSpentText.textContent = Timer.formatTime(task.elapsedTime || 0);
     animateXP(0, task.xpearned || 0);
 
     launchConfetti();
@@ -723,8 +707,6 @@ function startTask(taskId) {
         shortBreakDuration: task.shortBreakDuration || 0,
         longBreakDuration: task.longBreakDuration || 0,
         onCompleteTask: () => {
-            console.log("Timer ended with elapsedTime =", activeTimer.elapsedTime);
-            task.elapsedTime = activeTimer.elapsedTime;
             completeTask(task.id);
         }
     });
