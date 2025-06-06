@@ -382,6 +382,12 @@ function completeTask(taskId) {
     }, 1500);
 }
 
+if(completeScreen) {
+    completeScreen.addEventListener('click', () => {
+        closeBtnCS();
+    });
+}
+
 function closeBtnCS() {
     completeScreen.classList.remove('visible');
     setTimeout(() => {
@@ -682,7 +688,7 @@ function updatePomodoroStatusMessage() {
 function startPomodoroStatusInterval() {
     if (pomodoroStatusInterval) clearInterval(pomodoroStatusInterval);
     updatePomodoroStatusMessage();
-    pomodoroStatusInterval = setInterval(updatePomodoroStatusMessage, 10 * 60 * 1000);
+    pomodoroStatusInterval = setInterval(updatePomodoroStatusMessage, 60 * 1000);
 }
 
 function stopPomodoroStatusInterval() {

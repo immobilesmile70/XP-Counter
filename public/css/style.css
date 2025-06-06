@@ -1604,6 +1604,7 @@ button {
 .tasks-footer button:hover {
     transform: scale(1.1);
 }
+
 .leaderboard-list button:hover {
     transform: scale(1.1);
 }
@@ -1790,7 +1791,7 @@ input[type=number]::-webkit-outer-spin-button {
 .completion-screen {
     text-align: center;
     padding: 2rem;
-    border-radius: 16px;
+    border-radius: 35px;
     background: var(--sidebar-bg);
     box-shadow: 0 0 30px rgba(0, 0, 0, 0.1);
     position: relative;
@@ -1815,24 +1816,28 @@ input[type=number]::-webkit-outer-spin-button {
     font-size: 1rem;
     margin: 0.3rem 0;
     color: var(--subtext);
+    font-weight: bolder;
 }
 
 .message-box button {
     margin-top: 1.5rem;
-    padding: 0.75rem 1.5rem;
+    padding: 10px 20px;
     background: var(--button-bg);
     color: var(--subtext);
     border: none;
-    border-radius: 8px;
+    border-radius: 16px;
     cursor: pointer;
-    transition: 0.2s ease;
+    transition: background 0.3s ease, transform 0.3s ease;
+    font-size: 1.2rem;
 }
 
 .message-box button:hover {
+    transform: scale(1.1);
     background: var(--button-hover);
 }
 
 .message-box button:active {
+    transform: scale(0.9);
     background: var(--button-active);
 }
 
