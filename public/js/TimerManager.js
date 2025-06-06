@@ -316,6 +316,7 @@ class Timer {
         return null;
     }
 
+
     getPomodoroState() {
         if (this.type !== TIMER_TYPE.POMODORO) return null;
         return {
@@ -328,10 +329,25 @@ class Timer {
 
     restorePomodoroState(state) {
         if (this.type !== TIMER_TYPE.POMODORO || !state) return;
+
         this.pomodoroPlan = state.plan || [];
         this.pomoIndex = state.pomoIndex || 0;
-        this.pomodoroStartTimestamp = state.pomoStartTimestamp || Date.now();
+
+        const timeUsedBeforePause = this.pomodoroPlan
+            .slice(0, this.pomoIndex)
+            .reduce((sum, block) => sum + block.duration, 0);
+
+        const currentBlock = this.pomodoroPlan[this.pomoIndex];
+        const timeUsedInBlock = currentBlock
+            ? currentBlock.duration - (state.pomoBlockRemaining || currentBlock.duration)
+            : 0;
+
+        const totalTimePassed = timeUsedBeforePause + timeUsedInBlock;
+
+        this.pomodoroStartTimestamp = Date.now() - (totalTimePassed * 1000);
+        this._elapsedStartTime = Date.now() - (state.elapsedTime || 0) * 1000;
     }
+
 
     static formatTime(seconds, blockType = null) {
         seconds = Math.max(0, Math.floor(seconds));
