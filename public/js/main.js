@@ -357,16 +357,16 @@ function completeTask(taskId) {
     csTaskName.textContent = task.name || 'Task404';
     animateXP(0, task.xpearned || 0);
 
-    clearConfetti();
-    setTimeout(launchConfetti, 10);
-
-    dialogAudio.pause();
-    dialogAudio.currentTime = 0;
+    completeTaskAudio.pause();
+    completeTaskAudio.currentTime = 0;
     completeTaskAudio.volume = 0.9;
     completeTaskAudio.play();
 
     completeScreen.classList.remove('hide');
     setTimeout(() => completeScreen.classList.add('visible'), 10);
+
+    clearConfetti();
+    setTimeout(launchConfetti, 15);
 
     setTimeout(async () => {
         window.taskManager.removeTask(taskId);
