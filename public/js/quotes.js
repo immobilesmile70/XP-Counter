@@ -29,7 +29,7 @@ function setQuoteInDOM(quoteObj) {
             formattedText = `${formattedText.slice(0, breakIndex)}<br>${formattedText.slice(breakIndex + 1)}`;
         }
     }
-    quoteDiv.innerHTML = `<p>${formattedText}</p><div class="quote-author">- ${quoteObj.author}</div>`;
+    quoteDiv.innerHTML = `<span>${formattedText}</span><div class="quote-author">- ${quoteObj.author}</div>`;
 }
 
 async function showQuote() {
