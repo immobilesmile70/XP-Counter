@@ -347,15 +347,7 @@ class Timer {
 
         this.pomodoroStartTimestamp = Date.now() - totalElapsedTime * 1000;
         this._elapsedStartTime = Date.now() - (this.elapsedTime || 0) * 1000;
-
-        console.log("Resumed Pomodoro", {
-            index: this.pomoIndex,
-            remaining: this.pomoBlockRemaining,
-            plan: this.pomodoroPlan.map(b => `${b.type}:${b.duration}`),
-        });
     }
-
-
 
     static formatTime(seconds, blockType = null) {
         seconds = Math.max(0, Math.floor(seconds));
