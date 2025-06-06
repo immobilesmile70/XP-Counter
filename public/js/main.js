@@ -723,6 +723,7 @@ function startTask(taskId) {
         shortBreakDuration: task.shortBreakDuration || 0,
         longBreakDuration: task.longBreakDuration || 0,
         onCompleteTask: () => {
+            console.log("Timer ended with elapsedTime =", activeTimer.elapsedTime);
             task.elapsedTime = activeTimer.elapsedTime;
             completeTask(task.id);
         }
