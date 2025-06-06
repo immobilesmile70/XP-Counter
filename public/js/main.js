@@ -359,7 +359,7 @@ function completeTask(taskId) {
 
     launchConfetti();
 
-    completeTaskAudio.volume = 1;
+    completeTaskAudio.volume = 0.9;
     completeTaskAudio.play();
 
     completeScreen.classList.remove('hide');

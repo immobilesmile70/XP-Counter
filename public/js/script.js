@@ -34,7 +34,7 @@ function showPopup(message, duration = 3000) {
         closePopupButton.style.backgroundColor = "rgb(174, 43, 43)";
     }
 
-    popupAudio.volume = 1;
+    popupAudio.volume = 0.5;
     popupAudio.play();
 
     popup.classList.remove('hide');
@@ -71,7 +71,7 @@ export function showDialog(message, subMessage, buttons = [], customContent = nu
         customContainer.appendChild(customContent);
     }
 
-    dialogAudio.volume = 1;
+    dialogAudio.volume = 0.5;
     dialogAudio.play();
 
     buttons.forEach(({ text, onClick }) => {
