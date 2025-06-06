@@ -338,7 +338,7 @@ function completeTask(taskId) {
     if (!task) return;
 
     if (window.timer) {
-        if (typeof window.timer.pause === 'function') window.timer.pause(); 
+        if (typeof window.timer.pause === 'function') window.timer.pause();
         const finalElapsed = window.timer.elapsedTime;
         task.elapsedTime = finalElapsed;
         if (task.type === "pomodoro") {
@@ -365,6 +365,8 @@ function completeTask(taskId) {
     const storedUsername = localStorage.getItem('username');
     csUsername.textContent = storedUsername || 'Student404';
     csTaskName.textContent = task.name || 'Task404';
+    console.log("Type:", typeof task.elapsedTime, "Value:", task.elapsedTime);
+    console.log("Formatted:", Timer.formatTime(task.elapsedTime));
     timeSpentText.textContent = Timer.formatTime(task.elapsedTime || 0);
     animateXP(0, task.xpearned || 0);
 
