@@ -112,19 +112,13 @@ class Timer {
                 return;
             }
         }
+
         if (this.isRunning) return;
+
         this.isRunning = true;
         this.isPaused = false;
+
         if (this.type === TIMER_TYPE.POMODORO) {
-            if (!this.pomodoroPlan || !this.pomodoroPlan.length) {
-                if (task.pomodoroState?.plan) {
-                    this.pomodoroPlan = task.pomodoroState.plan;
-                    this.pomoIndex = task.pomodoroState.pomoIndex || 0;
-                } else {
-                    this._generatePomodoroPlan();
-                    this.pomoIndex = 0;
-                }
-            }
             this.pomodoroStartTimestamp = Date.now();
             this._elapsedStartTime = Date.now();
         } else {
@@ -132,10 +126,12 @@ class Timer {
             this.initialTime = this.currentTime;
             this._elapsedStartTime = Date.now();
         }
+
         this.lastXPCheck = Date.now();
         this._runTimer();
         setTimerButtons('running');
     }
+
 
     pause() {
         if (!this.isRunning) return;
