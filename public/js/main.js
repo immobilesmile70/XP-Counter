@@ -337,6 +337,8 @@ function completeTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
 
+    pauseTask();
+
     if (typeof pendingXP !== 'undefined' && pendingXP > 0) {
         task.xpearned = (task.xpearned || 0) + pendingXP;
         pushXPToFirebase(pendingXP);
@@ -357,17 +359,20 @@ function completeTask(taskId) {
     csTaskName.textContent = task.name || 'Task404';
     animateXP(0, task.xpearned || 0);
 
-    completeTaskAudio.pause();
-    completeTaskAudio.currentTime = 0;
-    completeTaskAudio.volume = 0.9;
-    completeTaskAudio.play();
+    setTimeout(() => {
+        completeTaskAudio.pause();
+        completeTaskAudio.currentTime = 0;
+        completeTaskAudio.volume = 0.9;
+        completeTaskAudio.play();
 
-    completeScreen.classList.remove('hide');
-    setTimeout(() => completeScreen.classList.add('visible'), 10);
+        completeScreen.classList.remove('hide');
+        setTimeout(() => completeScreen.classList.add('visible'), 10);
 
-    clearConfetti();
-    setTimeout(launchConfetti, 15);
+        clearConfetti();
+        setTimeout(launchConfetti, 15);
 
+    }, 200);
+    
     setTimeout(async () => {
         window.taskManager.removeTask(taskId);
         if (activeTaskId === taskId) {
