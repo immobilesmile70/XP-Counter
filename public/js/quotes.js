@@ -22,7 +22,14 @@ function setQuoteInDOM(quoteObj) {
         quoteDiv.textContent = 'No quote available.';
         return;
     }
-    quoteDiv.innerHTML = `${quoteObj.text}<div class="quote-author">- ${quoteObj.author}</div>`;
+    let formattedText = quoteObj.text;
+    if (formattedText.length > 50) {
+        const breakIndex = formattedText.indexOf(' ', 50);
+        if (breakIndex !== -1) {
+            formattedText = `${formattedText.slice(0, breakIndex)}<br>${formattedText.slice(breakIndex + 1)}`;
+        }
+    }
+    quoteDiv.innerHTML = `<p>${formattedText}</p><div class="quote-author">- ${quoteObj.author}</div>`;
 }
 
 async function showQuote() {
