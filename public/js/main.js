@@ -778,6 +778,9 @@ function pauseTask() {
 
 function resumeTask() {
     if (activeTimer) {
+        if (task.type === 'pomodoro' && task.pomodoroState) {
+            activeTimer.restorePomodoroState(task.pomodoroState);
+        }
         activeTimer.continue();
     }
 }
