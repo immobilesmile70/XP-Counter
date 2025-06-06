@@ -1055,8 +1055,8 @@ if (editTaskButton) {
         task.type = newType;
         if (newType === 'count_down') {
             task.duration = newDuration;
-            task.shortBreakDuration = undefined;
-            task.longBreakDuration = undefined;
+            task.shortBreakDuration = 0;
+            task.longBreakDuration = 0;
             task.elapsedTime = 0;
         } else if (newType === 'pomodoro') {
             task.duration = newDuration;
@@ -1065,10 +1065,7 @@ if (editTaskButton) {
             task.elapsedTime = 0;
             task.pomodoroState = null;
         } else {
-            task.duration = undefined;
-            task.shortBreakDuration = undefined;
-            task.longBreakDuration = undefined;
-            task.elapsedTime = 0;
+            task.duration = 0;
         }
         queueFirebaseUpdate(task, { name: newName, type: newType, duration: task.duration, shortBreakDuration: task.shortBreakDuration, longBreakDuration: task.longBreakDuration });
         refreshTaskList();
