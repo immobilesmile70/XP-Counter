@@ -18,6 +18,7 @@ import { initializeAndLoadTasks } from '/js/main.js';
 const popup = document.getElementById('popup');
 const closePopupButton = document.getElementById("close-popup-button");
 const popupMessage = document.getElementById('popup-message');
+const popupAudio = document.getElementById("popup-audio");
 let popupTimeout = null;
 let isInfoPopup = false;
 
@@ -33,6 +34,9 @@ function showPopup(message, duration = 3000) {
         closePopupButton.style.backgroundColor = "rgb(174, 43, 43)";
     }
 
+    popupAudio.volume = 1;
+    popupAudio.play();
+
     popup.classList.remove('hide');
     setTimeout(() => { popup.classList.add('show'); }, 100);
 
@@ -43,6 +47,7 @@ function showPopup(message, duration = 3000) {
 }
 
 const dialog = document.getElementById("dialog");
+const dialogAudio = document.getElementById("dialog-audio");
 const dialogContent = document.getElementById("dialog-content");
 const messageEl = document.getElementById("dialog-message");
 const subMessageEl = document.getElementById("dialog-sub-message");
@@ -65,6 +70,9 @@ export function showDialog(message, subMessage, buttons = [], customContent = nu
     if (customContent) {
         customContainer.appendChild(customContent);
     }
+
+    dialogAudio.volume = 1;
+    dialogAudio.play();
 
     buttons.forEach(({ text, onClick }) => {
         const btn = document.createElement("button");

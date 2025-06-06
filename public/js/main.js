@@ -43,6 +43,7 @@ const editTaskBtnFlex = document.getElementById('edit-task-btn-flex');
 const csUsername = document.getElementById('cs-username');
 const csTaskName = document.getElementById('cs-task-name');
 const completeScreen = document.getElementById('complete-screen');
+const completeTaskAudio = document.getElementById("complete-task-audio");
 
 let taskLimit = 8;
 
@@ -357,6 +358,9 @@ function completeTask(taskId) {
     animateXP(0, task.xpearned || 0);
 
     launchConfetti();
+
+    completeTaskAudio.volume = 1;
+    completeTaskAudio.play();
 
     completeScreen.classList.remove('hide');
     setTimeout(() => completeScreen.classList.add('visible'), 10);
