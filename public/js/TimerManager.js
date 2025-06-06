@@ -327,7 +327,7 @@ class Timer {
             pomoIndex: this.pomoIndex,
             pomoStartTimestamp: this.pomodoroStartTimestamp,
             elapsedTime: this.elapsedTime,
-            pomoBlockRemaining: activeTimer.pomoBlockRemaining
+            pomoBlockRemaining: this.pomoBlockRemaining
         };
     }
 
