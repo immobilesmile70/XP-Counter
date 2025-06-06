@@ -777,11 +777,14 @@ function pauseTask() {
 }
 
 function resumeTask() {
-    if (activeTimer) {
-        if (task.type === 'pomodoro' && task.pomodoroState) {
-            activeTimer.restorePomodoroState(task.pomodoroState);
+    if (activeTaskId) {
+        const task = window.taskManager.getTask(activeTaskId);
+        if (activeTimer) {
+            if (task.type === 'pomodoro' && task.pomodoroState) {
+                activeTimer.restorePomodoroState(task.pomodoroState);
+            }
+            activeTimer.continue();
         }
-        activeTimer.continue();
     }
 }
 
@@ -930,7 +933,7 @@ function bindGlobalUIEvents() {
                         task.status = 'paused';
                     }
                     if (task.type === 'pomodoro') {
-                        task.pomodoroState = Timer.getPomodoroState();
+                        task.pomodoroState = activeTimer.getPomodoroState();
                     }
                     queueFirebaseUpdate(task, { elapsedTime: task.elapsedTime, status: task.status });
                 }
