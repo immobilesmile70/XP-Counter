@@ -337,6 +337,8 @@ function completeTask(taskId) {
     const task = window.taskManager.getTask(taskId);
     if (!task) return;
 
+    console.log("Calling completeTask with timer.elapsedTime =", window.timer?.elapsedTime);
+
     if (window.timer) {
         if (typeof window.timer.pause === 'function') window.timer.pause();
         const finalElapsed = window.timer.elapsedTime;
