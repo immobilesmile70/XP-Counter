@@ -1,4 +1,4 @@
-import * as LeoProfanity from "https://cdn.skypack.dev/leo-profanity";
+import * as LeoProfanity from "leo-profanity";
 
 LeoProfanity.getDictionary();
 

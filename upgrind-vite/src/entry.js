@@ -1,3 +1,4 @@
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import './main.js';
 import './firebase.js';
 import './TimerManager.js';

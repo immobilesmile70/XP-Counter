@@ -12,8 +12,10 @@
     "vite": "^6.3.5"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@vercel/analytics": "^1.5.0",
     "firebase": "^11.9.0",
+    "leo-profanity": "^1.7.0",
     "zxcvbn": "^4.4.2"
   }
 }

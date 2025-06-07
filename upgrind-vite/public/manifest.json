@@ -1,16 +1,16 @@
 {
   "name": "UpGrind",
   "short_name": "UpGrind",
-  "start_url": "./index.html",
+  "start_url": "/",
   "display": "fullscreen",
   "background_color": "#111111",
   "theme_color": "#111111",
   "description": "This is a simple web app to help students get through a set of tasks in a fun way.",
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/immobilesmile70/XP-Counter/main/assets/upgrind%20logo.ico",
+      "src": "/favicon.ico",
       "sizes": "256x256",
-      "type": "image/png",
+      "type": "image/x-icon",
       "purpose": "any maskable"
     }
   ]
