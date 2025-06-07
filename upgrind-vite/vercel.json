@@ -1,0 +1,19 @@
+{
+  "rewrites": [
+    { "source": "/privacy", "destination": "/privacy-policy.html" },
+    { "source": "/pp", "destination": "/privacy-policy.html" },
+    { "source": "/terms", "destination": "/terms-and-conditions.html" },
+    { "source": "/tos", "destination": "/terms-and-conditions.html" }
+  ],
+  "version": 1,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/.*", "dest": "/index.html" }
+  ]
+}
