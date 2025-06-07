@@ -544,12 +544,22 @@ function launchConfetti() {
   const confettiContainer = document.querySelector(".confetti-container");
   confettiContainer.innerHTML = "";
 
+  const shapes = ["square", "circle", "triangle", "strip"];
+
   for (let i = 0; i < 120; i++) {
     const confetti = document.createElement("div");
-    confetti.classList.add("confetti");
+    const shape = shapes[Math.floor(Math.random() * shapes.length)];
+    confetti.classList.add("confetti", `confetti-${shape}`);
+
+    const size = Math.random() * 12 + 6;
+    confetti.style.width = shape === "strip" ? `${size * 0.6}px` : `${size}px`;
+    confetti.style.height = shape === "strip" ? `${size * 2}px` : `${size}px`;
+
     confetti.style.left = `${Math.random() * 100}%`;
     confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
     confetti.style.animationDelay = `${Math.random() * 3}s`;
+    confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+
     confettiContainer.appendChild(confetti);
   }
 }
