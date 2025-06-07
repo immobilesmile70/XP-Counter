@@ -369,15 +369,15 @@ document.addEventListener("DOMContentLoaded", () => {
       sidebarOverlay.classList.add("hidden");
     }
 
-    setTimeout(() => screenToShow.classList.remove("hide"), 300);
-    setTimeout(() => screenToShow.classList.remove("hidden"), 310);
+    screenToShow.classList.remove("hide");
+    setTimeout(() => screenToShow.classList.remove("hidden"), 10);
 
     screensToHide.forEach((screen) => screen.classList.add("hidden"));
 
     setTimeout(() => {
       screensToHide.forEach((screen) => screen.classList.add("hide"));
       transitionLock = false;
-    }, 300);
+    }, 350);
   }
 
   function showCounter() {

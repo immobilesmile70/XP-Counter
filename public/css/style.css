@@ -1052,13 +1052,14 @@ button {
   height: 100%;
   opacity: 1;
   pointer-events: auto;
-  transition: opacity 0.25s ease, transform 0.3s ease;
+  transition: opacity 0.25s ease, width 0.35s ease, height 0.35s ease;
 }
 
 .xp-section.hidden {
   opacity: 0;
   pointer-events: none;
-  transform: scale(0);
+  width: 0;
+  height: 0;
 }
 
 .xp-section.hide {
