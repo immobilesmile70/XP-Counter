@@ -1896,10 +1896,6 @@ input[type="number"]::-webkit-outer-spin-button {
   border-radius: 2px;
 }
 
-.confetti-circle {
-  border-radius: 50%;
-}
-
 .confetti-strip {
   border-radius: 1px;
 }
@@ -1921,12 +1917,25 @@ input[type="number"]::-webkit-outer-spin-button {
 
 @keyframes fall {
   0% {
-    transform: translateY(-50px) rotate(0deg);
+    transform: translateY(-80px) translateX(0) rotate(0deg) skew(0deg, 0deg);
     opacity: 1;
   }
 
+  30% {
+    transform: translateY(100px) translateX(calc(-10% + var(--random-offset)))
+      rotate(120deg) skew(5deg, 3deg);
+    opacity: 0.9;
+  }
+
+  60% {
+    transform: translateY(300px) translateX(calc(-30% + var(--random-offset)))
+      rotate(300deg) skew(-10deg, 8deg);
+    opacity: 0.8;
+  }
+
   100% {
-    transform: translateY(650px) rotate(360deg);
+    transform: translateY(650px) translateX(calc(-50% + var(--random-offset)))
+      rotate(720deg) skew(0deg, 0deg);
     opacity: 0;
   }
 }

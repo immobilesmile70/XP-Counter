@@ -544,21 +544,31 @@ function launchConfetti() {
   const confettiContainer = document.querySelector(".confetti-container");
   confettiContainer.innerHTML = "";
 
-  const shapes = ["square", "circle", "triangle", "strip"];
+  const shapes = ["square", "triangle", "strip"];
 
   for (let i = 0; i < 120; i++) {
     const confetti = document.createElement("div");
     const shape = shapes[Math.floor(Math.random() * shapes.length)];
     confetti.classList.add("confetti", `confetti-${shape}`);
 
-    const size = Math.random() * 12 + 6;
-    confetti.style.width = shape === "strip" ? `${size * 0.6}px` : `${size}px`;
-    confetti.style.height = shape === "strip" ? `${size * 2}px` : `${size}px`;
+    const size = Math.random() * 10 + 6;
+    if (shape === "strip") {
+      confetti.style.width = `${size * 0.5}px`;
+      confetti.style.height = `${size * 2}px`;
+    } else if (shape === "triangle") {
+    } else {
+      confetti.style.width = `${size}px`;
+      confetti.style.height = `${size}px`;
+    }
 
+    const hue = Math.floor(Math.random() * 360);
     confetti.style.left = `${Math.random() * 100}%`;
-    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-    confetti.style.animationDelay = `${Math.random() * 3}s`;
+    confetti.style.backgroundColor =
+      shape !== "triangle" ? `hsl(${hue}, 90%, 65%)` : "transparent";
+    confetti.style.color = `hsl(${hue}, 90%, 65%)`;
+    confetti.style.animationDelay = `${Math.random() * 2}s`;
     confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+    confetti.style.setProperty('--random-offset', Math.random() * 100 + 'px');
 
     confettiContainer.appendChild(confetti);
   }
