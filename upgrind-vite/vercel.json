@@ -5,7 +5,7 @@
     { "source": "/terms", "destination": "/terms-and-conditions.html" },
     { "source": "/tos", "destination": "/terms-and-conditions.html" }
   ],
-  "version": 1,
+  "version": 2.1,
   "builds": [
     {
       "src": "package.json",
