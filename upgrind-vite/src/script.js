@@ -28,6 +28,8 @@ import { initializeAndLoadTasks } from "./main.js";
 
 import zxcvbn from 'zxcvbn';
 
+//Just wanted a change
+
 const popup = document.getElementById("popup");
 const closePopupButton = document.getElementById("close-popup-button");
 const popupMessage = document.getElementById("popup-message");
