@@ -1,4 +1,4 @@
-import { loadTasksFromFirebase, getUserId } from '/js/firebase.js';
+import { loadTasksFromFirebase, getUserId } from "/js/firebase.js";
 
 class Task {
   constructor({
@@ -24,7 +24,7 @@ class Task {
     this.cyclesPerSet = cyclesPerSet;
     this.elapsedTime = elapsedTime;
     this.pomodoroState = pomodoroState;
-    this.status = 'pending';
+    this.status = "pending";
     this.xpearned = xpearned || 0;
   }
 
@@ -97,7 +97,7 @@ export class TaskManager {
   completeCurrentTask() {
     const task = this.getCurrentTask();
     if (task) {
-      task.updateStatus('completed');
+      task.updateStatus("completed");
     }
   }
 
